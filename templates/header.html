@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Intra Site</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'finance/style.css' %}">
+    <script src="{% static 'jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/">Intra Site</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/finance">Finances</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Network Topology</a>
+      </li>
+    </ul>
+  </div>
+</nav>

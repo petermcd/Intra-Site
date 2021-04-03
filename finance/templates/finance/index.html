@@ -1,0 +1,31 @@
+{% include "header.html" %}
+<header>
+    <h1>Financials</h1>
+</header>
+<main class="container">
+{% if finance_payments_list %}
+    <section id="payment_list">
+        <div class="row" id="payment_header">
+            <div class="company col-sm">Company</div>
+            <div class="payment_date col-sm">Payment Date</div>
+            <div class="monthly_payment col-sm">Payment Amount</div>
+        </div>
+    {% for payment in finance_payments_list %}
+        <div class="row">
+            <div class="company col-sm">
+            {% if payment.type == "debt" %}
+                <a href="{% url 'finance:debt_detail' payment.id %}">{{ payment.company.name }}</a>
+            {% else %}
+                {{ payment.company.name }}
+            {% endif %}
+            </div>
+            <div class="payment_date col-sm">{{ payment.payment_day }}</div>
+            <div class="monthly_payment col-sm">{{ payment.payment_amount_clean }}</div>
+        </div>
+    {% endfor %}
+    </section>
+{% else %}
+    <p>No lenders are available.</p>
+{% endif %}
+</main>
+{% include "footer.html" %}

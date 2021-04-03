@@ -1,0 +1,29 @@
+{% include "header.html" %}
+<header>
+    <h1>{{ debt.name }}</h1>
+</header>
+<main class="container">
+{% if error_message %}
+    <p><strong>{{ error_message }}</strong></p>
+{% else %}
+    <section id="payment_list">
+        <div class="row" id="payment_header">
+            <div class="payment_date col-sm">Payment Date</div>
+            <div class="balance col-sm">Balance</div>
+            <div class="payment col-sm">Payment</div>
+            <div class="interest col-sm">Interest</div>
+            <div class="remaining_balance col-sm">Remaining Balance</div>
+        </div>
+    {% for payment in debt.remaining_payments %}
+        <div class="row">
+            <div class="payment_date col-sm">{{ payment.date }}</div>
+            <div class="balance col-sm">{{ payment.balance }}</div>
+            <div class="payment col-sm">{{ payment.payment }}</div>
+            <div class="interest col-sm">{{ payment.interest }}</div>
+            <div class="remaining_balance col-sm">{{ payment.remaining_balance }}</div>
+        </div>
+    {% endfor %}
+    </section>
+{% endif %}
+</main>
+{% include "footer.html" %}
