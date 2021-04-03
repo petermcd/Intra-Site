@@ -15,12 +15,11 @@ Including another URLconf
 """
 from django.urls import path
 
-from polls import views
+from network_topology.views import index
 
 from . import views
 
 app_name = 'network'
 urlpatterns = [
-    path('', views.IndexView.as_view(), name="index"),
-    path('device/<int:pk>/', views.DetailView.as_view(), name='device_detail'),
+    path('', index, name="index")
 ]
