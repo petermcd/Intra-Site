@@ -33,7 +33,7 @@ class Bill(models.Model):
 
     @property
     def payment_amount_clean(self) -> str:
-        return format_money(self.currency.symbol, self.payment_amount)
+        return format_money(self.payment_amount)
 
     @staticmethod
     def type() -> str:
@@ -55,7 +55,7 @@ class Debt(models.Model):
         return self.current_balance > 0
 
     def __str__(self) -> str:
-        return f'{self.company.name} - {format_money(self.currency.symbol, self.current_balance)}'
+        return f'{self.company.name} - {format_money(self.current_balance)}'
 
     @property
     def name(self) -> str:
@@ -63,11 +63,11 @@ class Debt(models.Model):
 
     @property
     def payment_amount_clean(self) -> str:
-        return format_money(self.currency.symbol, self.payment_amount)
+        return format_money(self.payment_amount)
 
     @property
     def current_balance_clean(self) -> str:
-        return format_money(self.currency.symbol, self.current_balance)
+        return format_money(self.current_balance)
 
     @property
     def remaining_payment_count(self) -> int:
@@ -90,16 +90,16 @@ class Debt(models.Model):
                 monthly_payments = current_balance
             payment = {
                 'date': next_payment.strftime("%d/%m/%Y"),
-                'balance': format_money(self.currency.symbol, current_balance),
-                'payment': format_money(self.currency.symbol, monthly_payments),
+                'balance': format_money(current_balance),
+                'payment': format_money(monthly_payments),
             }
             remaining_pre_interest = current_balance - monthly_payments
             interest = int(
                 remaining_pre_interest * (monthly_interest_rate / 100)
             )
             current_balance = remaining_pre_interest + interest
-            payment['interest'] = format_money(self.currency.symbol, interest)
-            payment['remaining_balance'] = format_money(self.currency.symbol, current_balance)
+            payment['interest'] = format_money(interest)
+            payment['remaining_balance'] = format_money(current_balance)
             payments.append(payment)
             next_payment = add_month(next_payment)
         return payments
@@ -125,8 +125,8 @@ class Payments:
         return elem.payment_day
 
 
-def format_money(symbol: str, value: int) -> str:
-    return f'{symbol}{value / 100:.2f}'
+def format_money(value: int) -> str:
+    return f'{value / 100:.2f}'
 
 
 def add_month(date):

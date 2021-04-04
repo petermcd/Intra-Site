@@ -16,11 +16,11 @@
         </div>
     {% for payment in debt.remaining_payments %}
         <div class="row">
-            <div class="payment_date col-sm">{{ payment.date }}</div>
-            <div class="balance col-sm">{{ payment.balance }}</div>
-            <div class="payment col-sm">{{ payment.payment }}</div>
-            <div class="interest col-sm">{{ payment.interest }}</div>
-            <div class="remaining_balance col-sm">{{ payment.remaining_balance }}</div>
+            <div class="payment_date col-sm">{{ payment.currency.symbol }}{{ payment.date }}</div>
+            <div class="balance col-sm">{{ payment.currency.symbol }}{{ payment.balance }}</div>
+            <div class="payment col-sm">{{ payment.currency.symbol }}{{ payment.payment }}</div>
+            <div class="interest col-sm">{{ payment.currency.symbol }}{{ payment.interest }}</div>
+            <div class="remaining_balance col-sm">{{ payment.currency.symbol }}{{ payment.remaining_balance }}</div>
         </div>
     {% endfor %}
     </section>
