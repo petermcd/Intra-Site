@@ -22,4 +22,5 @@ urlpatterns = [
     path('finance/', include('finance.urls')),
     path('polls/', include('polls.urls')),
     path('network/', include('network_topology.urls')),
+    path('network_sites/', include('network_sites.urls')),
 ]

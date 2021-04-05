@@ -15,10 +15,9 @@ Including another URLconf
 """
 from django.urls import path
 
-from network_topology import views
+from . import views
 
-app_name = 'network'
+app_name = 'network_sites'
 urlpatterns = [
-    path('', views.index, name="index"),
-    path('topology.json', views.topology, name="topology.json"),
+    path('', views.IndexView.as_view(), name="index")
 ]

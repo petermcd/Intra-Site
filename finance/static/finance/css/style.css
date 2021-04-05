@@ -60,3 +60,7 @@ header{
     background-color: #f5f5f5;
     flex-shrink: 0;
 }
+#graph{
+    width: 100%;
+    height: calc(100vh - 200px);
+}

@@ -1,8 +1,13 @@
+{% load static %}
 {% include "header.html" %}
     <header>
-        <h1>Portfolio</h1>
+        <h1>Network Topology</h1>
     </header>
     <main class="container">
-        <p>Working on it</p>
+        <div id="graph"></div>
     </main>
+<script src="//unpkg.com/three"></script>
+<script src="//unpkg.com/three-spritetext"></script>
+<script src="//unpkg.com/3d-force-graph"></script>
+<script src="{% static 'network_topology/js/graph.js' %}"></script>
 {% include "footer.html" %}
