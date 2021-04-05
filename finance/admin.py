@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Bill, Currency, Debt, Company
+from .models import Bill, Company, Currency, Debt
 
 
 class BillAdmin(admin.ModelAdmin):

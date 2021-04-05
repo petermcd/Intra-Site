@@ -1,0 +1,16 @@
+{% include "header.html" %}
+    <header>
+        <h1>Network Sites</h1>
+    </header>
+    <main class="container">
+        <section class="row row-cols-1 row-cols-md-2">
+            {% for site in network_sites_list %}
+                <article class="col">
+                    <h2>{{ site.name }}</h2>
+                    <p>{{ site.description }}</p>
+                    <p><a href="{{ site.corrected_url }}">Visit {{ site.name }}</a></p>
+                </article>
+            {% endfor %}
+        </section>
+    </main>
+{% include "footer.html" %}

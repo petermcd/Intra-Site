@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -41,6 +40,7 @@ INSTALLED_APPS = [
     'portfolio.apps.PortfolioConfig',
     'finance.apps.FinanceConfig',
     'network_topology.apps.NetworkTopologyConfig',
+    'network_sites.apps.NetworkSitesConfig',
 ]
 
 MIDDLEWARE = [
