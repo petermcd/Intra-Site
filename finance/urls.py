@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.urls import path
 
-from polls import views
 
 from . import views
 

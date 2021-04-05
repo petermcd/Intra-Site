@@ -1,52 +1,46 @@
-{% include "header.html" %}
-<header>
-    <h1>Financials</h1>
-</header>
-<main class="container row">
-{% if finance_payments_list %}
-    <section id="payment_list col-6">
-        <div class="row" id="payment_header">
-            <div class="company col-6">Company</div>
-            <div class="payment_date col-3">Payment Date</div>
-            <div class="monthly_payment col-3">Payment Amount</div>
-        </div>
-    {% for payment in finance_payments_list %}
-        <div class="row">
-            <div class="company col-6">
-            {% if payment.type == "debt" %}
-                <a href="{% url 'finance:debt_detail' payment.id %}">{{ payment.company.name }}</a>
-            {% else %}
-                {{ payment.company.name }}
-            {% endif %}
-            </div>
-            <div class="payment_date col-3">{{ payment.payment_day }}</div>
-            <div class="monthly_payment col-3">{{ payment.currency.symbol }}{{ payment.payment_amount_clean }}</div>
-        </div>
-    {% endfor %}
-        <div class="row">
-            <div class="company col-6"></div>
-            <div class="payment_date col-3">Paid</div>
-            <div class="monthly_payment col-3">{{ paid }}</div>
-        </div>
-        <div class="row">
-            <div class="company col-6"></div>
-            <div class="payment_date col-3">Still To Pay</div>
-            <div class="monthly_payment col-3">{{ to_pay }}</div>
-        </div>
-        <div class="row">
-            <div class="company col-6"></div>
-            <div class="payment_date col-3">Total</div>
-            <div class="monthly_payment col-3">{{ total }}</div>
-        </div>
-    </section>
-    <section class="col-6">
-        <canvas id="monthly_chart"></canvas>
-    </section>
-{% else %}
-    <p>No lenders are available.</p>
-{% endif %}
-</main>
-{% include "footer.html" %}
 {% load static %}
+{% include "header.html" %}
+    <header>
+        <h1>Financials</h1>
+    </header>
+    <main class="container">{% if finance_payments_list %}
+        <section id="payment_list">
+            <div class="row" id="payment_header">
+                <div class="company col-6">Company</div>
+                <div class="payment_date col-3">Payment Date</div>
+                <div class="monthly_payment col-3">Payment Amount</div>
+            </div>{% for payment in finance_payments_list %}
+            <div class="row">
+                <div class="company col-6">{% if payment.type == "debt" %}
+                    <a href="{% url 'finance:debt_detail' payment.id %}">{{ payment.company.name }}</a>
+                {% else %}
+                    {{ payment.company.name }}
+                {% endif %}</div>
+                <div class="payment_date col-3">{{ payment.payment_day }}</div>
+                <div class="monthly_payment col-3">{{ payment.currency.symbol }}{{ payment.payment_amount_clean }}</div>
+            </div>{% endfor %}
+            <div class="row">
+                <div class="company col-6"></div>
+                <div class="payment_date col-3">Paid</div>
+                <div class="monthly_payment col-3">{{ paid }}</div>
+            </div>
+            <div class="row">
+                <div class="company col-6"></div>
+                <div class="payment_date col-3">Still To Pay</div>
+                <div class="monthly_payment col-3">{{ to_pay }}</div>
+            </div>
+            <div class="row">
+                <div class="company col-6"></div>
+                <div class="payment_date col-3">Total</div>
+                <div class="monthly_payment col-3">{{ total }}</div>
+            </div>
+        </section>
+        <section id="charts">
+            <canvas id="monthly_chart"></canvas>
+        </section>{% else %}
+        <p>No lenders are available.</p>
+    {% endif %}
+    </main>
 <script src="{% static 'js/chart.js' %}"></script>
 <script src="{% static 'finance/js/payment-chart.js' %}"></script>
+{% include "footer.html" %}

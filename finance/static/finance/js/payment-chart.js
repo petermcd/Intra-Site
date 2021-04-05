@@ -1,22 +1,20 @@
-labels = []
-values = []
+let labels = []
+let values = []
 
 function get_data()
 {
     $(".company").each(function(index){
-        company_name = $.trim($(this).text());
+        let company_name = $.trim($(this).text());
         if (company_name !== '' && company_name !== 'Company'){
-            payment = $(".monthly_payment").get(index).innerText.substring(1);
-            if(payment !== '0.00'){
-                labels.push(company_name);
-                values.push(payment);
-            }
+            let payment = $(".monthly_payment").get(index).innerText.substring(1);
+            labels.push(company_name);
+            values.push(payment);
         }
     });
 }
 get_data()
-var ctx = document.getElementById('monthly_chart').getContext('2d');
-var myChart = new Chart(ctx, {
+const ctx = document.getElementById('monthly_chart').getContext('2d');
+let myChart = new Chart(ctx, {
     type: 'pie',
     data: {
         labels: labels,
