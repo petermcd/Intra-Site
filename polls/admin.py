@@ -8,7 +8,7 @@ from .models import Question, Choice
 class ChoiceInline(admin.TabularInline):
     model = Choice
     extra = 3
-    fields =  ['choice_text']
+    fields = ['choice_text']
 
 
 class QuestionAdmin(admin.ModelAdmin):

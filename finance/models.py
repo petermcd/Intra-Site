@@ -63,7 +63,10 @@ class Debt(models.Model):
 
     @property
     def payment_amount_clean(self) -> str:
-        return format_money(self.payment_amount)
+        payment = self.payment_amount
+        if self.payment_amount > self.current_balance:
+            payment = self.current_balance
+        return format_money(payment)
 
     @property
     def current_balance_clean(self) -> str:
@@ -113,7 +116,7 @@ class Payments:
     @staticmethod
     def monthly_payments():
         payments = list()
-        for bill in  Bill.objects.all():
+        for bill in Bill.objects.all():
             payments.append(bill)
         for debt in Debt.objects.all():
             payments.append(debt)
@@ -129,10 +132,10 @@ def format_money(value: int) -> str:
     return f'{value / 100:.2f}'
 
 
-def add_month(date):
-    day = date.day
-    month = date.month + 1
-    year = date.year
+def add_month(payment_date):
+    day = payment_date.day
+    month = payment_date.month + 1
+    year = payment_date.year
     if month > 12:
         month = 1
         year += 1

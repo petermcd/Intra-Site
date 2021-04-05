@@ -17,7 +17,6 @@ from django.urls import path
 
 from network_topology.views import index
 
-from . import views
 
 app_name = 'network'
 urlpatterns = [
