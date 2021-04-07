@@ -21,6 +21,7 @@ def topology(request):
             "id": f"d{device.pk}",
             "name": device.name,
             "ip": str(device.ip),
+            "description": device.description,
             "type": 'device'
         }
         data['nodes'].append(device_data)
@@ -37,6 +38,8 @@ def topology(request):
             "id": f"s{site.pk}",
             "name": site.name,
             "ip": str(site.ip),
+            "url": site.corrected_url,
+            "description": site.description,
             "type": 'site'
         }
         data['nodes'].append(site_data)

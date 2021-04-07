@@ -61,6 +61,14 @@ header{
     flex-shrink: 0;
 }
 #graph{
-    width: 100%;
     height: calc(100vh - 200px);
+}
+
+aside {
+    float: left;
+    overflow: auto;
+}
+#graph {
+    display: inline-block;
+    background-color: black;
 }

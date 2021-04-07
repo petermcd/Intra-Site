@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'polls.apps.PollsConfig',
-    'portfolio.apps.PortfolioConfig',
     'finance.apps.FinanceConfig',
     'network_topology.apps.NetworkTopologyConfig',
     'network_sites.apps.NetworkSitesConfig',
