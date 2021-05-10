@@ -21,4 +21,5 @@ app_name = 'network'
 urlpatterns = [
     path('', views.index, name="index"),
     path('topology.json', views.topology, name="topology.json"),
+    path('sites', views.SiteView.as_view(), name="sites"),
 ]

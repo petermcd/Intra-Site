@@ -24,9 +24,9 @@ class IndexView(generic.ListView):
         to_pay = 0
         for payment in payments:
             if payment.payment_day > current_day:
-                to_pay += payment.payment_amount
+                to_pay += payment.calculated_payment_amount
             else:
-                paid += payment.payment_amount
+                paid += payment.calculated_payment_amount
 
         total = format_money(to_pay + paid)
         paid = format_money(paid)
