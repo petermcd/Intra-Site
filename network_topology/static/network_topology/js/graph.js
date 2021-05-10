@@ -1,7 +1,7 @@
 const elem = $('#graph')[0];
 const topology_graph = ForceGraph3D()
     (elem)
-    .jsonUrl('/network/topology.json')
+    .jsonUrl('/topology.json')
     .nodeAutoColorBy('type')
     .width(elem.offsetWidth)
     .height(elem.offsetHeight)

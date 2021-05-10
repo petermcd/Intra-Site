@@ -1,9 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 
-from network_sites.models import Site
-
-from .models import Device
+from .models import Device, Site
+from django.views import generic
 
 
 def index(request):
@@ -37,14 +36,14 @@ def topology(request):
         site_data = {
             "id": f"s{site.pk}",
             "name": site.name,
-            "ip": str(site.ip),
+            "ip": str(site.hosted_on.ip),
             "url": site.corrected_url,
             "description": site.description,
             "type": 'site'
         }
         data['nodes'].append(site_data)
         try:
-            hosting_device = Device.objects.get(ip__exact=site.ip.pk)
+            hosting_device = Device.objects.get(ip__exact=site.hosted_on.ip.pk)
             link = {
                 "source": f"s{site.pk}",
                 "target": f"d{hosting_device.pk}"
@@ -53,3 +52,11 @@ def topology(request):
         except Device.DoesNotExist:
             pass
     return JsonResponse(data)
+
+
+class SiteView(generic.ListView):
+    template_name = 'templates/network_topology/index2.html'
+    context_object_name = 'network_sites_list'
+
+    def get_queryset(self):
+        return Site.objects.all().order_by('name')

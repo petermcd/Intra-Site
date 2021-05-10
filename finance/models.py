@@ -35,6 +35,10 @@ class Bill(models.Model):
     def payment_amount_clean(self) -> str:
         return format_money(self.payment_amount)
 
+    @property
+    def calculated_payment_amount(self) -> int:
+        return self.payment_amount
+
     @staticmethod
     def type() -> str:
         return 'bill'
@@ -63,10 +67,14 @@ class Debt(models.Model):
 
     @property
     def payment_amount_clean(self) -> str:
+        return format_money(self.calculated_payment_amount)
+
+    @property
+    def calculated_payment_amount(self) -> int:
         payment = self.payment_amount
         if self.payment_amount > self.current_balance:
             payment = self.current_balance
-        return format_money(payment)
+        return payment
 
     @property
     def current_balance_clean(self) -> str:

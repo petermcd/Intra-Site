@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'finance.apps.FinanceConfig',
     'network_topology.apps.NetworkTopologyConfig',
-    'network_sites.apps.NetworkSitesConfig',
 ]
 
 MIDDLEWARE = [
