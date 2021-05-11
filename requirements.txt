@@ -1,0 +1,3 @@
+cloudflare:2.8.*
+django:3.*
+pyZabbix:0.8
