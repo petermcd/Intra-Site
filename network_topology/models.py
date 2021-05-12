@@ -1,12 +1,12 @@
 from django.db import models
 from automation.automation import Automation
-from django.db.models.signals import post_delete, post_save
+from django.db.models.signals import m2m_changed, post_delete, post_save
 from django.dispatch import receiver, Signal
 
 
-class AnsibleGroup(models.Model):
+class MonitoringGroup(models.Model):
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=255)
+    group_id = models.IntegerField()
 
     def __str__(self) -> str:
         return self.name
@@ -61,7 +61,7 @@ class Device(models.Model):
     description = models.CharField(max_length=500)
     connected_to = models.ForeignKey('self', on_delete=models.RESTRICT, blank=True, null=True)
     connection_method = models.ForeignKey(ConnectionMethod, on_delete=models.RESTRICT, blank=True, null=True)
-    ansible_group = models.ManyToManyField(AnsibleGroup, blank=True)
+    monitoring_groups = models.ManyToManyField(MonitoringGroup, blank=False)
     monitoring_templates = models.ManyToManyField(MonitoringTemplate, blank=True)
 
     def __str__(self) -> str:
@@ -162,6 +162,7 @@ def device_update_monitoring(sender, instance, **kwargs):
     """
     automation = instantiate_automation()
     monitoring_templates = set()
+    monitoring_groups = set()
     for template in instance.monitoring_templates.all():
         monitoring_templates.add(template.template_id)
     for template in instance.device_type.monitoring_templates.all():
@@ -169,15 +170,24 @@ def device_update_monitoring(sender, instance, **kwargs):
     for site in Site.objects.filter(hosted_on__device__device=instance):
         for template in site.monitoring_templates.all():
             monitoring_templates.add(template.template_id)
+    for group in instance.monitoring_groups.all():
+        monitoring_groups.add(group.group_id)
 
     device_details = {
         'name': instance.name,
         'hostname': instance.hostname,
         'ip': str(instance.ip),
         'device_id': instance.pk,
-        'templates': monitoring_templates
+        'templates': monitoring_templates,
+        'groups': monitoring_groups,
     }
     automation.update_device_monitoring(device_details)
+
+
+@receiver(m2m_changed, sender=Device.monitoring_groups.through)
+@receiver(m2m_changed, sender=Device.monitoring_templates.through)
+def device_update_monitoring(sender, instance, **kwargs):
+    monitoring_update.send(sender=Device, instance=instance)
 
 
 @receiver(post_delete, sender=Device)
@@ -195,7 +205,8 @@ def device_delete_monitoring(sender, instance, **kwargs):
         'hostname': instance.hostname,
         'ip': str(instance.ip),
         'device_id': instance.pk,
-        'templates': set()
+        'templates': set(),
+        'groups': set(),
     }
     automation.delete_device_monitoring(device_details)
 

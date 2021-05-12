@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (
-    AnsibleGroup,
+    MonitoringGroup,
     ConnectionMethod,
     Device,
     DeviceCategory,
@@ -13,8 +13,8 @@ from .models import (
 )
 
 
-class AnsibleGroupsAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description')
+class MonitoringGroupsAdmin(admin.ModelAdmin):
+    list_display = ('name', 'group_id')
     ordering = ('name',)
 
 
@@ -55,7 +55,7 @@ class SiteAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Settings, SettingsAdmin)
-admin.site.register(AnsibleGroup, AnsibleGroupsAdmin)
+admin.site.register(MonitoringGroup, MonitoringGroupsAdmin)
 admin.site.register(ConnectionMethod, ConnectionMethodAdmin)
 admin.site.register(Device, DeviceAdmin)
 admin.site.register(DeviceCategory, DeviceCategoryAdmin)
