@@ -16,7 +16,6 @@ class Monitoring:
     def create_device(self, device_details):
         groups = self._format_groups(device_details)
         templates, _ = self._format_templates(device_details)
-        print(device_details)
         self._zabbix.host.create(
             host=device_details['hostname'],
             name=device_details['name'],

@@ -200,9 +200,6 @@ def device_update_monitoring(sender, instance, **kwargs):
         monitoring_templates.add(template.template_id)
     for template in instance.device_type.monitoring_templates.all():
         monitoring_templates.add(template.template_id)
-    #for site in Site.objects.filter(hosted_on__device__device=instance):
-    #    for template in site.monitoring_templates.all():
-    #        monitoring_templates.add(template.template_id)
     for group in instance.monitoring_groups.all():
         monitoring_groups.add(group.group_id)
 
