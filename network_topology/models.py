@@ -59,6 +59,7 @@ class Device(models.Model):
     ip = models.OneToOneField(IP, on_delete=models.CASCADE)
     device_type = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
     description = models.CharField(max_length=500)
+    snmp_enabled = models.BooleanField(default=False)
     connected_to = models.ForeignKey('self', on_delete=models.RESTRICT, blank=True, null=True)
     connection_method = models.ForeignKey(ConnectionMethod, on_delete=models.RESTRICT, blank=True, null=True)
     monitoring_groups = models.ManyToManyField(MonitoringGroup, blank=False)
@@ -163,13 +164,45 @@ def device_update_monitoring(sender, instance, **kwargs):
     automation = instantiate_automation()
     monitoring_templates = set()
     monitoring_groups = set()
+    interfaces = [
+        {
+            "type": 1,
+            "main": 1,
+            "useip": 1,
+            "ip": str(instance.ip),
+            "dns": "",
+            "port": "10050"
+        }
+    ]
+    if instance.snmp_enabled:
+        snmp_username = Settings.objects.filter(name__exact='SNMP_USERNAME')[0].value
+        snmp_password = Settings.objects.filter(name__exact='SNMP_PASSWORD')[0].value
+        interfaces.append(
+            {
+                "type": 2,
+                "main": 1,
+                "useip": 1,
+                "ip": str(instance.ip),
+                "dns": "",
+                "port": "161",
+                'details': {
+                    'version': 3,
+                     'bulk': 1,
+                    'securityname': snmp_username,
+                    'securitylevel': 1,
+                    'authpassphrase': snmp_password,
+                    'contextname': '',
+                }
+            }
+        )
+
     for template in instance.monitoring_templates.all():
         monitoring_templates.add(template.template_id)
     for template in instance.device_type.monitoring_templates.all():
         monitoring_templates.add(template.template_id)
-    for site in Site.objects.filter(hosted_on__device__device=instance):
-        for template in site.monitoring_templates.all():
-            monitoring_templates.add(template.template_id)
+    #for site in Site.objects.filter(hosted_on__device__device=instance):
+    #    for template in site.monitoring_templates.all():
+    #        monitoring_templates.add(template.template_id)
     for group in instance.monitoring_groups.all():
         monitoring_groups.add(group.group_id)
 
@@ -180,6 +213,7 @@ def device_update_monitoring(sender, instance, **kwargs):
         'device_id': instance.pk,
         'templates': monitoring_templates,
         'groups': monitoring_groups,
+        'interfaces': interfaces,
     }
     automation.update_device_monitoring(device_details)
 
@@ -207,6 +241,7 @@ def device_delete_monitoring(sender, instance, **kwargs):
         'device_id': instance.pk,
         'templates': set(),
         'groups': set(),
+        'interfaces': [],
     }
     automation.delete_device_monitoring(device_details)
 
