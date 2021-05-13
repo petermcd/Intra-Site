@@ -15,3 +15,40 @@ a monthly payment)
 ## Service Links
 
 Links to services that I run on the local network
+
+# Install Requirements
+
+## Settings
+
+### CLOUDFLARE_API_KEY
+
+This is the API key for the Cloudflare API. The user requires read on the zone and read/write on the DNS.
+
+### ZABBIX_URL
+
+The full URL that Zabbix monitoring platform is hosted on
+
+### ZABBIX_USERNAME
+
+API user for Zabbix, this requires admin rights
+
+### ZABBIX_PASSWORD
+
+Password for the API user
+
+### SNMP_USERNAME
+
+Shared SNMP username that will be used by all devices
+
+### SNMP_PASSWORD
+
+Shared SNMP password that will be used by all devices
+
+## Zabbix Templates
+
+### 
+
+This enables the monitoring of the Asustor NAS drive, there are pitfalls (such as fetching system temperature in 
+fahrenheit but reporting it as celsius) and will require replacing
+
+[Template SNMP Asustor NAS](https://share.zabbix.com/unsorted/template-snmp-asustor-nas)
