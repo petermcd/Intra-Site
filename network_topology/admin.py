@@ -49,6 +49,7 @@ class SettingsAdmin(admin.ModelAdmin):
     list_display = ('name', 'value')
     ordering = ('name',)
 
+
 class SiteAdmin(admin.ModelAdmin):
     list_display = ('name', 'url')
     ordering = ('name',)
