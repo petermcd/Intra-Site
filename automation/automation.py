@@ -15,7 +15,6 @@ class Automation:
         return cls.instance
 
     def update_dns(self, required_dns: List[Dict[str, str]]):
-        print(required_dns)
         for item in required_dns:
             if self._dns.has_record(item['name']):
                 continue
