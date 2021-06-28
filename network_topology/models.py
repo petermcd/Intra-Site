@@ -134,8 +134,6 @@ def device_update_dns(sender, instance, **kwargs):
                 'name': automation.get_hostname(site.url),
                 'ip': str(instance.ip)
         })
-    print('-------------')
-    print(tasks)
     automation.update_dns(tasks)
 
 
