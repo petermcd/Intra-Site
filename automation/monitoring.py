@@ -57,20 +57,20 @@ class Monitoring:
             device = {}
         required_template_ids = []
         required_templates = []
-        templates_to_clear = []
         for template in new_device_details['templates']:
             required_template_ids.append(template)
             required_templates.append({'templateid': template})
-        for template in device.get('parentTemplates', {}):
-            if int(template['templateid']) not in required_template_ids:
-                templates_to_clear.append({'templateid': int(template['templateid'])})
+        templates_to_clear = [
+            {'templateid': int(template['templateid'])}
+            for template in device.get('parentTemplates', {})
+            if int(template['templateid']) not in required_template_ids
+        ]
+
         return required_templates, templates_to_clear
 
     @staticmethod
     def _format_groups(new_device_details):
-        groups = []
-        for group in new_device_details['groups']:
-            groups.append({'groupid': group})
-        if len(groups) == 0:
+        groups = [{'groupid': group} for group in new_device_details['groups']]
+        if not groups:
             groups.append({'groupid': 19})
         return groups
