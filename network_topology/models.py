@@ -16,7 +16,7 @@ class ConnectionMethod(models.Model):
     name = models.CharField(max_length=20)
 
     def __str__(self) -> str:
-        return self.name
+        return str(self.name)
 
 
 class MonitoringTemplate(models.Model):
@@ -31,7 +31,7 @@ class IP(models.Model):
     ip = models.GenericIPAddressField(unique=True)
 
     def __str__(self) -> str:
-        return self.ip
+        return str(self.ip)
 
 
 class DeviceCategory(models.Model):
