@@ -123,9 +123,7 @@ class Debt(models.Model):
 class Payments:
     @staticmethod
     def monthly_payments():
-        payments = list()
-        for bill in Bill.objects.all():
-            payments.append(bill)
+        payments = [bill for bill in Bill.objects.all()]
         for debt in Debt.objects.all():
             payments.append(debt)
         payments.sort(key=Payments._sort)

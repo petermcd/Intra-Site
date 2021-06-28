@@ -162,8 +162,6 @@ def device_update_monitoring(sender, instance, **kwargs):
     :param kwargs: Not used but required by the API
     """
     automation = instantiate_automation()
-    monitoring_templates = set()
-    monitoring_groups = set()
     interfaces = [
         {
             "type": 1,
@@ -196,12 +194,16 @@ def device_update_monitoring(sender, instance, **kwargs):
             }
         )
 
-    for template in instance.monitoring_templates.all():
-        monitoring_templates.add(template.template_id)
+    monitoring_templates = {
+        template.template_id
+        for template in instance.monitoring_templates.all()
+    }
+
     for template in instance.device_type.monitoring_templates.all():
         monitoring_templates.add(template.template_id)
-    for group in instance.monitoring_groups.all():
-        monitoring_groups.add(group.group_id)
+    monitoring_groups = {
+        group.group_id for group in instance.monitoring_groups.all()
+    }
 
     device_details = {
         'name': instance.name,
@@ -269,5 +271,4 @@ def instantiate_automation() -> Automation:
         'zabbix_username': Settings.objects.filter(name__exact='ZABBIX_USERNAME')[0].value,
         'zabbix_password': Settings.objects.filter(name__exact='ZABBIX_PASSWORD')[0].value,
     }
-    automation = Automation(**credentials)
-    return automation
+    return Automation(**credentials)

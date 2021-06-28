@@ -1,4 +1,4 @@
-cloudflare:2.8
-django:3
-pyZabbix:0.8
-mysqlclient:2
+cloudflare>=2.8
+django>=3
+pyZabbix>=0.8
+mysqlclient>=2
