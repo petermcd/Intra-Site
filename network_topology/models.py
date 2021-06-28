@@ -120,7 +120,7 @@ def device_update_dns(sender, instance, **kwargs):
     :param instance: Instance object being updated
     :param kwargs: Not used but required by the API
     """
-    sites = Site.objects.filter(hosted_on__device__device=instance)
+    sites = Site.objects.filter(hosted_on=instance)
     if len(sites) == 0:
         return
     automation = instantiate_automation()
@@ -134,6 +134,8 @@ def device_update_dns(sender, instance, **kwargs):
                 'name': automation.get_hostname(site.url),
                 'ip': str(instance.ip)
         })
+    print('-------------')
+    print(tasks)
     automation.update_dns(tasks)
 
 
