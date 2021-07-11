@@ -1,7 +1,8 @@
 from django.db import models
-from automation.automation import Automation
 from django.db.models.signals import m2m_changed, post_delete, post_save
-from django.dispatch import receiver, Signal
+from django.dispatch import Signal, receiver
+
+from automation.automation import Automation
 
 
 class MonitoringGroup(models.Model):
@@ -37,7 +38,7 @@ class IP(models.Model):
 class DeviceCategory(models.Model):
     name = models.CharField(max_length=50)
 
-    def __str__(self) ->str:
+    def __str__(self) -> str:
         return self.name
 
 
@@ -133,7 +134,7 @@ def device_update_dns(sender, instance, **kwargs):
             tasks.append({
                 'name': automation.get_hostname(site.url),
                 'ip': str(instance.ip)
-        })
+            })
     automation.update_dns(tasks)
 
 
@@ -185,7 +186,7 @@ def device_update_monitoring(sender, instance, **kwargs):
                 "port": "161",
                 'details': {
                     'version': 3,
-                     'bulk': 1,
+                    'bulk': 1,
                     'securityname': snmp_username,
                     'securitylevel': 1,
                     'authpassphrase': snmp_password,

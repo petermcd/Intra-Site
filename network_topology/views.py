@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views import generic
 
 from .models import Device, Site
-from django.views import generic
 
 
 def index(request):
