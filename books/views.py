@@ -10,8 +10,7 @@ class IndexView(generic.ListView):
         return Book.objects.all()
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        return data
+        return super().get_context_data(**kwargs)
 
 
 class DetailView(generic.DetailView):
