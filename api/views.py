@@ -30,20 +30,23 @@ def get_book_details(request, search_type: str, search: str):
         records = []
         for item in content['items']:
             item_details = item['volumeInfo']
-            record = {'title': item_details['title'], 'subtitle': item_details['subtitle'], 'authors': [],
+            record = {'title': item_details['title'], 'subtitle': None, 'authors': [],
                       'publisher': item_details['publisher'], 'published': item_details['publishedDate'],
                       'description': item_details['description'], 'pages': item_details['pageCount']}
+            if 'subtitle' in item_details:
+                record['subtitle'] = item_details['subtitle']
             for author in item_details['authors']:
+                print(author)
                 author_res = Author.objects.filter(name__exact=author)
                 if len(author_res) == 0:
-                    record = Author(name=author)
-                    record.save()
+                    new_author = Author(name=author)
+                    new_author.save()
                     author_dict = {
-                        'id': record.pk,
+                        'id': new_author.pk,
                         'name': author,
                     }
                     record['authors'].append(author_dict)
-                    continue
+                    break
                 author_dict = {
                     'id': author_res[0].pk,
                     'name': author_res[0].name,
