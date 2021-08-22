@@ -1,0 +1,27 @@
+{% include "header.html" %}
+<header xmlns="http://www.w3.org/1999/html">
+    <h1>{{ book.title }}</h1>
+    <h2>{{ book.subtitle }}</h2>
+    <h3>By {% for author in book.authors.all %}{{ author.name }} {% if forloop.last %}{% else %}, {% endif %}{% endfor %}</h3>
+</header>
+<main class="container">
+{% if error_message %}
+    <p><strong>{{ error_message }}</strong></p>
+{% else %}
+    <section id="payment_list">
+        <div class="row">
+            <div class="description col-9">{{ book.description }}</div>
+            <div class="col-3">
+                <aside class="col-12">
+                    <div class="thumbnail"><img src='{{ book.thumbnail }}' alt='{{ book.title }}'></div>
+                    <div class="published"><b>Published By</b>: {{ book.publisher }} {% if book.published %}({{ book.published|date:"d/m/Y" }}){% endif %}</div>
+                    <div class="pages"><b>Pages</b>: {{ book.pages }}</div>
+                    <div class="isbn10"><b>ISBN 10</b>: {{ book.isbn10 }}</div>
+                    <div class="isbn13"><b>ISBN 13</b>: {{ book.isbn13 }}</div>
+                </aside>
+            </div>
+        </div>
+    </section>
+{% endif %}
+</main>
+{% include "footer.html" %}
