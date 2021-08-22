@@ -22,9 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'lo=0(fuefb7mc0kyg!%b+32q-ew=0-)@r%4ed#de78+)ao^#$@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["intra.devfaq.com", "127.0.0.1"]
+ALLOWED_HOSTS = ["intra.devfaq.com"]
 
 
 # Application definition
@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'api.apps.ApiConfig',
+    'books.apps.BooksConfig',
     'finance.apps.FinanceConfig',
     'network_topology.apps.NetworkTopologyConfig',
 ]
