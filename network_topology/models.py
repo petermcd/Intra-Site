@@ -57,7 +57,7 @@ class DeviceCategory(models.Model):
         verbose_name = 'Device Category'
         verbose_name_plural = 'Device Categories'
 
-    def __str__(self) ->str:
+    def __str__(self) -> str:
         return self.name
 
 
@@ -71,7 +71,6 @@ class DeviceType(models.Model):
     class Meta:
         verbose_name = 'Device Type'
         verbose_name_plural = 'Device Types'
-
 
     def __str__(self) -> str:
         return f"{self.manufacturer} - {self.model}"
@@ -162,7 +161,7 @@ def device_update_dns(sender, instance, **kwargs):
             tasks.append({
                 'name': automation.get_hostname(site.url),
                 'ip': str(instance.ip)
-        })
+            })
     automation.update_dns(tasks)
 
 
@@ -214,7 +213,7 @@ def device_update_monitoring(sender, instance, **kwargs):
                 "port": "161",
                 'details': {
                     'version': 3,
-                     'bulk': 1,
+                    'bulk': 1,
                     'securityname': snmp_username,
                     'securitylevel': 1,
                     'authpassphrase': snmp_password,

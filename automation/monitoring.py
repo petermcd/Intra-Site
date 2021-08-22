@@ -52,7 +52,7 @@ class Monitoring:
         return found_device[0]
 
     @staticmethod
-    def _format_templates(new_device_details, device = None):
+    def _format_templates(new_device_details, device=None):
         if not device:
             device = {}
         required_template_ids = []

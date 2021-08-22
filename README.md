@@ -1,20 +1,20 @@
 # Intra Site
 
-This is a basic intranet site that I have that will have following functionality:
+This is a basic intranet site that I have that will have the following functionality:
 
 ## Network Topology
 
-A topology of my network including hostrnames, ip's and the connections between devices.
+A topology of my network including hostnames, IP's and the connections between devices.
 
 ## Finances
 
-A break down of my finances, these include monthly bills and outstanding debts.
+A breakdown of my finances, these include monthly bills and outstanding debts.
 The debts also include a run down of how many payments will be required (currently assumes
 a monthly payment)
 
 ## Service Links
 
-Links to services that I run on the local network
+Links too services that I run on the local network
 
 # Install Requirements
 
@@ -22,7 +22,7 @@ Links to services that I run on the local network
 
 ### CLOUDFLARE_API_KEY
 
-This is the API key for the Cloudflare API. The user requires read on the zone and read/write on the DNS.
+This is the API key for the Cloudflare API. The user requires read access on the zone and read/write on the DNS.
 
 ### ZABBIX_URL
 
