@@ -5,6 +5,8 @@ from .monitoring import Monitoring
 
 
 class Automation:
+    instance = None
+
     def __init__(self, cloudflare_api_key: str, zabbix_url: str, zabbix_username: str, zabbix_password: str):
         self._dns = DNS(cloudflare_api_key)
         self._monitoring = Monitoring(zabbix_url, zabbix_username, zabbix_password)
