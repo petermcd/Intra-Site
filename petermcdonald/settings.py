@@ -24,7 +24,7 @@ SECRET_KEY = 'lo=0(fuefb7mc0kyg!%b+32q-ew=0-)@r%4ed#de78+)ao^#$@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["intra.devfaq.com"]
+ALLOWED_HOSTS = ['intra.devfaq.com', '127.0.0.1']
 
 
 # Application definition
