@@ -24,6 +24,14 @@ Links too services that I run on the local network
 
 This is the API key for the Cloudflare API. The user requires read access on the zone and read/write on the DNS.
 
+### GOOGLE_BOOKS_API_KEY
+
+The API key for the Google Books API
+
+### GOOGLE_BOOKS_API_URL
+
+The base URL for the Google Books API
+
 ### ZABBIX_URL
 
 The full URL that Zabbix monitoring platform is hosted on
