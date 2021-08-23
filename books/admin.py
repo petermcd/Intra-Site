@@ -4,7 +4,7 @@ from books.models import Author, Book
 
 
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'publisher', 'isbn10', 'read')
+    list_display = ('title', 'subtitle', 'publisher', 'isbn10', 'read')
     ordering = ('title',)
 
     class Media:
