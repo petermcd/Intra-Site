@@ -19,6 +19,7 @@ class Book(models.Model):
     description = models.CharField(max_length=5000)
     pages = models.IntegerField()
     thumbnail = models.URLField(max_length=255, default=None, blank=True)
+    ebook_url = models.URLField(max_length=400, default=None, blank=True)
     read = models.BooleanField(default=False)
 
     def __str__(self) -> str:
