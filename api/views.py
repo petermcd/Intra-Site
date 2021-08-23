@@ -2,10 +2,11 @@ from django.http import HttpResponse
 
 from json import dumps, loads
 import requests
+from network_topology.models import Settings
 from books.models import Author
 
-API_KEY = 'AIzaSyAemadkCuLLWhPAI7jBgLQIOC56yGjSNXU'
-URL = 'https://www.googleapis.com/books/v1/volumes?'
+API_KEY = Settings.objects.filter(name__exact='GOOGLE_BOOKS_API_KEY')[0].value
+URL = Settings.objects.filter(name__exact='GOOGLE_BOOKS_API_URL')[0].value
 
 
 def get_book_details(request, search_type: str, search: str):
