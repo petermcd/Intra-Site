@@ -32,6 +32,18 @@ The API key for the Google Books API
 
 The base URL for the Google Books API
 
+### SNMP_PASSWORD
+
+Shared SNMP password that will be used by all devices
+
+### SNMP_USERNAME
+
+Shared SNMP username that will be used by all devices
+
+### ZABBIX_PASSWORD
+
+Password for the API user
+
 ### ZABBIX_URL
 
 The full URL that Zabbix monitoring platform is hosted on
@@ -40,17 +52,11 @@ The full URL that Zabbix monitoring platform is hosted on
 
 API user for Zabbix, this requires admin rights
 
-### ZABBIX_PASSWORD
+Running the following command will create the necessary keys:
 
-Password for the API user
-
-### SNMP_USERNAME
-
-Shared SNMP username that will be used by all devices
-
-### SNMP_PASSWORD
-
-Shared SNMP password that will be used by all devices
+```bash
+python manage.py loaddata settings
+```
 
 ## Zabbix Templates
 
