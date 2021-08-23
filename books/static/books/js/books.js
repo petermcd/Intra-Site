@@ -21,7 +21,6 @@ function isdn10_lookup(){
         ).fail(
             function(){
                     alert('fail called');
-                    alert('Lookup failed');
             });
 }
 
