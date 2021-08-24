@@ -1,4 +1,5 @@
 from django.views import generic
+
 from books.models import Book
 
 
@@ -19,4 +20,3 @@ class DetailView(generic.DetailView):
 
     def get_queryset(self):
         return Book.objects.all()
-

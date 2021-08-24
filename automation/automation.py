@@ -1,5 +1,6 @@
 from typing import Dict, List
 from urllib.parse import urlparse
+
 from .dns import DNS
 from .monitoring import Monitoring
 

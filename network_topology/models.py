@@ -1,7 +1,8 @@
 from django.db import models
-from automation.automation import Automation
 from django.db.models.signals import m2m_changed, post_delete, post_save
-from django.dispatch import receiver, Signal
+from django.dispatch import Signal, receiver
+
+from automation.automation import Automation
 
 
 class MonitoringGroup(models.Model):

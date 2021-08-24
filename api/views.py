@@ -1,9 +1,10 @@
+from json import dumps, loads
+
+import requests
 from django.http import HttpResponse
 
-from json import dumps, loads
-import requests
-from network_topology.models import Settings
 from books.models import Author
+from network_topology.models import Settings
 
 API_KEY = Settings.objects.filter(name__exact='GOOGLE_BOOKS_API_KEY')[0].value
 URL = Settings.objects.filter(name__exact='GOOGLE_BOOKS_API_URL')[0].value

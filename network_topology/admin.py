@@ -1,16 +1,7 @@
 from django.contrib import admin
 
-from .models import (
-    MonitoringGroup,
-    ConnectionMethod,
-    Device,
-    DeviceCategory,
-    DeviceType,
-    IP,
-    MonitoringTemplate,
-    Settings,
-    Site
-)
+from .models import (IP, ConnectionMethod, Device, DeviceCategory, DeviceType,
+                     MonitoringGroup, MonitoringTemplate, Settings, Site)
 
 
 class MonitoringGroupsAdmin(admin.ModelAdmin):
