@@ -1,0 +1,58 @@
+[
+  {
+    "model": "network_topology.Settings",
+    "fields": {
+      "name": "CLOUDFLARE_API_KEY",
+      "value": "NOT SET"
+    }
+  },
+  {
+    "model": "network_topology.Settings",
+    "fields": {
+      "name": "GOOGLE_BOOKS_API_KEY",
+      "value": "NOT SET"
+    }
+  },
+  {
+    "model": "network_topology.Settings",
+    "fields": {
+      "name": "GOOGLE_BOOKS_API_URL",
+      "value": "https://www.googleapis.com/books/v1/volumes?"
+    }
+  },
+  {
+    "model": "network_topology.Settings",
+    "fields": {
+      "name": "SNMP_PASSWORD",
+      "value": "NOT SET"
+    }
+  },
+  {
+    "model": "network_topology.Settings",
+    "fields": {
+      "name": "SNMP_USERNAME",
+      "value": "NOT SET"
+    }
+  },
+  {
+    "model": "network_topology.Settings",
+    "fields": {
+      "name": "ZABBIX_PASSWORD",
+      "value": "NOT SET"
+    }
+  },
+  {
+    "model": "network_topology.Settings",
+    "fields": {
+      "name": "ZABBIX_URL",
+      "value": "NOT SET"
+    }
+  },
+  {
+    "model": "network_topology.Settings",
+    "fields": {
+      "name": "ZABBIX_USERNAME",
+      "value": "NOT SET"
+    }
+  }
+]

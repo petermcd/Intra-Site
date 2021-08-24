@@ -9,12 +9,20 @@ class MonitoringGroup(models.Model):
     name = models.CharField(max_length=50)
     group_id = models.IntegerField()
 
+    class Meta:
+        verbose_name = 'Monitoring Group'
+        verbose_name_plural = 'Monitoring Groups'
+
     def __str__(self) -> str:
         return self.name
 
 
 class ConnectionMethod(models.Model):
     name = models.CharField(max_length=20)
+
+    class Meta:
+        verbose_name = 'Connection Method'
+        verbose_name_plural = 'Connection Methods'
 
     def __str__(self) -> str:
         return str(self.name)
@@ -24,6 +32,10 @@ class MonitoringTemplate(models.Model):
     name = models.CharField(max_length=255)
     template_id = models.IntegerField()
 
+    class Meta:
+        verbose_name = 'Monitoring Template'
+        verbose_name_plural = 'Monitoring Templates'
+
     def __str__(self):
         return self.name
 
@@ -31,12 +43,20 @@ class MonitoringTemplate(models.Model):
 class IP(models.Model):
     ip = models.GenericIPAddressField(unique=True)
 
+    class Meta:
+        verbose_name = 'IP'
+        verbose_name_plural = 'IPs'
+
     def __str__(self) -> str:
         return str(self.ip)
 
 
 class DeviceCategory(models.Model):
     name = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = 'Device Category'
+        verbose_name_plural = 'Device Categories'
 
     def __str__(self) -> str:
         return self.name
@@ -48,6 +68,10 @@ class DeviceType(models.Model):
     description = models.CharField(max_length=500)
     category = models.ForeignKey(DeviceCategory, on_delete=models.RESTRICT)
     monitoring_templates = models.ManyToManyField(MonitoringTemplate, blank=True)
+
+    class Meta:
+        verbose_name = 'Device Type'
+        verbose_name_plural = 'Device Types'
 
     def __str__(self) -> str:
         return f"{self.manufacturer} - {self.model}"
@@ -73,6 +97,10 @@ class Device(models.Model):
 class Settings(models.Model):
     name = models.CharField(max_length=255)
     value = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name = 'Settings'
+        verbose_name_plural = 'Settings'
 
     def __str__(self):
         return self.name

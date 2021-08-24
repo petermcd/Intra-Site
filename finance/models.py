@@ -8,6 +8,10 @@ class Currency(models.Model):
     shortname = models.CharField('Shortname', max_length=3)
     symbol = models.CharField('Symbol', max_length=1)
 
+    class Meta:
+        verbose_name = 'Currency'
+        verbose_name_plural = 'Currencies'
+
     def __str__(self) -> str:
         return self.shortname
 
@@ -16,6 +20,10 @@ class Company(models.Model):
 
     name = models.CharField('Company', max_length=30)
     url = models.URLField('Website', max_length=255)
+
+    class Meta:
+        verbose_name = 'Company'
+        verbose_name_plural = 'Companies'
 
     def __str__(self):
         return self.name
