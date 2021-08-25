@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Bill, Company, Currency, Debt
+from .models import Bill, Company, Debt
 
 
 class BillAdmin(admin.ModelAdmin):
@@ -18,12 +18,6 @@ class CompanyAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
 
-class CurrencyAdmin(admin.ModelAdmin):
-    list_display = ('shortname', 'symbol')
-    ordering = ('shortname',)
-
-
-admin.site.register(Currency, CurrencyAdmin)
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(Bill, BillAdmin)
 admin.site.register(Debt, DebtAdmin)

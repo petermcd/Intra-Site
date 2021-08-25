@@ -23,7 +23,6 @@ def get_book_details(request, search_type: str, search: str):
 
     content = loads(res.content)
     if 'items' not in content or len(content['items']) == 0:
-        print('reached')
         response = {
             'success': True,
             'records': 0
@@ -40,13 +39,12 @@ def get_book_details(request, search_type: str, search: str):
             if 'subtitle' in item_details:
                 record['subtitle'] = item_details['subtitle']
             for author in item_details['authors']:
-                print(author)
                 author_res = Author.objects.filter(name__exact=author)
                 if len(author_res) == 0:
                     new_author = Author(name=author)
                     new_author.save()
                     author_dict = {
-                        'id': new_author.pk,
+                        'id': new_author.id,
                         'name': author,
                     }
                     record['authors'].append(author_dict)

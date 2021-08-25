@@ -3,19 +3,6 @@ from datetime import date, datetime
 from django.db import models
 
 
-class Currency(models.Model):
-    name = models.CharField('Name', max_length=50)
-    shortname = models.CharField('Shortname', max_length=3)
-    symbol = models.CharField('Symbol', max_length=1)
-
-    class Meta:
-        verbose_name = 'Currency'
-        verbose_name_plural = 'Currencies'
-
-    def __str__(self) -> str:
-        return self.shortname
-
-
 class Company(models.Model):
 
     name = models.CharField('Company', max_length=30)
@@ -31,7 +18,6 @@ class Company(models.Model):
 
 class Bill(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     payment_amount = models.IntegerField()
     payment_day = models.IntegerField()
     description = models.CharField(max_length=500)
@@ -54,7 +40,6 @@ class Bill(models.Model):
 
 class Debt(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     start_date = models.DateField()
     starting_balance = models.IntegerField()
     current_balance = models.IntegerField()

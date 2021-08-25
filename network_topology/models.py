@@ -166,6 +166,20 @@ def device_update_dns(sender, instance, **kwargs):
     automation.update_dns(tasks)
 
 
+@receiver(post_delete, sender=Site)
+def site_delete_dns(sender, instance, **kwargs):
+    """
+    Trigger for Site to delete the DNS if required
+
+    :param sender: Parent object
+    :param instance: Instance object being deleted
+    :param kwargs: Not used but required by the API
+    """
+    automation = instantiate_automation()
+    hostname = automation.get_hostname(instance.url)
+    automation.delete_dns([hostname])
+
+
 @receiver(post_save, sender=Site)
 @receiver(post_delete, sender=Site)
 def site_update_monitoring(sender, instance, **kwargs):
