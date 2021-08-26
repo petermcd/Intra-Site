@@ -5,6 +5,22 @@ from django.dispatch import Signal, receiver
 from automation.automation import Automation
 
 
+class Registrar(models.Model):
+    name = models.CharField(max_length=255)
+    use_api = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
+
+class Domain(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True)
+    registrar = models.ForeignKey(Registrar, on_delete=models.RESTRICT)
+
+    def __str__(self):
+        return self.name
+
+
 class MonitoringGroup(models.Model):
     name = models.CharField(max_length=50)
     group_id = models.IntegerField()
@@ -89,6 +105,8 @@ class Device(models.Model):
     connection_method = models.ForeignKey(ConnectionMethod, on_delete=models.RESTRICT, blank=True, null=True)
     monitoring_groups = models.ManyToManyField(MonitoringGroup, blank=False)
     monitoring_templates = models.ManyToManyField(MonitoringTemplate, blank=True)
+    subdomain = models.CharField(max_length=50, blank=True, null=True)
+    domain = models.ForeignKey(Domain, blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.name
@@ -110,38 +128,32 @@ class Site(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=1000)
     hosted_on = models.ForeignKey(Device, on_delete=models.RESTRICT, blank=True, null=True)
-    url = models.URLField(null=True, blank=True)
+    https = models.BooleanField(default=False)
+    use_ip = models.BooleanField(default=False)
+    path = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self) -> str:
         return self.name
 
     @property
     def corrected_url(self) -> str:
-        url = self.url
-        if self.url and 'IP-ADDRESS.com' in self.url:
-            url = url.replace('IP-ADDRESS.com', str(self.hosted_on.ip))
-        return url
+        schema = 'http://'
+        if self.https:
+            schema = 'https://'
+        if self.use_ip or not self.hosted_on.domain:
+            domain = self.hosted_on.ip
+        else:
+            domain = ''
+            if self.hosted_on.subdomain:
+                domain = self.hosted_on.subdomain
+            domain = f'{domain}.{self.hosted_on.domain}'
+        return f'{schema}{domain}{self.path}'
 
 
 monitoring_update = Signal()
-dns_update = Signal()
-
-
-@receiver(post_save, sender=Site)
-def site_update_dns(sender, instance, **kwargs):
-    """
-    Trigger for Site to update the DNS if required
-
-    :param sender: Parent object
-    :param instance: Instance object being updated
-    :param kwargs: Not used but required by the API
-    """
-    device = instance.hosted_on
-    dns_update.send(sender=Device, instance=device)
 
 
 @receiver(post_save, sender=Device)
-@receiver(dns_update)
 def device_update_dns(sender, instance, **kwargs):
     """
     Trigger for Device so that the site DNS can update if IP changes
@@ -150,24 +162,19 @@ def device_update_dns(sender, instance, **kwargs):
     :param instance: Instance object being updated
     :param kwargs: Not used but required by the API
     """
-    sites = Site.objects.filter(hosted_on=instance)
-    if len(sites) == 0:
+    hostname = ''
+    if not instance.domain.name:
         return
+    if not instance.domain.registrar.use_api:
+        return
+    if instance.subdomain:
+        hostname = instance.subdomain
+    hostname = f'{hostname}.{instance.domain.name}'
     automation = instantiate_automation()
-    hosts = []
-    tasks = []
-    for site in sites:
-        hostname = automation.get_hostname(site.url)
-        if hostname not in hosts:
-            hosts.append(hostname)
-            tasks.append({
-                'name': automation.get_hostname(site.url),
-                'ip': str(instance.ip)
-            })
-    automation.update_dns(tasks)
+    automation.update_dns(hostname=hostname, ip=instance.ip.ip, registrar=instance.domain.registrar.name)
 
 
-@receiver(post_delete, sender=Site)
+@receiver(post_delete, sender=Device)
 def site_delete_dns(sender, instance, **kwargs):
     """
     Trigger for Site to delete the DNS if required
@@ -176,9 +183,14 @@ def site_delete_dns(sender, instance, **kwargs):
     :param instance: Instance object being deleted
     :param kwargs: Not used but required by the API
     """
+    hostname = ''
+    if not instance.domain.name:
+        return
+    if instance.subdomain:
+        hostname = instance.subdomain
+    hostname = f'{hostname}.{instance.domain.name}'
     automation = instantiate_automation()
-    hostname = automation.get_hostname(instance.url)
-    automation.delete_dns([hostname])
+    automation.delete_dns(hostname, registrar=instance.domain.registrar.name)
 
 
 @receiver(post_save, sender=Site)

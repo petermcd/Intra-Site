@@ -1,12 +1,8 @@
 from django.contrib import admin
 
 from .models import (IP, ConnectionMethod, Device, DeviceCategory, DeviceType,
-                     MonitoringGroup, MonitoringTemplate, Settings, Site)
-
-
-class MonitoringGroupsAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group_id')
-    ordering = ('name',)
+                     Domain, MonitoringGroup, MonitoringTemplate, Registrar,
+                     Settings, Site)
 
 
 class ConnectionMethodAdmin(admin.ModelAdmin):
@@ -27,13 +23,28 @@ class DeviceTypeAdmin(admin.ModelAdmin):
     ordering = ('manufacturer', 'model')
 
 
+class DomainAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    ordering = ('name',)
+
+
 class IPAdmin(admin.ModelAdmin):
     ordering = ('ip',)
+
+
+class MonitoringGroupsAdmin(admin.ModelAdmin):
+    list_display = ('name', 'group_id')
+    ordering = ('name',)
 
 
 class MonitoringTemplateAdmin(admin.ModelAdmin):
     ordering = ('name',)
     list_display = ('name', 'template_id')
+
+
+class RegistrarAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    ordering = ('name',)
 
 
 class SettingsAdmin(admin.ModelAdmin):
@@ -42,16 +53,18 @@ class SettingsAdmin(admin.ModelAdmin):
 
 
 class SiteAdmin(admin.ModelAdmin):
-    list_display = ('name', 'url')
+    list_display = ('name',)
     ordering = ('name',)
 
 
-admin.site.register(Settings, SettingsAdmin)
-admin.site.register(MonitoringGroup, MonitoringGroupsAdmin)
 admin.site.register(ConnectionMethod, ConnectionMethodAdmin)
 admin.site.register(Device, DeviceAdmin)
 admin.site.register(DeviceCategory, DeviceCategoryAdmin)
 admin.site.register(DeviceType, DeviceTypeAdmin)
+admin.site.register(Domain, DomainAdmin)
 admin.site.register(IP, IPAdmin)
+admin.site.register(MonitoringGroup, MonitoringGroupsAdmin)
 admin.site.register(MonitoringTemplate, MonitoringTemplateAdmin)
+admin.site.register(Registrar, RegistrarAdmin)
+admin.site.register(Settings, SettingsAdmin)
 admin.site.register(Site, SiteAdmin)

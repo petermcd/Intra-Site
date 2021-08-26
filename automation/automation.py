@@ -1,4 +1,3 @@
-from typing import Dict, List
 from urllib.parse import urlparse
 
 from .dns import DNS
@@ -16,13 +15,11 @@ class Automation:
             cls.instance = super(Automation, cls).__new__(cls)
         return cls.instance
 
-    def update_dns(self, required_dns: List[Dict[str, str]]):
-        for item in required_dns:
-            self._dns.add_record(item['name'], item['ip'])
+    def update_dns(self, hostname: str, ip: str, registrar: str):
+        self._dns.add_record(hostname=hostname, ip=ip, registrar=registrar)
 
-    def delete_dns(self, required_dns: List[str]):
-        for item in required_dns:
-            self._dns.delete_record(item)
+    def delete_dns(self, hostname: str, registrar: str):
+        self._dns.delete_record(hostname=hostname, registrar=registrar)
 
     def create_device_monitoring(self, device_details):
         self._monitoring.create_device(device_details)
