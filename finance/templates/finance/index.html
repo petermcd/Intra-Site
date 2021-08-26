@@ -17,7 +17,7 @@
                     {{ payment.company.name }}
                 {% endif %}</div>
                 <div class="payment_date col-3">{{ payment.payment_day }}</div>
-                <div class="monthly_payment col-3">{{ payment.currency.symbol }}{{ payment.payment_amount_clean }}</div>
+                <div class="monthly_payment col-3">{{ payment.payment_amount_clean }}</div>
             </div>{% endfor %}
             <div class="row">
                 <div class="company col-6"></div>

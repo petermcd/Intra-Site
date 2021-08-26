@@ -52,17 +52,23 @@ class DNS:
             self._cf_domain[domain] = domain_details
         return self._cf_domain[domain]
 
-    def has_record(self, domain: str) -> bool:
+    def has_record(self, domain: str, ip: Optional[str] = None) -> bool:
         """
         Check to see if a domain currently has a specified dns record
 
         :param domain: Domain to check
+        :param ip: IP the record should match
 
-        :return: True if exists, False otherwise
+        :return: True if exists and IP match if specified
         """
         domain_details = self.split_domain(domain)
         records = self.get_record(domain_details['domain'])
-        return domain in records
+        if domain in records:
+            if not ip:
+                return True
+            elif records[domain]['content'] == ip:
+                return True
+        return False
 
     def add_record(self, dns_name: str, ip: str) -> None:
         """
@@ -75,7 +81,7 @@ class DNS:
         zone_id = self.get_zone(domain_details['domain'])
         if not zone_id:
             return
-        if self.has_record(dns_name):
+        if self.has_record(domain=dns_name, ip=ip):
             return
         payload = {
             'name': domain_details['subdomain'],
