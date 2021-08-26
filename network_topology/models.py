@@ -141,6 +141,7 @@ def site_update_dns(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=Device)
+@receiver(dns_update)
 def device_update_dns(sender, instance, **kwargs):
     """
     Trigger for Device so that the site DNS can update if IP changes

@@ -18,14 +18,11 @@ class Automation:
 
     def update_dns(self, required_dns: List[Dict[str, str]]):
         for item in required_dns:
-            if self._dns.has_record(item['name']):
-                continue
             self._dns.add_record(item['name'], item['ip'])
 
     def delete_dns(self, required_dns: List[str]):
         for item in required_dns:
-            if self._dns.has_record(item):
-                self._dns.delete_record(item)
+            self._dns.delete_record(item)
 
     def create_device_monitoring(self, device_details):
         self._monitoring.create_device(device_details)
