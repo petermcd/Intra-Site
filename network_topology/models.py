@@ -137,15 +137,11 @@ class Site(models.Model):
 
     @property
     def corrected_url(self) -> str:
-        schema = 'http://'
-        if self.https:
-            schema = 'https://'
+        schema = 'https://' if self.https else 'http://'
         if self.use_ip or not self.hosted_on.domain:
             domain = self.hosted_on.ip
         else:
-            domain = ''
-            if self.hosted_on.subdomain:
-                domain = self.hosted_on.subdomain
+            domain = self.hosted_on.subdomain or ''
             domain = f'{domain}.{self.hosted_on.domain}'
         return f'{schema}{domain}{self.path}'
 
@@ -162,13 +158,11 @@ def device_update_dns(sender, instance, **kwargs):
     :param instance: Instance object being updated
     :param kwargs: Not used but required by the API
     """
-    hostname = ''
     if not instance.domain:
         return
     if not instance.domain.registrar.use_api:
         return
-    if instance.subdomain:
-        hostname = instance.subdomain
+    hostname = instance.subdomain or ''
     hostname = f'{hostname}.{instance.domain.name}'
     automation = instantiate_automation()
     automation.update_dns(hostname=hostname, ip=instance.ip.ip, registrar=instance.domain.registrar.name)
@@ -183,11 +177,9 @@ def site_delete_dns(sender, instance, **kwargs):
     :param instance: Instance object being deleted
     :param kwargs: Not used but required by the API
     """
-    hostname = ''
     if not instance.domain:
         return
-    if instance.subdomain:
-        hostname = instance.subdomain
+    hostname = instance.subdomain or ''
     hostname = f'{hostname}.{instance.domain.name}'
     automation = instantiate_automation()
     automation.delete_dns(hostname, registrar=instance.domain.registrar.name)

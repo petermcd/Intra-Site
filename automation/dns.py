@@ -63,12 +63,7 @@ class DNS:
         """
         domain_details = self.split_domain(domain)
         records = self.get_record(domain_details['domain'])
-        if domain in records:
-            if not ip:
-                return True
-            elif records[domain]['content'] == ip:
-                return True
-        return False
+        return domain in records and (not ip or records[domain]['content'] == ip)
 
     def add_record(self, hostname: str, ip: str, registrar: str) -> None:
         """
