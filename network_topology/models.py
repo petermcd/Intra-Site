@@ -163,7 +163,7 @@ def device_update_dns(sender, instance, **kwargs):
     :param kwargs: Not used but required by the API
     """
     hostname = ''
-    if not instance.domain.name:
+    if not instance.domain:
         return
     if not instance.domain.registrar.use_api:
         return
@@ -184,7 +184,7 @@ def site_delete_dns(sender, instance, **kwargs):
     :param kwargs: Not used but required by the API
     """
     hostname = ''
-    if not instance.domain.name:
+    if not instance.domain:
         return
     if instance.subdomain:
         hostname = instance.subdomain
