@@ -18,6 +18,20 @@ Links too services that I run on the local network
 
 # Install Requirements
 
+## .env File
+
+A .env file is required in the root of the Django project with the following content.
+
+```bash
+DJANGO_SECRET_KEY=dummy
+DJANGO_DEBUG=0
+DJANGO_DATABASE_HOST=dummy
+DJANGO_DATABASE_PORT=3306
+DJANGO_DATABASE=dummy
+DJANGO_DATABASE_USER=dummy
+DJANGO_DATABASE_PASSWORD=dummy
+```
+
 ## Settings
 
 ### CLOUDFLARE_API_KEY
