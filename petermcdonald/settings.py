@@ -1,5 +1,10 @@
+import os
 import sys
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -8,16 +13,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'lo=0(fuefb7mc0kyg!%b+32q-ew=0-)@r%4ed#de78+)ao^#$@'
+SECRET_KEY = str(os.getenv('DJANGO_SECRET_KEY'))
 
-database = 'intranet'
 DEBUG = False
 ALLOWED_HOSTS = ['intra.devfaq.com']
 
-if sys.platform == 'win32':
-    database = 'intranet-test'
+if int(os.getenv('DJANGO_DEBUG', 0)) == 1:
     DEBUG = True
-    ALLOWED_HOSTS = ['127.0.0.1']
+    ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -71,11 +74,11 @@ WSGI_APPLICATION = 'petermcdonald.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': database,
-        'USER': 'intranet',
-        'PASSWORD': 'UhRvm856V',
-        'HOST': 'nas.devfaq.com',
-        'PORT': '3306',
+        'HOST': str(os.getenv('DJANGO_DATABASE_HOST')),
+        'PORT': str(os.getenv('DJANGO_DATABASE_PORT')),
+        'NAME': str(os.getenv('DJANGO_DATABASE')),
+        'USER': str(os.getenv('DJANGO_DATABASE_USER')),
+        'PASSWORD': str(os.getenv('DJANGO_DATABASE_PASSWORD')),
     }
 }
 
