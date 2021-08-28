@@ -12,6 +12,14 @@
         {% if event.where %}Where:<br />{{ event.where }}<br /><br />{% endif %}
         Details:<br />{{ event.description }}
     </section>
+    {% if event.where %}<br /><iframe
+        width="800"
+        height="600"
+        style="border:0"
+        loading="lazy"
+        allowfullscreen
+        src="https://www.google.com/maps/embed/v1/place?key={{ api_key }}&q={{ event.where|urlencode }}">
+    </iframe>{% endif %}
 {% endif %}
 </main>
 {% include "footer.html" %}
