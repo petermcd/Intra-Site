@@ -1,7 +1,6 @@
 from django.contrib import admin
-from events.models import Event
 
-from django.utils.timezone import now
+from events.models import Event
 
 
 class EventAdmin(admin.ModelAdmin):

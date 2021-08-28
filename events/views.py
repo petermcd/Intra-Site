@@ -1,5 +1,5 @@
-from django.views import generic
 from django.utils.timezone import now
+from django.views import generic
 
 from events.models import Event
 
