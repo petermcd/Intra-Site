@@ -7,3 +7,4 @@ class Event(models.Model):
     starting = models.DateTimeField(blank=True, null=True)
     ending = models.DateTimeField(blank=True, null=True)
     description = models.CharField(max_length=255)
+    ticket_file = models.URLField(blank=True, null=True)
