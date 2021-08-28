@@ -9,16 +9,16 @@
     <section id="event_details">
         Starts: {{ event.starting|date:'H:i d-m-Y' }}{% if event.ending %}{% endif %}
         {% if event.ending %}<br />Ends: {{ event.ending|date:'H:i d-m-Y' }}{% endif %}<br /><br />
-        {% if event.where %}Where:<br />{{ event.where }}<br /><br />{% endif %}
+        {% if event.venue %}Where:<br /><pre>{{ event.venue.print }}</pre>{% endif %}
         Details:<br />{{ event.description }}
     </section>
-    {% if event.where %}<br /><iframe
+    {% if event.venue %}<br /><iframe
         width="800"
         height="600"
         style="border:0"
         loading="lazy"
         allowfullscreen
-        src="https://www.google.com/maps/embed/v1/place?key={{ api_key }}&q={{ event.where|urlencode }}">
+        src="https://www.google.com/maps/embed/v1/place?key={{ api_key }}&q={{ event.venue|urlencode }}">
     </iframe>{% endif %}
 {% endif %}
 </main>
