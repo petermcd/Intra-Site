@@ -1,8 +1,8 @@
 from django.urls import path
 
-from books import views
+from events import views
 
-app_name = 'books'
+app_name = 'events'
 urlpatterns = [
     path('', views.IndexView.as_view(), name="index"),
     path('<int:pk>/', views.DetailView.as_view(), name="details"),

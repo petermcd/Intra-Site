@@ -65,13 +65,13 @@ class DNS:
         records = self.get_record(domain_details['domain'])
         return domain in records and (not ip or records[domain]['content'] == ip)
 
-    def add_record(self, hostname: str, ip: str, registrar: str) -> None:
+    def add_record(self, hostname: str, ip: str, dns_provider: str) -> None:
         """
         Creates a DNS record if it does not already exist
 
         :param hostname: DNS Record to create
         :param ip: IP for DNS record to create
-        :param registrar: Domain registrar
+        :param dns_provider: DNS Provider
         """
         domain_details = self.split_domain(hostname)
         zone_id = self.get_zone(domain_details['domain'])
@@ -80,7 +80,7 @@ class DNS:
         if self.has_record(hostname, ip):
             return
         elif self.has_record(hostname):
-            self.delete_record(hostname=hostname, registrar=registrar)
+            self.delete_record(hostname=hostname, dns_provider=dns_provider)
         payload = {
             'name': domain_details['subdomain'],
             'type': 'A',
@@ -88,12 +88,12 @@ class DNS:
         }
         self._cf.zones.dns_records.post(zone_id, data=payload)
 
-    def delete_record(self, hostname: str, registrar: str) -> None:
+    def delete_record(self, hostname: str, dns_provider: str) -> None:
         """
         Deletes a given DNS record
 
         :param hostname: DNS name to be deleted
-        :param registrar: Domain registrar
+        :param dns_provider: DNS Provider
         """
         domain_details = self.split_domain(hostname)
         zone_id = self.get_zone(domain_details['domain'])
