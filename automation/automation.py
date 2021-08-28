@@ -15,11 +15,11 @@ class Automation:
             cls.instance = super(Automation, cls).__new__(cls)
         return cls.instance
 
-    def update_dns(self, hostname: str, ip: str, registrar: str):
-        self._dns.add_record(hostname=hostname, ip=ip, registrar=registrar)
+    def update_dns(self, hostname: str, ip: str, dns_provider: str):
+        self._dns.add_record(hostname=hostname, ip=ip, dns_provider=dns_provider)
 
-    def delete_dns(self, hostname: str, registrar: str):
-        self._dns.delete_record(hostname=hostname, registrar=registrar)
+    def delete_dns(self, hostname: str, dns_provider: str):
+        self._dns.delete_record(hostname=hostname, dns_provider=dns_provider)
 
     def create_device_monitoring(self, device_details):
         self._monitoring.create_device(device_details)

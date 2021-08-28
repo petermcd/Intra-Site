@@ -1,8 +1,8 @@
 from django.contrib import admin
 
 from .models import (IP, ConnectionMethod, Device, DeviceCategory, DeviceType,
-                     Domain, MonitoringGroup, MonitoringTemplate, Registrar,
-                     Settings, Site)
+                     DNSProvider, Domain, MonitoringGroup, MonitoringTemplate,
+                     Registrar, Settings, Site)
 
 
 class ConnectionMethodAdmin(admin.ModelAdmin):
@@ -21,6 +21,11 @@ class DeviceCategoryAdmin(admin.ModelAdmin):
 class DeviceTypeAdmin(admin.ModelAdmin):
     list_display = ('manufacturer', 'model', 'description', 'category')
     ordering = ('manufacturer', 'model')
+
+
+class DNSProviderAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    ordering = ('name',)
 
 
 class DomainAdmin(admin.ModelAdmin):
@@ -62,6 +67,7 @@ admin.site.register(Device, DeviceAdmin)
 admin.site.register(DeviceCategory, DeviceCategoryAdmin)
 admin.site.register(DeviceType, DeviceTypeAdmin)
 admin.site.register(Domain, DomainAdmin)
+admin.site.register(DNSProvider, DNSProviderAdmin)
 admin.site.register(IP, IPAdmin)
 admin.site.register(MonitoringGroup, MonitoringGroupsAdmin)
 admin.site.register(MonitoringTemplate, MonitoringTemplateAdmin)

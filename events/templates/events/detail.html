@@ -1,0 +1,17 @@
+{% include "header.html" %}
+<header xmlns="http://www.w3.org/1999/html">
+    <h1>{{ event.name }}</h1>
+</header>
+<main class="container">
+{% if error_message %}
+    <p><strong>{{ error_message }}</strong></p>
+{% else %}
+    <section id="event_details">
+        Starts: {{ event.starting|date:'H:i d-m-Y' }}{% if event.ending %}{% endif %}
+        {% if event.ending %}<br />Ends: {{ event.ending|date:'H:i d-m-Y' }}{% endif %}<br /><br />
+        {% if event.where %}Where:<br />{{ event.where }}<br /><br />{% endif %}
+        Details:<br />{{ event.description }}
+    </section>
+{% endif %}
+</main>
+{% include "footer.html" %}

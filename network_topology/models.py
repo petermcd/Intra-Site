@@ -13,9 +13,22 @@ class Registrar(models.Model):
         return self.name
 
 
+class DNSProvider(models.Model):
+    name = models.CharField(max_length=255)
+    use_api = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = 'DNS Provider'
+        verbose_name_plural = 'DNS Providers'
+
+    def __str__(self):
+        return self.name
+
+
 class Domain(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     registrar = models.ForeignKey(Registrar, on_delete=models.RESTRICT)
+    dns_provider = models.ForeignKey(DNSProvider, on_delete=models.RESTRICT)
 
     def __str__(self):
         return self.name
@@ -160,12 +173,12 @@ def device_update_dns(sender, instance, **kwargs):
     """
     if not instance.domain:
         return
-    if not instance.domain.registrar.use_api:
+    if not instance.domain.dns_provider.use_api:
         return
     hostname = instance.subdomain or ''
     hostname = f'{hostname}.{instance.domain.name}'
     automation = instantiate_automation()
-    automation.update_dns(hostname=hostname, ip=instance.ip.ip, registrar=instance.domain.registrar.name)
+    automation.update_dns(hostname=hostname, ip=instance.ip.ip, dns_provider=instance.domain.dns_provider.name)
 
 
 @receiver(post_delete, sender=Device)
@@ -182,7 +195,7 @@ def site_delete_dns(sender, instance, **kwargs):
     hostname = instance.subdomain or ''
     hostname = f'{hostname}.{instance.domain.name}'
     automation = instantiate_automation()
-    automation.delete_dns(hostname, registrar=instance.domain.registrar.name)
+    automation.delete_dns(hostname, dns_provider=instance.domain.dns_provider.name)
 
 
 @receiver(post_save, sender=Site)
@@ -267,7 +280,7 @@ def device_update_monitoring(sender, instance, **kwargs):
 
 @receiver(m2m_changed, sender=Device.monitoring_groups.through)
 @receiver(m2m_changed, sender=Device.monitoring_templates.through)
-def device_update_monitoring(sender, instance, **kwargs):
+def device_update_monitoring_groups(sender, instance, **kwargs):
     monitoring_update.send(sender=Device, instance=instance)
 
 
