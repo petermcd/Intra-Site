@@ -22,11 +22,19 @@ class Monitoring:
             templates=templates,
             groups=groups,
             inventory_mode=1,
-            interfaces=device_details['interfaces']
+            interfaces=device_details['interfaces'],
         )
 
     def update_device(self, device_details):
         device = self._fetch_device(device_details)
+        interfaces = self._fetch_device_interfaces(device)
+        interface_ids = [inter['type'] for inter in interfaces]
+        missing_interfaces = [
+            inter
+            for inter in device_details['interfaces']
+            if str(inter['type']) not in interface_ids
+        ]
+        self._add_device_interface(device, missing_interfaces)
         if not device:
             self.create_device(device_details)
             return
@@ -34,12 +42,19 @@ class Monitoring:
         groups = self._format_groups(device_details)
         self._zabbix.host.update(
             hostid=device['hostid'],
-            name=device_details['name'],
             hostname=device_details['hostname'],
+            name=device_details['name'],
             templates=required_templates,
+            groups=groups,
             templates_clear=templates_to_clear,
-            groups=groups
         )
+
+    def _add_device_interface(self, device, interfaces):
+        for interface in interfaces:
+            self._zabbix.hostinterface.create(
+                hostid=device['hostid'],
+                **interface,
+            )
 
     def _fetch_device(self, device):
         found_device = self._zabbix.host.get(
@@ -50,6 +65,14 @@ class Monitoring:
         if len(found_device) == 0:
             return None
         return found_device[0]
+
+    def _fetch_device_interfaces(self, device):
+        found_interface = self._zabbix.hostinterface.get(
+            hostids=device['hostid'],
+        )
+        if len(found_interface) == 0:
+            return None
+        return found_interface
 
     @staticmethod
     def _format_templates(new_device_details, device=None):
