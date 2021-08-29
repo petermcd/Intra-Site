@@ -5,7 +5,7 @@
     </header>
     <main class="container">{% if finance_payments_list %}
         <section id="payment_list">
-            <div class="row" id="payment_header">
+            <div class="row" id="row_header">
                 <div class="company col-6">Company</div>
                 <div class="payment_date col-3">Payment Date</div>
                 <div class="monthly_payment col-3">Payment Amount</div>
@@ -41,6 +41,6 @@
         <p>No lenders are available.</p>
     {% endif %}
     </main>
-<script src="{% static 'js/chart.js' %}"></script>
-<script src="{% static 'finance/js/payment-chart.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+    <script src="{% static 'finance/js/payment-chart.js' %}"></script>
 {% include "footer.html" %}

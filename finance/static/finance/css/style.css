@@ -14,41 +14,11 @@ main{
 header{
     text-align: center;
 }
-#payment_header{
+#row_header{
     font-weight: bold;
     text-align: center;
 }
-.company{
-    border-width: 1px;
-    border-color: lightgrey;
-    border-style: solid;
-}
-.payment_date{
-    border-width: 1px;
-    border-color: lightgrey;
-    border-style: solid;
-}
-.monthly_payment{
-    border-width: 1px;
-    border-color: lightgrey;
-    border-style: solid;
-}
-.balance{
-    border-width: 1px;
-    border-color: lightgrey;
-    border-style: solid;
-}
-.payment{
-    border-width: 1px;
-    border-color: lightgrey;
-    border-style: solid;
-}
-.interest{
-    border-width: 1px;
-    border-color: lightgrey;
-    border-style: solid;
-}
-.remaining_balance{
+.row div{
     border-width: 1px;
     border-color: lightgrey;
     border-style: solid;
@@ -62,13 +32,10 @@ header{
 }
 #graph{
     height: calc(100vh - 200px);
+    display: inline-block;
+    background-color: black;
 }
-
 aside {
     float: left;
     overflow: auto;
-}
-#graph {
-    display: inline-block;
-    background-color: black;
 }

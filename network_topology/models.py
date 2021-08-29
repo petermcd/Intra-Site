@@ -150,13 +150,13 @@ class Site(models.Model):
 
     @property
     def corrected_url(self) -> str:
-        schema = 'https://' if self.https else 'http://'
+        schema = 'https' if self.https else 'http'
         if self.use_ip or not self.hosted_on.domain:
             domain = self.hosted_on.ip
         else:
             domain = self.hosted_on.subdomain or ''
             domain = f'{domain}.{self.hosted_on.domain}'
-        return f'{schema}{domain}{self.path}'
+        return f'{schema}://{domain}{self.path}'
 
 
 monitoring_update = Signal()

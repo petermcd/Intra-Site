@@ -7,19 +7,25 @@
     <p><strong>{{ error_message }}</strong></p>
 {% else %}
     <section id="event_details">
-        Starts: {{ event.starting|date:'H:i d-m-Y' }}{% if event.ending %}{% endif %}
-        {% if event.ending %}<br />Ends: {{ event.ending|date:'H:i d-m-Y' }}{% endif %}<br /><br />
-        {% if event.venue %}Where:<br /><pre>{{ event.venue.print }}</pre>{% endif %}
-        Details:<br />{{ event.description }}
+        <div class="row">
+            <div class="details col-6">
+                Starts: {{ event.starting|date:'H:i d-m-Y' }}{% if event.ending %}{% endif %}
+                {% if event.ending %}<br />Ends: {{ event.ending|date:'H:i d-m-Y' }}{% endif %}<br /><br />
+                {% if event.venue %}Where:<br /><pre>{{ event.venue.print }}</pre>{% endif %}
+                Details:<br />{{ event.description }}
+            </div>
+            <aside class="col-6">
+                {% if event.venue %}<iframe
+                    class="col-12"
+                    height="600"
+                    style="border:0"
+                    loading="lazy"
+                    allowfullscreen
+                    src="https://www.google.com/maps/embed/v1/place?key={{ api_key }}&q={{ event.venue|urlencode }}">
+                </iframe>{% endif %}
+            </aside>
+        </div>
     </section>
-    {% if event.venue %}<br /><iframe
-        width="800"
-        height="600"
-        style="border:0"
-        loading="lazy"
-        allowfullscreen
-        src="https://www.google.com/maps/embed/v1/place?key={{ api_key }}&q={{ event.venue|urlencode }}">
-    </iframe>{% endif %}
 {% endif %}
 </main>
 {% include "footer.html" %}
