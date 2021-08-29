@@ -1,6 +1,7 @@
 from datetime import date, datetime
 
 from django.db import models
+from django.utils.timezone import now
 
 
 class Company(models.Model):
@@ -117,7 +118,8 @@ class Payments:
     @staticmethod
     def monthly_payments():
         payments = [bill for bill in Bill.objects.all()]
-        for debt in Debt.objects.all():
+        date = now()
+        for debt in Debt.objects.filter(current_balance__gt=0, payment_amount__gt=0, start_date__lte=date):
             payments.append(debt)
         payments.sort(key=Payments._sort)
         return payments
