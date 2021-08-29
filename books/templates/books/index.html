@@ -5,13 +5,13 @@
     </header>
     <main class="container">
         <section id="book_list">
-            <div class="row" id="book_header">
+            <div class="row" id="row_header">
                 <div class="title col-6">Title</div>
-                <div class="authors col-3">Authors</div>
+                <div class="authors col-6">Authors</div>
             </div>{% for book in book_list %}
             <div class="row">
                 <div class="title col-6"><a href='/books/{{ book.id }}'>{{ book.title }}</a></div>
-                <div class="authors col-3">{% for author in book.authors.all %} {{ author.name }} {% if forloop.last %}<br />{% endif %} {% endfor %}</div>
+                <div class="authors col-6"><ul>{% for author in book.authors.all %}<li>{{ author.name }}</li>{% endfor %}</ul></div>
             </div>{% endfor %}
         </section>
     </main>

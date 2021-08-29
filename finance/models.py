@@ -86,9 +86,9 @@ class Debt(models.Model):
         monthly_payments = self.payment_amount
 
         today = date.today()
-        next_payment = datetime(today.year, today.month, today.day)
+        next_payment = datetime(today.year, today.month, self.payment_day)
         if today.day >= self.payment_day:
-            next_payment = add_month(next_payment)
+            next_payment = add_month(self.payment_day, next_payment)
         while current_balance > 0:
             if current_balance < monthly_payments:
                 monthly_payments = current_balance
@@ -105,7 +105,7 @@ class Debt(models.Model):
             payment['interest'] = format_money(interest)
             payment['remaining_balance'] = format_money(current_balance)
             payments.append(payment)
-            next_payment = add_month(next_payment)
+            next_payment = add_month(self.payment_day, next_payment)
         return payments
 
     @staticmethod
@@ -131,11 +131,15 @@ def format_money(value: int) -> str:
     return f'{value / 100:.2f}'
 
 
-def add_month(payment_date):
-    day = payment_date.day
+def add_month(payment_day, payment_date):
+    max_days = [
+        0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+    ]
+    day = payment_day
     month = payment_date.month + 1
     year = payment_date.year
     if month > 12:
         month = 1
         year += 1
+    day = min(day, max_days[month])
     return datetime(year, month, day)
