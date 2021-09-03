@@ -2,7 +2,7 @@ from datetime import date, datetime
 
 from django.db import models
 from django.db.models.signals import post_save
-from django.dispatch import Signal, receiver
+from django.dispatch import receiver
 from django.utils.timezone import now
 
 
@@ -167,4 +167,3 @@ def investment_update_history(sender, instance, **kwargs):
     history_item.investment = instance
     history_item.value = instance.value
     history_item.save()
-
