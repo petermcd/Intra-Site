@@ -121,11 +121,19 @@ class Investment(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     value = models.IntegerField()
 
+    @property
+    def value_clean(self) -> str:
+        return format_money(self.value)
+
 
 class InvestmentHistory(models.Model):
     investment = models.ForeignKey(Investment, on_delete=models.CASCADE)
     value = models.IntegerField()
     at = models.DateField(auto_now_add=True)
+
+    @property
+    def value_clean(self) -> str:
+        return format_money(self.value)
 
 
 class Payments:

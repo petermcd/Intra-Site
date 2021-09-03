@@ -19,8 +19,8 @@ class DebtAdmin(admin.ModelAdmin):
 
 
 class InvestmentAdmin(admin.ModelAdmin):
-    list_display = ('company', 'name', 'value',)
-    ordering = ('company', 'name',)
+    list_display = ('name', 'company', 'value_clean',)
+    ordering = ('name', 'company',)
 
 
 admin.site.register(Bill, BillAdmin)
