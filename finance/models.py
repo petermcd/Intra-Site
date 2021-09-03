@@ -1,6 +1,8 @@
 from datetime import date, datetime
 
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.timezone import now
 
 
@@ -114,6 +116,18 @@ class Debt(models.Model):
         return 'debt'
 
 
+class Investment(models.Model):
+    name = models.CharField(max_length=255)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    value = models.IntegerField()
+
+
+class InvestmentHistory(models.Model):
+    investment = models.ForeignKey(Investment, on_delete=models.CASCADE)
+    value = models.IntegerField()
+    at = models.DateField(auto_now_add=True)
+
+
 class Payments:
     @staticmethod
     def monthly_payments():
@@ -145,3 +159,11 @@ def add_month(payment_day, payment_date):
         year += 1
     day = min(day, max_days[month])
     return datetime(year, month, day)
+
+
+@receiver(post_save, sender=Investment)
+def investment_update_history(sender, instance, **kwargs):
+    history_item = InvestmentHistory()
+    history_item.investment = instance
+    history_item.value = instance.value
+    history_item.save()
