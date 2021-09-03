@@ -40,7 +40,7 @@ function populate_form(form_data){
         let $author_select = $('#id_authors');
         for (let author of form_data['authors']){
                 if (!option_exists(author['id'])){
-                        $author_select.append(new Option(author['name'].html(), author['id'].html()));
+                        $author_select.append(new Option(author['name'], author['id']));
                 }
                 $author_select.val(author['id']).change();
         }
