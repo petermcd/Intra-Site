@@ -6,9 +6,6 @@
     <h1>{{ debt.name }}</h1>
 </header>
 <main class="container">
-{% if error_message %}
-    <p><strong>{{ error_message }}</strong></p>
-{% else %}
     <section id="payment_list">
         <div class="row" id="payment_header">
             <div class="payment_date col-sm">Payment Date</div>
@@ -27,6 +24,5 @@
         </div>
     {% endfor %}
     </section>
-{% endif %}
 </main>
 {% endblock %}
