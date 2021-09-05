@@ -1,5 +1,8 @@
-{% include "header.html" %}
-<header xmlns="http://www.w3.org/1999/html">
+{% extends "main.html" %}
+{% load static %}
+{% block title %}{{ event.name }}{% endblock %}
+{% block content %}
+<header>
     <h1>{{ event.name }}</h1>
 </header>
 <main class="container">
@@ -28,4 +31,4 @@
     </section>
 {% endif %}
 </main>
-{% include "footer.html" %}
+{% endblock %}

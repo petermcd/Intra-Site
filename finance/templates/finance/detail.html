@@ -1,4 +1,7 @@
-{% include "header.html" %}
+{% extends "main.html" %}
+{% load static %}
+{% block title %}{{ debt.name }} - {{ debt.current_balance_clean }}{% endblock %}
+{% block content %}
 <header>
     <h1>{{ debt.name }}</h1>
 </header>
@@ -26,4 +29,4 @@
     </section>
 {% endif %}
 </main>
-{% include "footer.html" %}
+{% endblock %}

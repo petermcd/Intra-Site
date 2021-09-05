@@ -1,3 +1,5 @@
+// jshint esversion: 6
+
 const elem = $('#graph')[0];
 const topology_graph = ForceGraph3D()
     (elem)
@@ -22,13 +24,13 @@ const topology_graph = ForceGraph3D()
             node,
             3000
         );
-        output_details(node)
+        output_details(node);
     });
 
 function set_graph_size(){
     topology_graph
         .width(elem.offsetWidth)
-        .height(elem.offsetHeight)
+        .height(elem.offsetHeight);
 }
 function output_details(node){
     let elem = $('#graph-item-details');

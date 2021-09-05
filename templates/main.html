@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Intra Site</title>
+    <title>Intra Site - {% block title %}Home{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'finance/css/style.css' %}">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -32,3 +32,11 @@
             </ul>
         </div>
     </nav>
+    {% block content %}Wow content is missing{% endblock %}
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted">My Intra Site</span>
+        </div>
+    </footer>
+</body>
+</html>

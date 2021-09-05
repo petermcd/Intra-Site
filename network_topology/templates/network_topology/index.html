@@ -1,5 +1,7 @@
+{% extends "main.html" %}
 {% load static %}
-{% include "header.html" %}
+{% block title %}Network Topology{% endblock %}
+{% block content %}
     <header>
         <h1>Network Topology</h1>
     </header>
@@ -11,8 +13,8 @@
         </aside>
         <div class="col-12 col-md-10" id="graph"></div>
     </main>
-<script src="//unpkg.com/three"></script>
-<script src="//unpkg.com/three-spritetext"></script>
-<script src="//unpkg.com/3d-force-graph"></script>
-<script src="{% static 'network_topology/js/graph.js' %}"></script>
-{% include "footer.html" %}
+    <script src="//unpkg.com/three"></script>
+    <script src="//unpkg.com/three-spritetext"></script>
+    <script src="//unpkg.com/3d-force-graph"></script>
+    <script src="{% static 'network_topology/js/graph.js' %}"></script>
+{% endblock %}

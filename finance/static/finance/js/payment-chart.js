@@ -1,5 +1,7 @@
-let labels = []
-let values = []
+// jshint esversion: 6
+
+let labels = [];
+let values = [];
 
 function get_data()
 {
@@ -12,7 +14,7 @@ function get_data()
         }
     });
 }
-get_data()
+get_data();
 const ctx = document.getElementById('monthly_chart').getContext('2d');
 let myChart = new Chart(ctx, {
     type: 'pie',

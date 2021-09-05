@@ -1,5 +1,7 @@
+{% extends "main.html" %}
 {% load static %}
-{% include "header.html" %}
+{% block title %}Events{% endblock %}
+{% block content %}
     <header>
         <h1>Events</h1>
     </header>
@@ -11,10 +13,10 @@
                 <div class="where col-6">Where</div>
             </div>{% for event in event_list %}
             <div class="row">
-                <div class="title col-3"><a href='/events/{{ event.id }}'>{{ event.name }}</a></div>
+                <div class="title col-3"><a href='/events/{{ event.id }}/'>{{ event.name }}</a></div>
                 <div class="when col-3">{{ event.starting }}{% if event.ending %} - {{ event.ending }}{% endif %}</div>
                 <div class="where col-6">{% if event.venue %}{{ event.venue }}{% endif %}</div>
             </div>{% endfor %}
         </section>
     </main>
-{% include "footer.html" %}
+{% endblock %}

@@ -1,5 +1,7 @@
+{% extends "main.html" %}
 {% load static %}
-{% include "header.html" %}
+{% block title %}Book Collection{% endblock %}
+{% block content %}
     <header>
         <h1>Book Collection</h1>
     </header>
@@ -10,7 +12,7 @@
                 <div class="authors col-6">Authors</div>
             </div>{% for book in book_list %}
             <div class="row">
-                <div class="title col-6"><a href='/books/{{ book.id }}'>{{ book.title }}</a></div>
+                <div class="title col-6"><a href='/books/{{ book.id }}/'>{{ book.title }}</a></div>
                 <div class="authors col-6"><ul>{% for author in book.authors.all %}<li>{{ author.name }}</li>{% endfor %}</ul></div>
             </div>{% endfor %}
             <div class="row text-end">
@@ -24,5 +26,4 @@
             </div>
         </section>
     </main>
-{% if page_obj.has_next %}{% endif %}
-{% include "footer.html" %}
+{% endblock %}

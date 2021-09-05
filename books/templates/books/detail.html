@@ -1,7 +1,10 @@
-{% include "header.html" %}
-<header xmlns="http://www.w3.org/1999/html">
+{% extends "main.html" %}
+{% load static %}
+{% block title %}{{ book.title }}{% if book.subtitle %} - {{ book.subtitle }}){% endif %}{% endblock %}
+{% block content %}
+<header>
     <h1>{{ book.title }}</h1>
-    <h2>{{ book.subtitle }}</h2>
+    {% if book.subtitle %}<h2>{{ book.subtitle }}</h2>{% endif %}
     <h3>By {% for author in book.authors.all %}{{ author.name }} {% if forloop.last %}{% else %}, {% endif %}{% endfor %}</h3>
 </header>
 <main class="container">
@@ -25,4 +28,4 @@
     </section>
 {% endif %}
 </main>
-{% include "footer.html" %}
+{% endblock %}
