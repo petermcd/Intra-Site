@@ -1,3 +1,5 @@
+// jshint esversion: 6
+
 $(document).ready(function() {
         $('#id_isbn10').after('<button id="isbn10_lookup">Fetch</button>');
         $('#isbn10_lookup').click(function(event){

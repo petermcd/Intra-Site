@@ -1,5 +1,7 @@
+{% extends "main.html" %}
 {% load static %}
-{% include "header.html" %}
+{% block title %}Finances{% endblock %}
+{% block content %}
     <header>
         <h1>Finances</h1>
     </header>
@@ -43,4 +45,4 @@
     </main>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
     <script src="{% static 'finance/js/payment-chart.js' %}"></script>
-{% include "footer.html" %}
+{% endblock %}

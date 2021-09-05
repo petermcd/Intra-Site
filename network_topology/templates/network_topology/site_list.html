@@ -1,4 +1,7 @@
-{% include "header.html" %}
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Network Topology{% endblock %}
+{% block content %}
     <header>
         <h1>Network Sites</h1>
     </header>
@@ -13,4 +16,4 @@
             {% endfor %}
         </section>
     </main>
-{% include "footer.html" %}
+{% endblock %}
