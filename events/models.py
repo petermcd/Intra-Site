@@ -59,6 +59,7 @@ class EventTravel(models.Model):
     event = models.ForeignKey(Event, on_delete=models.RESTRICT)
     venue = models.ForeignKey(Venue, on_delete=models.RESTRICT)
     starting = models.DateTimeField()
+    ending = models.DateTimeField(blank=True, null=True)
     notes = models.CharField(max_length=255, blank=True, null=True)
 
     @property
