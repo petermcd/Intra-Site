@@ -21,7 +21,7 @@ class Venue(models.Model):
         output = [item for item in tmp_dict if item]
         return ', '.join(output)
 
-    def print(self):
+    def printable(self):
         tmp_dict = [
             self.name,
             self.street_address,
@@ -41,3 +41,33 @@ class Event(models.Model):
     ending = models.DateTimeField(blank=True, null=True)
     description = models.CharField(max_length=255)
     ticket_file = models.URLField(blank=True, null=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class TransportMethod(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class EventTravel(models.Model):
+    method = models.ForeignKey(TransportMethod, on_delete=models.RESTRICT)
+    direction = models.CharField(max_length=4, choices=[('To', 'To'), ('From', 'From')])
+    event = models.ForeignKey(Event, on_delete=models.RESTRICT)
+    venue = models.ForeignKey(Venue, on_delete=models.RESTRICT)
+    starting = models.DateTimeField()
+    notes = models.CharField(max_length=255, blank=True, null=True)
+
+    @property
+    def event_name(self) -> str:
+        return self.event.name
+
+    @property
+    def venue_name(self) -> str:
+        return self.venue.name
+
+    def __str__(self) -> str:
+        return f'{self.direction} {self.event.name} at {self.starting} on a {self.method.name}'

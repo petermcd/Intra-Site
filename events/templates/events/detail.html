@@ -9,10 +9,28 @@
     <section id="event_details">
         <div class="row">
             <div class="details col-6">
-                Starts: {{ event.starting|date:'H:i d-m-Y' }}{% if event.ending %}{% endif %}
-                {% if event.ending %}<br />Ends: {{ event.ending|date:'H:i d-m-Y' }}{% endif %}<br /><br />
-                {% if event.venue %}Where:<br /><pre>{{ event.venue.print }}</pre>{% endif %}
-                Details:<br />{{ event.description }}
+                <b>Starts</b> {{ event.starting|date:'H:i d-m-Y' }}{% if event.ending %}{% endif %}
+                {% if event.ending %}<br /><b>Ends</b> {{ event.ending|date:'H:i d-m-Y' }}{% endif %}<br /><br />
+                {% if event.venue %}<b>Where</b><br /><pre>{{ event.venue.printable }}</pre>{% endif %}
+                <b>Details</b><br />{{ event.description }}<br /><br />
+                {% if to %}
+                    <b>Travel to</b><br />
+                    {% for to_event in to %}
+                        From: {{ to_event.venue.name }}<br />
+                        Method: {{ to_event.method.name }}<br />
+                        When: {{ to_event.starting|date:'H:i d-m-Y' }}<br />
+                        {% if to_event.notes %}notes: {{ to_event.notes }}<br />{% endif %}
+                    {% endfor %}<br />
+                {% endif %}
+                {% if from %}
+                    <b>Travel From</b><br />
+                    {% for from_event in from %}
+                        From: {{ from_event.venue.name }}<br />
+                        Method: {{ from_event.method.name }}<br />
+                        When: {{ from_event.starting|date:'H:i d-m-Y' }}<br />
+                        {% if from_event.notes %}notes: {{ from_event.notes }}<br />{% endif %}
+                    {% endfor %}
+                {% endif %}
             </div>
             <aside class="col-6">
                 {% if event.venue %}<iframe
