@@ -96,7 +96,7 @@ class Debt(models.Model):
             if current_balance < monthly_payments:
                 monthly_payments = current_balance
             payment = {
-                'date': next_payment.strftime("%d/%m/%Y"),
+                'date': next_payment.strftime('%d/%m/%y'),
                 'balance': format_money(current_balance),
                 'payment': format_money(monthly_payments),
             }
@@ -140,8 +140,8 @@ class Payments:
     @staticmethod
     def monthly_payments():
         payments = [bill for bill in Bill.objects.all()]
-        date = now()
-        for debt in Debt.objects.filter(current_balance__gt=0, payment_amount__gt=0, start_date__lte=date):
+        today = now()
+        for debt in Debt.objects.filter(current_balance__gt=0, payment_amount__gt=0, start_date__lte=today):
             payments.append(debt)
         payments.sort(key=Payments._sort)
         return payments

@@ -14,7 +14,7 @@
             </div>{% for event in event_list %}
             <div class="row">
                 <div class="title col-3"><a href='/events/{{ event.id }}/'>{{ event.name }}</a></div>
-                <div class="when col-3">{{ event.starting }}{% if event.ending %} - {{ event.ending }}{% endif %}</div>
+                <div class="when col-3">{{ event.starting| date:'d/m/y' }}</div>
                 <div class="where col-6">{% if event.venue %}{{ event.venue }}{% endif %}</div>
             </div>{% endfor %}
         </section>
