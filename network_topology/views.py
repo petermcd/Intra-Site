@@ -1,16 +1,30 @@
-from django.http import JsonResponse
+from typing import Any, Dict, List
+
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views import generic
 
 from .models import Device, Site
 
 
-def index(request):
+def index(request) -> HttpResponse:
+    """
+    Handle the Network topology index
+
+    Return:
+        HttpResponse for the index page
+    """
     return render(request, 'network_topology/index.html', {})
 
 
-def topology(request):
-    data = {
+def topology(request) -> JsonResponse:
+    """
+    Create and output the node map as a JSON response.
+
+    Return:
+        JsonResponse containing node map of the network
+    """
+    data: Dict[str, List[Any]] = {
         'nodes': [],
         'links': [],
     }
@@ -59,4 +73,10 @@ class SiteView(generic.ListView):
     context_object_name = 'network_sites_list'
 
     def get_queryset(self):
+        """
+        Get site objects to display in site view.
+
+        Return:
+            List of site objects
+        """
         return Site.objects.all().order_by('name')

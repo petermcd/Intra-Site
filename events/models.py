@@ -10,6 +10,12 @@ class Venue(models.Model):
     postcode = models.CharField(max_length=10)
 
     def __str__(self):
+        """
+        Standard to string.
+
+        Return:
+            String representation of the object
+        """
         tmp_dict = [
             self.name,
             self.street_address,
@@ -21,7 +27,13 @@ class Venue(models.Model):
         output = [item for item in tmp_dict if item]
         return ', '.join(output)
 
-    def printable(self):
+    def printable(self) -> str:
+        """
+        Formatted representation of the address.
+
+        Return:
+            Formatted address ready for output
+        """
         tmp_dict = [
             self.name,
             self.street_address,
@@ -43,6 +55,12 @@ class Event(models.Model):
     ticket_file = models.URLField(blank=True, null=True)
 
     def __str__(self) -> str:
+        """
+        Standard to string.
+
+        Return:
+            String representation of the object
+        """
         return self.name
 
 
@@ -50,6 +68,12 @@ class TransportMethod(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self) -> str:
+        """
+        Standard to string.
+
+        Return:
+            String representation of the object
+        """
         return self.name
 
 
@@ -64,11 +88,29 @@ class EventTravel(models.Model):
 
     @property
     def event_name(self) -> str:
+        """
+        Fetch the name of the event associated with the travel entry
+
+        Return:
+            Event name
+        """
         return self.event.name
 
     @property
     def venue_name(self) -> str:
+        """
+        Fetch the name of the venue associated with the travel entry
+
+        Return:
+            Venue name
+        """
         return self.venue.name
 
     def __str__(self) -> str:
+        """
+        Standard to string.
+
+        Return:
+            String representation of the object
+        """
         return f'{self.direction} {self.event.name} at {self.starting} on a {self.method.name}'

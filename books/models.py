@@ -5,6 +5,12 @@ class Author(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self) -> str:
+        """
+        Standard to string.
+
+        Return:
+            String representation of the object
+        """
         return self.name
 
 
@@ -23,4 +29,10 @@ class Book(models.Model):
     read = models.BooleanField(default=False)
 
     def __str__(self) -> str:
+        """
+        Standard to string.
+
+        Return:
+            String representation of the object
+        """
         return self.title

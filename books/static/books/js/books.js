@@ -61,8 +61,8 @@ function remove_lookup_message() {
 }
 
 String.prototype.htmlEscape = function () {
-    var span = document.createElement('span');
-    var txt = document.createTextNode('');
+    let span = document.createElement('span');
+    let txt = document.createTextNode('');
     span.appendChild(txt);
     txt.data = this;
     return span.innerHTML;

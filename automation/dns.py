@@ -4,41 +4,46 @@ import CloudFlare
 
 
 class DNS:
-    _cf = None
-    _cf_zones = {}
-    _cf_domain = {}
+    __slots__ = ['_cf', '_cf_zones', '_cf_domain']
 
     def __init__(self, api_key: str) -> None:
         """
-        Creates the required API objects
+        Create the required API objects.
 
-        :param api_key: Cloudflare API Key
+        Args:
+             api_key: Cloudflare API Key
         """
+        self._cf_zones: Dict[str, Any] = {}
+        self._cf_domain: Dict[str, Any] = {}
         self._cf = CloudFlare.CloudFlare(token=api_key)
 
     def get_zone(self, domain: str) -> Optional[str]:
         """
-        Retrieves the zones for the given domain
+        Retrieves the zones for the given domain.
 
-        :param domain: Domain we need the zone for
+        Args:
+            domain: Domain we need the zone for
 
-        :return: ID for the domain zone or None
+        Return:
+            ID for the domain zone or None
         """
         if domain not in self._cf_zones.keys():
             zones = self._cf.zones.get(params={'name': domain})
             if len(zones) == 0:
-                return None
+                return ''
             self._cf_zones[domain] = zones[0]['id']
         return self._cf_zones.get(domain, None)
 
     def get_record(self, domain: str, force: bool = False) -> Dict[str, Dict[str, Any]]:
         """
-        Retrieves the DNS records for a given domain name
+        Retrieve the DNS records for a given domain name.
 
-        :param domain: Domain DNS is required for
-        :param force: If True will fetch even if records already obtained
+        Args:
+            domain: Domain DNS is required for
+            force: If True will fetch even if records already obtained
 
-        :return: Dictionary of DNS records for the given domain
+        Return:
+            Dictionary of DNS records for the given domain
         """
         if force or domain not in self._cf_domain.keys():
             domain_details = {}
@@ -54,12 +59,14 @@ class DNS:
 
     def has_record(self, domain: str, ip: Optional[str] = None) -> bool:
         """
-        Check to see if a domain currently has a specified dns record
+        Check to see if a domain currently has a specified dns record.
 
-        :param domain: Domain to check
-        :param ip: IP the record should match
+        Args:
+            domain: Domain to check
+            ip: IP the record should match
 
-        :return: True if exists and IP match if specified
+        Return:
+            True if exists and IP match if specified
         """
         domain_details = self.split_domain(domain)
         records = self.get_record(domain_details['domain'])
@@ -67,11 +74,12 @@ class DNS:
 
     def add_record(self, hostname: str, ip: str, dns_provider: str) -> None:
         """
-        Creates a DNS record if it does not already exist
+        Creates a DNS record if it does not already exist.
 
-        :param hostname: DNS Record to create
-        :param ip: IP for DNS record to create
-        :param dns_provider: DNS Provider
+        Args:
+            hostname: DNS Record to create
+            ip: IP for DNS record to create
+            dns_provider: DNS Provider
         """
         domain_details = self.split_domain(hostname)
         zone_id = self.get_zone(domain_details['domain'])
@@ -90,10 +98,11 @@ class DNS:
 
     def delete_record(self, hostname: str, dns_provider: str) -> None:
         """
-        Deletes a given DNS record
+        Delete a given DNS record.
 
-        :param hostname: DNS name to be deleted
-        :param dns_provider: DNS Provider
+        Args
+            hostname: DNS name to be deleted
+            dns_provider: DNS Provider
         """
         domain_details = self.split_domain(hostname)
         zone_id = self.get_zone(domain_details['domain'])
@@ -107,11 +116,13 @@ class DNS:
     @staticmethod
     def split_domain(domain) -> Dict[str, str]:
         """
-        Splits a domain into subdomain and domain components.
+        Split a domain into subdomain and domain components.
 
-        :param domain: Domain to be split
+        Args:
+            domain: Domain to be split
 
-        :return: Dict of domain and subdomain
+        Return:
+            Dict of domain and subdomain
         """
         domain_split = domain.split('.')
         subdomain = domain_split[0]
