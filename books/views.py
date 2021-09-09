@@ -9,6 +9,12 @@ class IndexView(generic.ListView):
     context_object_name = 'book_list'
 
     def get_queryset(self):
+        """
+        Get book objects to display in index view matching the optional get query.
+
+        Return:
+            List of book objects
+        """
         term = self.request.GET.get('q')
         objects = Book.objects.all().order_by('title')
         if term:
@@ -16,6 +22,12 @@ class IndexView(generic.ListView):
         return objects
 
     def get_context_data(self, **kwargs):
+        """
+        Retrieve context data ready for output
+
+        Return:
+            Context data ready for output in a template
+        """
         return super().get_context_data(**kwargs)
 
 
@@ -24,4 +36,10 @@ class DetailView(generic.DetailView):
     template_name = 'books/detail.html'
 
     def get_queryset(self):
+        """
+        Get book objects to display in detail view.
+
+        Return:
+            List of book objects
+        """
         return Book.objects.all()

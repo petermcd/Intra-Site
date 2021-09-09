@@ -1,4 +1,5 @@
 import datetime
+from typing import Tuple
 
 from django.views import generic
 
@@ -10,15 +11,33 @@ class IndexView(generic.ListView):
     context_object_name = 'finance_payments_list'
 
     def get_queryset(self):
+        """
+        Get payment objects to display in index view.
+
+        Return:
+            List of payment objects
+        """
         return Payments().monthly_payments()
 
     def get_context_data(self, **kwargs):
+        """
+        Retrieve context data ready for output
+
+        Return:
+            Context data ready for output in a template
+        """
         data = super().get_context_data(**kwargs)
         data['paid'], data['to_pay'], data['total'] = self._calculate_totals(self.get_queryset())
         return data
 
     @staticmethod
-    def _calculate_totals(payments):
+    def _calculate_totals(payments) -> Tuple[str, str, str]:
+        """
+        Calculate payment totals for a debt
+
+        Return
+            Tuple of Paid, To Pay and Total for payment
+        """
         current_day = datetime.date.today().day
         paid = 0
         to_pay = 0
@@ -28,10 +47,10 @@ class IndexView(generic.ListView):
             else:
                 paid += payment.calculated_payment_amount
 
-        total = format_money(to_pay + paid)
-        paid = format_money(paid)
-        to_pay = format_money(to_pay)
-        return paid, to_pay, total
+        total_str: str = format_money(to_pay + paid)
+        paid_str: str = format_money(paid)
+        to_pay_str: str = format_money(to_pay)
+        return paid_str, to_pay_str, total_str
 
 
 class DetailView(generic.DetailView):
@@ -39,4 +58,10 @@ class DetailView(generic.DetailView):
     template_name = 'finance/detail.html'
 
     def get_queryset(self):
+        """
+        Get debt objects to display in detail view.
+
+        Return:
+            List of debt objects
+        """
         return Debt.objects.all()

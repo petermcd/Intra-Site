@@ -1,4 +1,5 @@
 from json import dumps, loads
+from typing import Any, Dict
 
 import requests
 from django.http import HttpResponse
@@ -14,6 +15,7 @@ def get_book_details(request, search_type: str, search: str):
     querystring = f'q={search_type}:{search}&key={API_KEY}'
     res = requests.get(f'{URL}{querystring}')
     content_type = 'application/json'
+    response: Dict[str, Any] = {}
     if res.status_code != 200:
         response = {
             'success': False,
