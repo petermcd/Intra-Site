@@ -9,12 +9,12 @@
     <section id="event_details">
         <div class="row">
             <div class="details col-6">
-                <b>Starts</b> {{ event.starting|date:'H:i d/m/y' }}{% if event.ending %}{% endif %}
-                {% if event.ending %}<br /><b>Ends</b> {{ event.ending|date:'H:i d/m/y' }}{% endif %}<br /><br />
-                {% if event.venue %}<b>Where</b><br /><pre>{{ event.venue.printable }}</pre>{% endif %}
-                <b>Details</b><br />{{ event.description }}<br /><br />
+                <strong>Starts</strong> {{ event.starting|date:'H:i d/m/y' }}{% if event.ending %}{% endif %}
+                {% if event.ending %}<br /><strong>Ends</strong> {{ event.ending|date:'H:i d/m/y' }}{% endif %}<br /><br />
+                {% if event.venue %}<strong>Where</strong><br /><pre>{{ event.venue.printable }}</pre>{% endif %}
+                <strong>Details</strong><br />{{ event.description }}<br /><br />
                 {% if to %}
-                    <b>Travel to</b><br />
+                    <strong>Travel to</strong><br />
                     {% for to_event in to %}
                         From: {{ to_event.venue.name }}<br />
                         Method: {{ to_event.method.name }}<br />
@@ -23,7 +23,7 @@
                     {% endfor %}<br />
                 {% endif %}
                 {% if from %}
-                    <b>Travel From</b><br />
+                    <strong>Travel From</strong><br />
                     {% for from_event in from %}
                         From: {{ from_event.venue.name }}<br />
                         Method: {{ from_event.method.name }}<br />
@@ -34,6 +34,7 @@
             </div>
             <aside class="col-6">
                 {% if event.venue %}<iframe
+                    title="Event Location"
                     class="col-12"
                     height="600"
                     style="border:0"

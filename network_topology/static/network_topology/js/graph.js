@@ -33,7 +33,7 @@ function set_graph_size(){
         .height(elem.offsetHeight);
 }
 function output_details(node){
-    let elem = $('#graph-item-details');
+    let element = $('#graph-item-details');
     let details = '<h2>Details</h2>';
     if(node.type === 'site'){
         details = details +
@@ -46,6 +46,6 @@ function output_details(node){
             'IP: ' + node.ip + '<br />' +
             'Description: ' + node.description + '<br />';
     }
-    elem.html(details);
+    element.html(details);
 }
 window.onresize = set_graph_size;

@@ -21,7 +21,7 @@
                     {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Next</a>{% else %}Next{% endif %}
                 </div>
                 <div class="search col-6">
-                    <form><input type="text" name="q" /><button>Search</button></form>
+                    <label for="search">Name</label><form><input type="text" name="q" id="search" /><button>Search</button></form>
                 </div>
             </div>
         </section>

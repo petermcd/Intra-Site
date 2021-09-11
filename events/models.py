@@ -63,6 +63,24 @@ class Event(models.Model):
         """
         return self.name
 
+    @property
+    def travel_arranged(self) -> str:
+        """
+        Identify if travel has been arranged for an event
+
+        Return:
+            Yes if all travel has been arranged, partial if some otherwise no
+        """
+
+        arranged = 'No'
+        t_to = EventTravel.objects.filter(event__exact=self, direction__exact='To')
+        t_from = EventTravel.objects.filter(event__exact=self, direction__exact='From')
+        if all([t_to, t_from]):
+            arranged = 'Yes'
+        elif any([t_to, t_from]):
+            arranged = 'Partial'
+        return arranged
+
 
 class TransportMethod(models.Model):
     name = models.CharField(max_length=255)

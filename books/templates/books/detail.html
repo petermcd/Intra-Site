@@ -14,10 +14,10 @@
             <div class="col-3">
                 <aside class="col-12">
                     {% if book.thumbnail %}<div class="thumbnail"><img src='{{ book.thumbnail }}' alt='{{ book.title }}'></div>{% endif %}
-                    <div class="published"><b>Published By</b>: {{ book.publisher }} {% if book.published %}({{ book.published|date:'d/m/y' }}){% endif %}</div>
-                    <div class="pages"><b>Pages</b>: {{ book.pages }}</div>
-                    <div class="isbn10"><b>ISBN 10</b>: {{ book.isbn10 }}</div>
-                    <div class="isbn13"><b>ISBN 13</b>: {{ book.isbn13 }}</div>
+                    <div class="published"><strong>Published By</strong>: {{ book.publisher }} {% if book.published %}({{ book.published|date:'d/m/y' }}){% endif %}</div>
+                    <div class="pages"><strong>Pages</strong>: {{ book.pages }}</div>
+                    <div class="isbn10"><strong>ISBN 10</strong>: {{ book.isbn10 }}</div>
+                    <div class="isbn13"><strong>ISBN 13</strong>: {{ book.isbn13 }}</div>
                     {% if book.ebook_url %}<div class="ebook_url"><a href="{{ book.ebook_url }}" target="_blank">DOWNLOAD</a></div>{% endif %}
                 </aside>
             </div>
