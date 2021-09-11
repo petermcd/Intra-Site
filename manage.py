@@ -15,7 +15,6 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    sys.argv = ['D:/Python_Projects/Intra-Site/manage.py', 'runserver', '8000']
     execute_from_command_line(sys.argv)
 
 
