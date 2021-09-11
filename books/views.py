@@ -28,7 +28,12 @@ class IndexView(generic.ListView):
         Return:
             Context data ready for output in a template
         """
-        return super().get_context_data(**kwargs)
+        term = ''
+        if 'q' in self.request.GET:
+            term = f'&q={self.request.GET["q"]}'
+        context = super().get_context_data(**kwargs)
+        context['search_term'] = term
+        return context
 
 
 class DetailView(generic.DetailView):
