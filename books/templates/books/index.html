@@ -17,8 +17,8 @@
             </div>{% endfor %}
             <div class="row text-end">
                 <div class="pagination col-6">
-                    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Previous</a>{% else %}Previous{% endif %}&nbsp;
-                    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Next</a>{% else %}Next{% endif %}
+                    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}{{ search_term }}">Previous</a>{% else %}Previous{% endif %}&nbsp;
+                    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}{{ search_term }}">Next</a>{% else %}Next{% endif %}
                 </div>
                 <div class="search col-6">
                     <label for="search">Name</label><form><input type="text" name="q" id="search" /><button>Search</button></form>
