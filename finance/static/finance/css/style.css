@@ -39,3 +39,7 @@ aside {
     float: left;
     overflow: auto;
 }
+
+label[for="search"] {
+    display:none;
+}
