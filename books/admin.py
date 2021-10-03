@@ -5,13 +5,13 @@ from books.models import Author, Book
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ['name', ]
-    ordering = ['name', ]
+    list_display = ['name',]
+    ordering = ['name',]
 
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'subtitle', 'publisher', 'isbn10', 'read')
+    list_display = ('title', 'subtitle', 'publisher', 'isbn10', 'read',)
     ordering = ('title',)
 
     class Media:

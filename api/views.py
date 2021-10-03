@@ -27,13 +27,10 @@ def get_book_details(request, search_type: str, search: str):
     if 'items' in content:
         for item in content['items']:
             item_details = item['volumeInfo']
-            record = {'title': item_details['title'], 'subtitle': None, 'authors': [],
-                      'publisher': '', 'published': item_details['publishedDate'],
-                      'description': item_details['description'], 'pages': item_details['pageCount']}
-            if 'publisher' in item_details:
-                record['publisher'] = item_details['publisher']
-            if 'subtitle' in item_details:
-                record['subtitle'] = item_details['subtitle']
+            record = {'title': item_details['title'], 'subtitle': item_details.get('subtitle', ''), 'authors': [],
+                      'published': item_details['publishedDate'], 'description': item_details['description'],
+                      'pages': item_details['pageCount'], 'publisher': item_details.get('publisher', '')}
+
             for author in item_details['authors']:
                 author_res = Author.objects.filter(name__exact=author)
                 if len(author_res) == 0:

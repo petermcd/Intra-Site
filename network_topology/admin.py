@@ -12,7 +12,7 @@ class ConnectionMethodAdmin(admin.ModelAdmin):
 
 @admin.register(Device)
 class DeviceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'hostname', 'ip', 'description')
+    list_display = ('name', 'hostname', 'ip', 'description',)
     ordering = ('name',)
 
 
@@ -23,8 +23,8 @@ class DeviceCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(DeviceType)
 class DeviceTypeAdmin(admin.ModelAdmin):
-    list_display = ('manufacturer', 'model', 'description', 'category')
-    ordering = ('manufacturer', 'model')
+    list_display = ('manufacturer', 'model', 'description', 'category',)
+    ordering = ('manufacturer', 'model',)
 
 
 @admin.register(DNSProvider)
@@ -46,14 +46,14 @@ class IPAdmin(admin.ModelAdmin):
 
 @admin.register(MonitoringGroup)
 class MonitoringGroupAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group_id')
+    list_display = ('name', 'group_id',)
     ordering = ('name',)
 
 
 @admin.register(MonitoringTemplate)
 class MonitoringTemplateAdmin(admin.ModelAdmin):
     ordering = ('name',)
-    list_display = ('name', 'template_id')
+    list_display = ('name', 'template_id',)
 
 
 @admin.register(Registrar)
@@ -64,7 +64,7 @@ class RegistrarAdmin(admin.ModelAdmin):
 
 @admin.register(Settings)
 class SettingsAdmin(admin.ModelAdmin):
-    list_display = ('name', 'value')
+    list_display = ('name', 'value',)
     ordering = ('name',)
 
 

@@ -1,7 +1,7 @@
 from django.utils.timezone import now
 from django.views import generic
 
-from events.models import Event, EventTravel
+from events.models import Event, EventAccommodation, EventTravel
 from network_topology.models import Settings
 
 
@@ -41,6 +41,7 @@ class DetailView(generic.DetailView):
         """
         context = super().get_context_data(**kwargs)
         context['api_key'] = Settings.objects.filter(name__exact='GOOGLE_API_KEY')[0].value
+        context['accommodation'] = EventAccommodation.objects.filter(event__exact=context['event'])
         context['to'] = EventTravel.objects.filter(event__exact=context['event'], direction__exact='To')
         context['from'] = EventTravel.objects.filter(event__exact=context['event'], direction__exact='From')
         return context

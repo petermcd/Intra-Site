@@ -13,6 +13,14 @@
                 {% if event.ending %}<br /><strong>Ends</strong> {{ event.ending|date:'H:i d/m/y' }}{% endif %}<br /><br />
                 {% if event.venue %}<strong>Where</strong><br /><pre>{{ event.venue.printable }}</pre>{% endif %}
                 <strong>Details</strong><br />{{ event.description }}<br /><br />
+                {% if accommodation %}
+                    <strong>Accommodation</strong><br />
+                    {% for hotel in accommodation %}
+                        <u>{{ hotel.hotel_name }}</u><br />
+                        Checkin: {{ hotel.checkin|date:'H:i d/m/y' }}<br />
+                        Checkout: {{ hotel.checkout|date:'H:i d/m/y' }}<br />
+                    {% endfor %}<br />
+                {% endif %}
                 {% if to %}
                     <strong>Travel to</strong><br />
                     {% for to_event in to %}

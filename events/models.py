@@ -64,6 +64,18 @@ class Event(models.Model):
         return self.name
 
     @property
+    def accommodation_arranged(self) -> str:
+        """
+        Identify if accommodation has been arranged for an event
+
+        Return:
+            Yes if all accommodation has been arranged, otherwise no
+        """
+
+        accommodation = EventAccommodation.objects.filter(event__exact=self)
+        return 'Yes' if accommodation else 'No'
+
+    @property
     def travel_arranged(self) -> str:
         """
         Identify if travel has been arranged for an event
@@ -132,3 +144,29 @@ class EventTravel(models.Model):
             String representation of the object
         """
         return f'{self.direction} {self.event.name} at {self.starting} on a {self.method.name}'
+
+
+class EventAccommodation(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.RESTRICT)
+    hotel = models.ForeignKey(Venue, on_delete=models.RESTRICT)
+    checkin = models.DateTimeField()
+    checkout = models.DateTimeField(blank=True, null=True)
+
+    @property
+    def hotel_name(self) -> str:
+        """
+        Fetch the name of the hotel
+
+        Return:
+            Hotel name
+        """
+        return self.hotel.name
+
+    def __str__(self) -> str:
+        """
+        Standard to string.
+
+        Return:
+            String representation of the object
+        """
+        return f'{self.hotel.name} {self.checkin} -> {self.checkout}'
