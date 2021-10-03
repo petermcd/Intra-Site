@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from events.models import EventAccommodation, Event, EventTravel, TransportMethod, Venue
+from events.models import (Event, EventAccommodation, EventTravel,
+                           TransportMethod, Venue)
 
 
 @admin.register(Event)

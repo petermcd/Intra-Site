@@ -5,8 +5,8 @@ from books.models import Author, Book
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ['name',]
-    ordering = ['name',]
+    list_display = ['name', ]
+    ordering = ['name', ]
 
 
 @admin.register(Book)
