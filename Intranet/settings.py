@@ -19,7 +19,7 @@ ALLOWED_HOSTS = ['beta.devfaq.com']
 
 if int(os.getenv('DJANGO_DEBUG', 0)) == 1:
     DEBUG = True
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['*']
 
 # Application definition
 
