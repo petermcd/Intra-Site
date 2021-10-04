@@ -15,11 +15,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv('DJANGO_SECRET_KEY'))
 DEBUG = False
-ALLOWED_HOSTS = ['beta.devfaq.com']
+ALLOWED_HOSTS = ['beta.devfaq.com', ]
 
 if int(os.getenv('DJANGO_DEBUG', 0)) == 1:
     DEBUG = True
-    ALLOWED_HOSTS = ['*']
+    ALLOWED_HOSTS = ['*', ]
 
 # Application definition
 
@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'settings.apps.SettingsConfig',
+    'finance.apps.FinanceConfig',
 ]
 
 MIDDLEWARE = [
@@ -74,7 +76,7 @@ DATABASES = {
         'NAME': str(os.getenv('DJANGO_DATABASE')),
         'USER': str(os.getenv('DJANGO_DATABASE_USER')),
         'PASSWORD': str(os.getenv('DJANGO_DATABASE_PASSWORD')),
-    }
+    },
 }
 
 

@@ -1,0 +1,34 @@
+[
+  {
+    "model": "settings.Setting",
+    "fields": {
+      "name": "MONZO_API_CLIENT_ID",
+      "value": "",
+      "description": "Monzo API Client ID"
+    }
+  },
+  {
+    "model": "settings.Setting",
+    "fields": {
+      "name": "MONZO_API_OWNER_ID",
+      "value": "",
+      "description": "Monzo API Owner ID"
+    }
+  },
+  {
+    "model": "settings.Setting",
+    "fields": {
+      "name": "MONZO_API_CLIENT_SECRET",
+      "value": "",
+      "description": "Monzo API Client Secret"
+    }
+  },
+  {
+    "model": "settings.Setting",
+    "fields": {
+      "name": "MONZO_API_REDIRECT_URL",
+      "value": "",
+      "description": "Monzo API Redirect URL"
+    }
+  }
+]
