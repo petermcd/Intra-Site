@@ -16,6 +16,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = str(os.getenv('DJANGO_SECRET_KEY'))
 DEBUG = False
 ALLOWED_HOSTS = ['beta.devfaq.com', ]
+BASE_EXTERNAL_STORAGE_URL = str(os.getenv('BASE_EXTERNAL_STORAGE_URL'))
+BASE_LOCAL_PATH_FOR_EXTERNAL = str(os.getenv('BASE_LOCAL_PATH_FOR_EXTERNAL'))
 
 if int(os.getenv('DJANGO_DEBUG', 0)) == 1:
     DEBUG = True
@@ -30,8 +32,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'settings.apps.SettingsConfig',
+    'api.apps.ApiConfig',
+    'books.apps.BooksConfig',
+    'events.apps.EventsConfig',
     'finance.apps.FinanceConfig',
+    'settings.apps.SettingsConfig',
 ]
 
 MIDDLEWARE = [

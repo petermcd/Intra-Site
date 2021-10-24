@@ -1,0 +1,52 @@
+from django.core.files.storage import FileSystemStorage
+from django.db import models
+
+from Intranet.settings import (BASE_EXTERNAL_STORAGE_URL,
+                               BASE_LOCAL_PATH_FOR_EXTERNAL)
+
+ebook_fs = FileSystemStorage(
+    location=f'{BASE_LOCAL_PATH_FOR_EXTERNAL}/books', base_url=f'{BASE_EXTERNAL_STORAGE_URL}/books'
+)
+
+
+class Author(models.Model):
+    """
+    Model for Author.
+    """
+    name = models.CharField(max_length=255)
+
+    def __str__(self) -> str:
+        """
+        Standard to string.
+
+        Return:
+            String representation of the object
+        """
+        return self.name
+
+
+class Book(models.Model):
+    """
+    Model for Book.
+    """
+    title = models.CharField(max_length=200)
+    subtitle = models.CharField(max_length=500, default=None, blank=True)
+    authors = models.ManyToManyField(Author)
+    publisher = models.CharField(max_length=200)
+    published = models.DateField()
+    isbn10 = models.CharField(max_length=10, unique=True)
+    isbn13 = models.CharField(max_length=13, unique=True)
+    description = models.CharField(max_length=5000)
+    pages = models.IntegerField()
+    thumbnail = models.URLField(max_length=255, default=None, blank=True)
+    ebook = models.FileField(storage=ebook_fs, null=True, blank=True)
+    read = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        """
+        Standard to string.
+
+        Return:
+            String representation of the object
+        """
+        return self.title
