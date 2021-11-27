@@ -1,20 +1,41 @@
-from django.core.files.storage import FileSystemStorage
 from django.db import models
 
-from Intranet.settings import (BASE_EXTERNAL_STORAGE_URL,
-                               BASE_LOCAL_PATH_FOR_EXTERNAL)
+from Intranet.misc import OverwriteStorage
 
 TRAVEL_DIRECTION_CHOICES = [
     ('To', 'To'),
     ('From', 'From'),
 ]
 
-event_fs = FileSystemStorage(
-    location=f'{BASE_LOCAL_PATH_FOR_EXTERNAL}/events', base_url=f'{BASE_EXTERNAL_STORAGE_URL}/events'
-)
-travel_fs = FileSystemStorage(
-    location=f'{BASE_LOCAL_PATH_FOR_EXTERNAL}/travel', base_url=f'{BASE_EXTERNAL_STORAGE_URL}/travel'
-)
+
+def ticket_file_name(instance, filename) -> str:
+    """
+    Create filename for event ticket.
+
+    Args:
+        instance: Model class uploading the file
+        filename: The name of the file uploaded
+
+    Returns: String containing the new filename
+    """
+    ext = filename.split('.')[-1]
+    filename = f'{instance.name}-{instance.venue.name}-{instance.start}.{ext}'
+    return filename
+
+
+def travel_file_name(instance, filename) -> str:
+    """
+    Create filename for travel ticket.
+
+    Args:
+        instance: Model class uploading the file
+        filename: The name of the file uploaded
+
+    Returns: String containing the new filename
+    """
+    ext = filename.split('.')[-1]
+    filename = f'{instance.departing_station.name}-{instance.departure}.{ext}'
+    return filename
 
 
 class Venue(models.Model):
@@ -66,7 +87,7 @@ class Event(models.Model):
     venue = models.ForeignKey(Venue, on_delete=models.RESTRICT)
     start = models.DateTimeField(verbose_name='Starts')
     ends = models.DateTimeField(verbose_name='Ends')
-    ticket_file = models.FileField(storage=event_fs, null=True, blank=True)
+    ticket_file = models.FileField(storage=OverwriteStorage, null=True, blank=True, upload_to=ticket_file_name)
     notes = models.TextField(max_length=500)
 
     def __str__(self) -> str:
@@ -99,7 +120,7 @@ class Travel(models.Model):
     for_event = models.ForeignKey(
         Event, verbose_name='For Event', null=False, on_delete=models.RESTRICT, related_name='event'
     )
-    ticket_file = models.FileField(storage=travel_fs, null=True, blank=True)
+    ticket_file = models.FileField(storage=OverwriteStorage, null=True, blank=True, upload_to=travel_file_name)
     notes = models.TextField(max_length=500)
 
     def __str__(self) -> str:

@@ -1,12 +1,6 @@
-from django.core.files.storage import FileSystemStorage
 from django.db import models
 
-from Intranet.settings import (BASE_EXTERNAL_STORAGE_URL,
-                               BASE_LOCAL_PATH_FOR_EXTERNAL)
-
-ebook_fs = FileSystemStorage(
-    location=f'{BASE_LOCAL_PATH_FOR_EXTERNAL}/books', base_url=f'{BASE_EXTERNAL_STORAGE_URL}/books'
-)
+from Intranet.misc import OverwriteStorage
 
 
 class Author(models.Model):
@@ -25,6 +19,14 @@ class Author(models.Model):
         return self.name
 
 
+def content_file_name(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f'books/{instance.isbn10}.{ext}'
+    if instance.isbn10 == '0000000000':
+        filename = f'books/{instance.title}.{ext}'
+    return filename
+
+
 class Book(models.Model):
     """
     Model for Book.
@@ -39,7 +41,7 @@ class Book(models.Model):
     description = models.CharField(max_length=5000)
     pages = models.IntegerField()
     thumbnail = models.URLField(max_length=255, default=None, blank=True)
-    ebook = models.FileField(storage=ebook_fs, null=True, blank=True)
+    ebook = models.FileField(storage=OverwriteStorage, null=True, blank=True, upload_to=content_file_name)
     read = models.BooleanField(default=False)
 
     def __str__(self) -> str:

@@ -18,6 +18,20 @@ class Lender(models.Model):
         return self.name
 
 
+class Merchant(models.Model):
+    name = models.CharField('Merchant', max_length=100, null=False, blank=False)
+    for_lender = models.ForeignKey(Lender, on_delete=models.RESTRICT, null=True, blank=True)
+
+
+class Payment(models.Model):
+    transaction_id = models.CharField('Transaction ID', max_length=50, primary_key=True)
+    merchant = models.ForeignKey(Merchant, on_delete=models.RESTRICT)
+    amount = models.BigIntegerField('Amount', default=0, null=False, blank=False)
+    pending = models.BooleanField('Pending', default=False, null=False, blank=False)
+    when = models.DateTimeField('Created', null=False, blank=False)
+    settled = models.DateTimeField('Settled', null=True, blank=True)
+
+
 class DebtBalance(models.Model):
     """
     Model to host debt balances..
@@ -63,3 +77,12 @@ def format_money(money: int, symbol_left: str = '£', symbol_right: str = '') ->
          money converted with symbol
     """
     return f'{symbol_left}{money/100:.2f}{symbol_right}'
+
+
+class Monzo(models.Model):
+    client_id = models.CharField('Client ID', max_length=100)
+    client_secret = models.CharField('Client Secret', max_length=100)
+    owner_id = models.CharField('Owner ID', max_length=100)
+    access_token = models.CharField('Access Token', max_length=100)
+    expiry = models.BigIntegerField('Expiry')
+    refresh_token = models.CharField('Refresh Token', max_length=100)

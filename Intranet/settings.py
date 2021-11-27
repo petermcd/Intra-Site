@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'books.apps.BooksConfig',
     'events.apps.EventsConfig',
     'finance.apps.FinanceConfig',
+    'network.apps.NetworkConfig',
     'settings.apps.SettingsConfig',
 ]
 
