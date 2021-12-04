@@ -20,10 +20,11 @@ class Author(models.Model):
 
 
 def content_file_name(instance, filename):
+    path = 'downloads/books/'
     ext = filename.split('.')[-1]
-    filename = f'books/{instance.isbn10}.{ext}'
+    filename = f'{path}{instance.isbn10}.{ext}'
     if instance.isbn10 == '0000000000':
-        filename = f'books/{instance.title}.{ext}'
+        filename = f'{path}{instance.title}.{ext}'
     return filename
 
 

@@ -7,7 +7,11 @@ the local path with the correct path)
 sudo apt update
 sudo apt install nfs-common
 
-sudo mount 192.168.0.5:/volume1/Web/ebooks /path/to/ebooks/folder
+mkdir /home/pi/Intra-Site/downloads/
+
+sudo mount 192.168.0.5:/volume1/Web/ebooks /home/pi/Intra-Site/downloads/books
+sudo mount 192.168.0.5:/volume1/Web/event-tickets /home/pi/Intra-Site/downloads/event-tickets
+sudo mount 192.168.0.5:/volume1/Web/travel-tickets /home/pi/Intra-Site/downloads/travel-tickets
 ```
 
 ## TODO
