@@ -18,8 +18,9 @@ def ticket_file_name(instance, filename) -> str:
 
     Returns: String containing the new filename
     """
+    path = 'downloads/event-tickets/'
     ext = filename.split('.')[-1]
-    filename = f'{instance.name}-{instance.venue.name}-{instance.start}.{ext}'
+    filename = f'{path}{instance.name}-{instance.venue.name}-{instance.start}.{ext}'
     return filename
 
 
@@ -33,8 +34,9 @@ def travel_file_name(instance, filename) -> str:
 
     Returns: String containing the new filename
     """
+    path = 'downloads/travel-tickets/'
     ext = filename.split('.')[-1]
-    filename = f'{instance.departing_station.name}-{instance.departure}.{ext}'
+    filename = f'{path}{instance.departing_station.name}-{instance.departure}.{ext}'
     return filename
 
 

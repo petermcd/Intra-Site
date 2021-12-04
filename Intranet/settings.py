@@ -15,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv('DJANGO_SECRET_KEY'))
 DEBUG = False
-ALLOWED_HOSTS = ['beta.devfaq.com', ]
+ALLOWED_HOSTS = ['intra.devfaq.com',]
 BASE_EXTERNAL_STORAGE_URL = str(os.getenv('BASE_EXTERNAL_STORAGE_URL'))
 BASE_LOCAL_PATH_FOR_EXTERNAL = str(os.getenv('BASE_LOCAL_PATH_FOR_EXTERNAL'))
 
@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'books.apps.BooksConfig',
     'events.apps.EventsConfig',
-    # 'finance.apps.FinanceConfig',
+    'finance.apps.FinanceConfig',
     'network.apps.NetworkConfig',
     'settings.apps.SettingsConfig',
 ]
