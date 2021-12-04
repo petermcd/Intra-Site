@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.urls import include, path
 
-from Intranet.views import IndexView
 from finance.views import MonzoAuthView
+from Intranet.views import IndexView
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),

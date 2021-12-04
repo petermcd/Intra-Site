@@ -27,4 +27,3 @@ class BookAdmin(admin.ModelAdmin):
         js = (
             'books/js/books.js',
         )
-

@@ -4,18 +4,18 @@ import sys
 sys.dont_write_bytecode = True
 
 # Django specific settings
-import os
+import os # NOQA E402
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Intranet.settings')
-import django
+import django # NOQA E402
 
 django.setup()
 
-from monzo.authentication import Authentication
-from monzo.endpoints.account import Account
+from monzo.authentication import Authentication # NOQA E402
+from monzo.endpoints.account import Account # NOQA E402
 
-from finance.models import Monzo, MONZO_REDIRECT_URL
-from finance.views import MonzoStorage
+from finance.models import MONZO_REDIRECT_URL, Monzo # NOQA E402
+from finance.views import MonzoStorage # NOQA E402
 
 
 class MonzoAutomation:
@@ -40,12 +40,8 @@ class MonzoAutomation:
         self._monzo_auth.register_callback_handler(handler)
 
     def fetch_transactions(self):
-        #accounts = Account.fetch(self._monzo_auth, 'uk_retail')
-        #print(accounts)
-        from monzo.endpoints.whoami import WhoAmI
-        a = WhoAmI.fetch(self._monzo_auth)
-        print(a)
-
+        accounts = Account.fetch(self._monzo_auth, 'uk_retail')
+        print(accounts)
 
 
 a = MonzoAutomation()

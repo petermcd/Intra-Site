@@ -247,7 +247,9 @@ def device_subdomain_dns(sender, instance, **kwargs):
         subdomains = Subdomain.objects.filter(device=instance)
         for subdomain in subdomains:
             auto.update_dns(
-                hostname=subdomain.__str__(), ip=subdomain.device.ip.address, dns_provider=subdomain.domain.registrar.name
+                hostname=subdomain.__str__(),
+                ip=subdomain.device.ip.address,
+                dns_provider=subdomain.domain.registrar.name
             )
 
 

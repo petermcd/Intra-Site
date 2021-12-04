@@ -113,7 +113,7 @@ class Automation:
         """
         if not self._monitoring:
             url = Setting.objects.filter(name__exact='ZABBIX_URL')[0].value
-            username =  Setting.objects.filter(name__exact='ZABBIX_USERNAME')[0].value
+            username = Setting.objects.filter(name__exact='ZABBIX_USERNAME')[0].value
             password = Setting.objects.filter(name__exact='ZABBIX_PASSWORD')[0].value
             self._monitoring = Monitoring(base_url=url, username=username, password=password)
         return self._monitoring

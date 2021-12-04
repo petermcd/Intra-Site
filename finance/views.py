@@ -1,11 +1,11 @@
-from django.views import generic
-from finance.models import Monzo, MONZO_REDIRECT_URL
-
 from typing import Dict, Union
 
+from django.views import generic
 from monzo.authentication import Authentication
-from monzo.handlers.storage import Storage
 from monzo.exceptions import MonzoAuthenticationError
+from monzo.handlers.storage import Storage
+
+from finance.models import MONZO_REDIRECT_URL, Monzo
 
 
 class MonzoStorage(Storage):
@@ -71,5 +71,3 @@ class MonzoAuthView(generic.TemplateView):
             context = {'success': False, 'error': exc}
 
         return context
-
-
