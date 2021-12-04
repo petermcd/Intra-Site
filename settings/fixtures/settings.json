@@ -2,33 +2,65 @@
   {
     "model": "settings.Setting",
     "fields": {
-      "name": "MONZO_API_CLIENT_ID",
+      "name": "CLOUDFLARE_API_KEY",
       "value": "",
-      "description": "Monzo API Client ID"
+      "description": "Cloudflare API Key"
     }
   },
   {
     "model": "settings.Setting",
     "fields": {
-      "name": "MONZO_API_OWNER_ID",
+      "name": "GOOGLE_API_KEY",
       "value": "",
-      "description": "Monzo API Owner ID"
+      "description": "Google API Key"
     }
   },
   {
     "model": "settings.Setting",
     "fields": {
-      "name": "MONZO_API_CLIENT_SECRET",
+      "name": "GOOGLE_BOOKS_API_URL",
       "value": "",
-      "description": "Monzo API Client Secret"
+      "description": "Google API URL"
     }
   },
   {
     "model": "settings.Setting",
     "fields": {
-      "name": "MONZO_API_REDIRECT_URL",
+      "name": "SNMP_PASSWORD",
       "value": "",
-      "description": "Monzo API Redirect URL"
+      "description": "SNMP Username"
+    }
+  },
+  {
+    "model": "settings.Setting",
+    "fields": {
+      "name": "SNMP_USERNAME",
+      "value": "",
+      "description": "SNMP Password"
+    }
+  },
+  {
+    "model": "settings.Setting",
+    "fields": {
+      "name": "ZABBIX_PASSWORD",
+      "value": "",
+      "description": "Zabbix Password"
+    }
+  },
+  {
+    "model": "settings.Setting",
+    "fields": {
+      "name": "ZABBIX_USERNAME",
+      "value": "",
+      "description": "Zabbix Username"
+    }
+  },
+  {
+    "model": "settings.Setting",
+    "fields": {
+      "name": "ZABBIX_URL",
+      "value": "",
+      "description": "Zabbix URL"
     }
   }
 ]

@@ -1,7 +1,9 @@
 from django.contrib import admin
 
-from network.models import (Subdomain, IP, Device, DeviceManufacturer, DeviceModel,
-                            DeviceType, Domains, OperatingSystemVendor, OperatingSystemVersion, Registrar, Website)
+from network.models import (IP, Device, DeviceManufacturer, DeviceModel,
+                            DeviceType, Domains, OperatingSystemVendor,
+                            OperatingSystemVersion, Registrar, Subdomain,
+                            Website)
 
 
 @admin.register(Device)
@@ -99,5 +101,5 @@ class WebsiteAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
-    list_display = ('name', 'url',)
+    list_display = ('name', 'full_url',)
     ordering = ('name',)

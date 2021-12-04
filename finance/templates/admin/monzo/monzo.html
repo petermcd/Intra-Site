@@ -1,0 +1,10 @@
+     {% extends "admin/base_site.html" %}
+       {% block content %}
+           {% if success == True %}
+                <h1>SUCCESS</h1>
+                <p>{{ message }}</p>
+           {% else %}
+                <h1>FAILURE</h1>
+                <p>{{ error }}</p>
+           {% endif %}
+       {% endblock %}

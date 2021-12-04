@@ -1,0 +1,28 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Books{% endblock %}
+{% block breadcrumbs %}<a href="/">Home</a> > Events{% endblock %}
+{% block content %}
+        <header>
+            <h1>Events</h1>
+        </header>
+        <section id="table_list">
+            <div class="row" id="row_header">
+                <div class="title col-2">Title</div>
+                <div class="when col-2">When</div>
+                <div class="where col-4">Where</div>
+                <div class="travel_arranged col-2">Travel Arranged</div>
+                <div class="travel_arranged col-2">Accommodation Arranged</div>
+            </div>{% if event_list|length < 1 %}
+            <div class="row">
+                <div class="title">No events scheduled</div>
+            </div>{% endif %}{% for event in event_list %}
+            <div class="row">
+                <div class="title col-2"><a href='/events/{{ event.id }}/'>{{ event.name }}</a></div>
+                <div class="when col-2">{{ event.start| date:'d/m/y' }}</div>
+                <div class="where col-4">{% if event.venue %}{{ event.venue }}{% endif %}</div>
+                <div class="travel_arranged col-2">{{ event.travel_arranged }}</div>
+                <div class="travel_arranged col-2">{{ event.accommodation_arranged }}</div>
+            </div>{% endfor %}
+        </section>
+{% endblock %}

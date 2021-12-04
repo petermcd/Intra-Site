@@ -11,12 +11,42 @@ import django
 
 django.setup()
 
-# Import your models for use in your script
-from settings.models import Setting
+from monzo.authentication import Authentication
+from monzo.endpoints.account import Account
 
-""" Replace the code below with your own """
+from finance.models import Monzo, MONZO_REDIRECT_URL
+from finance.views import MonzoStorage
 
-a = Setting.objects.all()
 
-for b in a:
-    print(b.name)
+class MonzoAutomation:
+    __slots__ = [
+        '_monzo_auth'
+    ]
+
+    def __init__(self):
+        """
+        Standard init to initiate required objects.
+        """
+        monzo_config = Monzo.objects.all()[0]
+        self._monzo_auth = Authentication(
+            client_id=monzo_config.client_id,
+            client_secret=monzo_config.client_secret,
+            redirect_url=MONZO_REDIRECT_URL,
+            access_token=monzo_config.access_token,
+            access_token_expiry=monzo_config.expiry,
+            refresh_token=monzo_config.refresh_token,
+        )
+        handler = MonzoStorage()
+        self._monzo_auth.register_callback_handler(handler)
+
+    def fetch_transactions(self):
+        #accounts = Account.fetch(self._monzo_auth, 'uk_retail')
+        #print(accounts)
+        from monzo.endpoints.whoami import WhoAmI
+        a = WhoAmI.fetch(self._monzo_auth)
+        print(a)
+
+
+
+a = MonzoAutomation()
+a.fetch_transactions()

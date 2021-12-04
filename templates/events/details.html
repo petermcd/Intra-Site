@@ -1,0 +1,77 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Books{% endblock %}
+{% block breadcrumbs %}<a href="/">Home</a> > <a href="/events">Events</a> > {{ event.name }}{% endblock %}
+{% block content %}
+    <section id="item_details">
+        <div class="row">
+            <header>
+                <h1>{{ event.name }}</h1>
+            </header>
+            <div class="details col-sm-12 col-lg-6">
+                <strong>Starts</strong> {{ event.start|date:'H:i d/m/y' }}{% if event.ends %}{% endif %}
+                {% if event.ends %}<br /><strong>Ends</strong> {{ event.ends|date:'H:i d/m/y' }}{% endif %}<br /><br />
+                {% if event.venue %}<strong>Where</strong><br /><pre>{{ event.venue.printable }}</pre>{% endif %}
+                <strong>Details</strong><br />{{ event.description }}<br /><br />
+                <h2>Accommodation</h2>
+                <div class="row">
+                    {% if accommodation %}
+                        {% for acc in accommodation %}
+                            <div class="col-12 col-lg-6">
+                                <strong>{{ acc.hotel.name }}</strong><br />
+                                Checkin: {{ acc.check_in|date:'H:i d/m/y' }}<br />
+                                Checkout: {{ acc.check_out|date:'H:i d/m/y' }}<br /><br />
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No accommodation arranged for event</p>
+                    {% endif %}
+                </div><br />
+                <h2>Travel</h2>
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <strong>Too</strong><br />
+                        {% if to %}
+                            {% for to_event in to %}
+                                From: {{ to_event.departing_station }}<br />
+                                Method: {{ to_event.travel_type }}<br />
+                                When: {{ to_event.departure|date:'H:i d/m/y' }}<br />
+                                {% if to_event.ticket_file %}Ticket: <a href="{{ to_event.ticket_file.url }}">to_event.ticket_file.name</a></a><br />{% endif %}
+                                {% if to_event.notes %}Notes: {{ to_event.notes }}<br />{% endif %}
+                                <br />
+                            {% endfor %}
+                        {% else %}
+                            <p>No travel arranged too event</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <strong>From</strong><br />
+                        {% if from %}
+                            {% for from_event in from %}
+                                From: {{ from_event.departing_station }}<br />
+                                Method: {{ from_event.travel_type }}<br />
+                                When: {{ from_event.departure|date:'H:i d/m/y' }}<br />
+                                {% if to_event.ticket_file %}Ticket: <a href="{{ to_event.ticket_file.url }}">to_event.ticket_file.name</a></a><br />{% endif %}
+                                {% if from_event.notes %}notes: {{ from_event.notes }}<br />{% endif %}
+                                <br />
+                            {% endfor %}
+                        {% else %}
+                            <p>No travel arranged from event</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <aside class="col-sm-12 col-lg-6">
+                {% if event.venue %}<iframe
+                    title="Event Location"
+                    class="col-12"
+                    height="600"
+                    style="border:0"
+                    loading="lazy"
+                    allowfullscreen
+                    src="https://www.google.com/maps/embed/v1/place?key={{ api_key }}&q={{ event.venue|urlencode }}">
+                </iframe>{% endif %}
+            </aside>
+        </div>
+    </section>
+{% endblock %}

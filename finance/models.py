@@ -1,4 +1,7 @@
 from django.db import models
+from monzo.authentication import Authentication
+
+MONZO_REDIRECT_URL = 'http://127.0.0.1:8000/admin/finance/monzo.html'
 
 
 class Lender(models.Model):
@@ -21,6 +24,15 @@ class Lender(models.Model):
 class Merchant(models.Model):
     name = models.CharField('Merchant', max_length=100, null=False, blank=False)
     for_lender = models.ForeignKey(Lender, on_delete=models.RESTRICT, null=True, blank=True)
+
+    def __str__(self) -> str:
+        """
+        To string.
+
+        Returns:
+            Merchant Name
+        """
+        return self.name
 
 
 class Payment(models.Model):
@@ -83,6 +95,53 @@ class Monzo(models.Model):
     client_id = models.CharField('Client ID', max_length=100)
     client_secret = models.CharField('Client Secret', max_length=100)
     owner_id = models.CharField('Owner ID', max_length=100)
-    access_token = models.CharField('Access Token', max_length=100)
-    expiry = models.BigIntegerField('Expiry')
-    refresh_token = models.CharField('Refresh Token', max_length=100)
+    access_token = models.CharField('Access Token', max_length=100, null=True, blank=True)
+    expiry = models.BigIntegerField('Expiry', null=True, blank=True)
+    refresh_token = models.CharField('Refresh Token', max_length=100, null=True, blank=True)
+
+    @property
+    def linked(self):
+        """
+        Property to identify if Monzo is linked.
+
+        Returns:
+            Yes if linked otherwise No
+        """
+        return 'Yes' if all([self.access_token, self.expiry, self.refresh_token]) else 'No'
+
+    def save(self, *args, **kwargs):
+        """
+        Override sae method to ensure we only have one record.
+        """
+        if not self.pk and Monzo.objects.exists():
+            raise ValueError('Monzo configuration already exists')
+        super(Monzo, self).save(*args, **kwargs)
+
+    def link_url(self) -> str:
+        """
+        Property for the link.
+
+        Returns:
+             The link to authenticate Monzo otherwise 'Linked
+        """
+        if not self.refresh_token or 1 == 1:
+            monzo_auth = Authentication(
+                client_id=self.client_id,
+                client_secret=self.client_secret,
+                redirect_url=MONZO_REDIRECT_URL,
+                access_token=self.access_token,
+            )
+            return f'<a href="{monzo_auth.authentication_url}">LINK</a>'
+        return 'Linked'
+
+    def __str__(self):
+        """
+        To string for Monzo.
+
+        Returns:
+            The name of the Event
+        """
+        return 'Monzo Configuration'
+
+    class Meta:
+        verbose_name_plural = 'Monzo'

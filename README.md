@@ -12,6 +12,14 @@ sudo mount 192.168.0.5:/volume1/Web/ebooks /path/to/ebooks/folder
 
 ## TODO
 
+### Stop duplicate records
+
+When adding a new . record it creates a new one instead of updating the existing
+
+### Slow DNS
+
+Updating DNS on the fly is slow, probably better to add a task queue
+
 ### Books
 
 When a book is deleted the file should be deleted

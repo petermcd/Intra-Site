@@ -21,6 +21,9 @@ class BookAdmin(admin.ModelAdmin):
     ordering = ('title',)
 
     class Media:
+        """
+        Class to add relevant javascript to the admin page.
+        """
         js = (
             'books/js/books.js',
         )

@@ -1,32 +1,57 @@
-from django.conf.urls import url
 from django.contrib import admin
-from django.template.response import TemplateResponse
+from django.utils.safestring import mark_safe
 
-from finance.models import Monzo
+from finance.models import Lender, Loan, Merchant, Monzo
 
 
 @admin.register(Monzo)
 class FinanceAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
 
     def has_add_permission(self, request):
         return True
 
-    def get_urls(self):
-        urls = super(FinanceAdmin, self).get_urls()
-        monzo_urls = [
-            # TODO https://docs.djangoproject.com/en/4.0/ref/contrib/admin/#overriding-the-default-admin-site
-            url('kjhgfd', self.admin_site.admin_view(self.monzo_configuration))
-        ]
-        print(monzo_urls + urls)
-        return monzo_urls + urls
-
-    # Your view definition fn
-    def monzo_configuration(self, request):
-        context = dict(
-            self.admin_site.each_context(request),
-        )
-        return TemplateResponse(request, "finance/admin/monzo.html", context)
-
     def add_view(self, *args, **kwargs):
+        """
+        Create view for configuring items.
+        """
         self.exclude = ['access_token', 'expiry', 'refresh_token']
         return super(FinanceAdmin, self).add_view(*args, **kwargs)
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        self.exclude = ['access_token', 'expiry', 'refresh_token']
+        return super(FinanceAdmin, self).change_view(request, object_id, form_url, extra_context)
+
+    def output_link_url(self):
+        return mark_safe(self.link_url())
+
+    list_display = ('linked', output_link_url,)
+
+
+@admin.register(Lender)
+class LenderAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
+    list_display = ('name', 'url',)
+    ordering = ('name',)
+
+
+@admin.register(Merchant)
+class MerchantAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
+    list_display = ('name', 'for_lender',)
+    ordering = ('name',)
+
+
+@admin.register(Loan)
+class LoanAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
+    list_display = ('lender', 'due_day', 'apr',)
+    ordering = ('lender', 'due_day',)

@@ -7,13 +7,23 @@ from django.http import HttpResponse
 from books.models import Author
 from settings.models import Setting
 
-API_KEY = Setting.objects.filter(name__exact='GOOGLE_API_KEY')[0].value
-URL = Setting.objects.filter(name__exact='GOOGLE_BOOKS_API_URL')[0].value
-
 
 def get_book_details(request, search_type: str, search: str):
-    querystring = f'q={search_type}:{search}&key={API_KEY}'
-    res = requests.get(f'{URL}{querystring}')
+    """
+    Fetch book details from the Google books API.
+
+    Args:
+        request: API Request
+        search_type: What to search for
+        search: Test to search for
+
+    Returns:
+         List of dicts
+    """
+    api_key = Setting.objects.filter(name__exact='GOOGLE_API_KEY')[0].value
+    api_url = Setting.objects.filter(name__exact='GOOGLE_BOOKS_API_URL')[0].value
+    querystring = f'q={search_type}:{search}&key={api_key}'
+    res = requests.get(f'{api_url}{querystring}')
     content_type = 'application/json'
     response: Dict[str, Any] = {
         'success': False,

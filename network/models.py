@@ -1,4 +1,8 @@
 from django.db import models
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
+
+from automation.automation import Automation
 
 
 class DeviceManufacturer(models.Model):
@@ -136,6 +140,9 @@ class Domains(models.Model):
         """
         return self.name
 
+    class Meta:
+        verbose_name_plural = 'Domains'
+
 
 class Device(models.Model):
     """
@@ -147,6 +154,15 @@ class Device(models.Model):
     device_type = models.ForeignKey(DeviceType, on_delete=models.RESTRICT, null=False, blank=False)
     model = models.ForeignKey(DeviceModel, on_delete=models.RESTRICT, null=False, blank=False)
     operating_system = models.ForeignKey(OperatingSystemVersion, on_delete=models.RESTRICT, null=True, blank=True)
+    connected_too = models.ForeignKey('Device', on_delete=models.RESTRICT, null=True, blank=True)
+    __original_ip_id = None
+
+    def __init__(self, *args, **kwargs):
+        """
+        Overridden init.
+        """
+        super(Device, self).__init__(*args, **kwargs)
+        self.__original_ip_id = self.ip_id
 
     def __str__(self) -> str:
         """
@@ -165,6 +181,14 @@ class Subdomain(models.Model):
     subdomain = models.CharField('Subdomain', max_length=200, unique=True, null=False)
     domain = models.ForeignKey(Domains, on_delete=models.RESTRICT, null=False, blank=False)
     device = models.ForeignKey(Device, on_delete=models.RESTRICT, null=False, blank=False)
+    __original_device_id = None
+
+    def __init__(self, *args, **kwargs):
+        """
+        Overridden init.
+        """
+        super(Subdomain, self).__init__(*args, **kwargs)
+        self.__original_device_id = self.device_id
 
     def __str__(self) -> str:
         """
@@ -181,18 +205,11 @@ class Website(models.Model):
     Model for Website.
     """
     name = models.CharField('Name', max_length=255, unique=True, null=False)
-    url = models.URLField('URL', max_length=200, unique=True, null=False)
+    description = models.CharField('Description', max_length=1000, null=False, blank=False)
+    secure = models.BooleanField('Secure', default=True, null=False, blank=False)
     subdomain = models.ForeignKey(Subdomain, on_delete=models.RESTRICT, null=False, blank=False)
-    __original_subdomain_id = None
-    __original_url = None
-
-    def __init__(self, *args, **kwargs):
-        """
-        Overridden init.
-        """
-        super(Website, self).__init__(*args, **kwargs)
-        self.__original_subdomain_id = self.subdomain_id
-        self.__original_url = self.url
+    path = models.CharField('Path', max_length=200, unique=True, null=False)
+    notes = models.CharField('Notes', max_length=1000, null=True, blank=True)
 
     def __str__(self) -> str:
         """
@@ -201,12 +218,57 @@ class Website(models.Model):
         Returns:
             string representation of the object.
         """
-        return self.url
+        protocol = 'https' if self.secure else 'http'
+        return f'{protocol}://{self.subdomain}{self.path}'
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        if not self.pk:
-            print('new')
-        print('aaa')
-        super(Website, self).save(
-            force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields
+    @property
+    def full_url(self) -> str:
+        """
+        Websites full url.
+
+        Returns:
+            Full URL of website
+        """
+        return self.__str__()
+
+
+@receiver(post_save, sender=Device)
+def device_subdomain_dns(sender, instance, **kwargs):
+    """
+    Trigger to update DNS when a device changes IP.
+
+    Args:
+        sender: Parent object
+        instance: Instance object being updated
+        kwargs: Not used but required by the API
+    """
+    if instance._Device__original_ip_id != instance.ip_id:
+        auto = Automation()
+        subdomains = Subdomain.objects.filter(device=instance)
+        for subdomain in subdomains:
+            auto.update_dns(
+                hostname=subdomain.__str__(), ip=subdomain.device.ip.address, dns_provider=subdomain.domain.registrar.name
+            )
+
+
+@receiver(post_delete, sender=Subdomain)
+def subdomain_delete_dns(sender, instance, **kwargs):
+    """
+    Trigger to delete DNS when a subdomain is removed.
+
+    Args:
+        sender: Parent object
+        instance: Instance object being updated
+        kwargs: Not used but required by the API
+    """
+    auto = Automation()
+    auto.delete_dns(hostname=instance.__str__(), dns_provider=instance.domain.registrar.name)
+
+
+@receiver(post_save, sender=Subdomain)
+def subdomain_save_dns(sender, instance, **kwargs):
+    if instance.device_id != instance._Subdomain__original_device_id:
+        auto = Automation()
+        auto.update_dns(
+            hostname=instance.__str__(), ip=instance.device.ip.address, dns_provider=instance.domain.registrar.name
         )

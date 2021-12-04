@@ -57,6 +57,16 @@ class Venue(models.Model):
         """
         return f'{self.name} - {self.city}'
 
+    @property
+    def printable(self) -> str:
+        """
+        Printable representation of the model.
+
+        Returns:
+            Printable version of the venue as a string
+        """
+        return f'{self.name}\n{self.street_address}\n{self.city}\n{self.country}\n{self.postcode}'
+
 
 class Station(models.Model):
     """
@@ -99,11 +109,62 @@ class Event(models.Model):
         """
         return self.name
 
+    @property
+    def accommodation_arranged(self) -> str:
+        """
+        Property to identify if accommodation has been arranged.
+
+        Returns:
+            Yes or no
+        """
+        arranged = 'No'
+        accommodation = Accommodation.objects.filter(for_event__exact=self)
+        if accommodation:
+            arranged = 'Yes'
+        return arranged
+
+    @property
+    def travel_arranged(self) -> str:
+        """
+        Property to identify if travel has been arranged.
+
+        Returns:
+            Yes, partial or no
+        """
+        arranged = 'No'
+        t_to = Travel.objects.filter(for_event__exact=self, direction__exact='To')
+        t_from = Travel.objects.filter(for_event__exact=self, direction__exact='From')
+        if all([t_to, t_from]):
+            arranged = 'Yes'
+        elif any([t_to, t_from]):
+            arranged = 'Partial'
+        return arranged
+
+
+class TravelType(models.Model):
+    name = models.CharField(max_length=255, verbose_name='Name')
+
+    def __str__(self) -> str:
+        """
+        To string for TravelType.
+
+        Returns:
+            Travel type name as a string
+        """
+        return self.name
+
 
 class Travel(models.Model):
     """
     Model for Travel
     """
+    travel_type = models.ForeignKey(
+        TravelType,
+        verbose_name='Travel Type',
+        null=False,
+        on_delete=models.RESTRICT,
+        related_name='travel_type'
+    )
     departing_station = models.ForeignKey(
         Station,
         verbose_name='Departing Station',
@@ -138,3 +199,42 @@ class Travel(models.Model):
         """
         verbose_name = 'Travel'
         verbose_name_plural = 'Travel'
+
+
+class Hotel(models.Model):
+    """
+    Model for Hotels.
+    """
+    name = models.CharField(max_length=255, verbose_name='Name')
+    street_address = models.CharField(max_length=255, verbose_name='Street Address')
+    city = models.CharField(max_length=255, verbose_name='City')
+    country = models.CharField(max_length=255, verbose_name='Country')
+    postcode = models.CharField(max_length=255, verbose_name='Postcode')
+
+    def __str__(self) -> str:
+        """
+        To string for Venue.
+
+        Returns:
+            The name and city of the venue
+        """
+        return f'{self.name} - {self.city}'
+
+
+class Accommodation(models.Model):
+    hotel = models.ForeignKey(
+        Hotel,
+        verbose_name='Hotel',
+        null=False,
+        on_delete=models.RESTRICT,
+        related_name='event_hotel'
+    )
+    for_event = models.ForeignKey(
+        Event,
+        verbose_name='Event',
+        null=False,
+        on_delete=models.RESTRICT,
+        related_name='event_accommodation'
+    )
+    check_in = models.DateTimeField(verbose_name='Check In')
+    check_out = models.DateTimeField(verbose_name='Check Out')
