@@ -208,7 +208,7 @@ class Website(models.Model):
     description = models.CharField('Description', max_length=1000, null=False, blank=False)
     secure = models.BooleanField('Secure', default=True, null=False, blank=False)
     subdomain = models.ForeignKey(Subdomain, on_delete=models.RESTRICT, null=False, blank=False)
-    path = models.CharField('Path', max_length=200, unique=True, null=False)
+    path = models.CharField('Path', max_length=200, unique=False, null=False)
     notes = models.CharField('Notes', max_length=1000, null=True, blank=True)
 
     def __str__(self) -> str:
