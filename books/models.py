@@ -23,7 +23,7 @@ def content_file_name(instance, filename):
     path = 'downloads/books/'
     ext = filename.split('.')[-1]
     filename = f'{path}{instance.isbn10}.{ext}'
-    if instance.isbn10 == '0000000000':
+    if instance.isbn10.startswith('00000'):
         filename = f'{path}{instance.title}.{ext}'
     return filename
 
