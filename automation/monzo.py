@@ -1,16 +1,18 @@
 import sys
+
 sys.dont_write_bytecode = True
 import os
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Intranet.settings')
 import django
+
 django.setup()
 
 from monzo.authentication import Authentication
 
-from settings.models import Setting
-from finance.models import Monzo, MONZO_REDIRECT_URL
+from finance.models import MONZO_REDIRECT_URL, Monzo
 from finance.views import MonzoStorage
-
+from settings.models import Setting
 
 monzo_auth = Authentication(
     client_id=self.client_id,

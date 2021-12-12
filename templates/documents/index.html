@@ -1,0 +1,27 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Documents{% endblock %}
+{% block breadcrumbs %}<a href="/">Home</a> > Documents{% endblock %}
+{% block content %}
+        <section id="table_list">
+            <div class="row" id="row_header">
+                <div class="title col-3">Name</div>
+                <div class="authors col-3">Download</div>
+                <div class="authors col-6">Description</div>
+            </div>{% for document in document_list %}
+            <div class="row">
+                <div class="title col-3">{{ document.name }}</div>
+                <div class="authors col-3"><a href="{{ document.document.url }}">DOWNLOAD</a></div>
+                <div class="authors col-6">{{ document.description }}</div>
+            </div>{% endfor %}
+            <div class="row text-end">
+                <div class="pagination col-3">
+                    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}{{ search_term }}">Previous</a>{% else %}Previous{% endif %}&nbsp;
+                    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}{{ search_term }}">Next</a>{% else %}Next{% endif %}
+                </div>
+                <div class="search col-9">
+                    <form><label for="search">Name</label><input type="text" name="q" id="search" /><button>Search</button></form>
+                </div>
+            </div>
+        </section>
+{% endblock %}

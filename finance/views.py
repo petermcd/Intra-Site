@@ -34,7 +34,7 @@ class MonzoAuthView(generic.TemplateView):
     """
     template_name = 'admin/monzo/monzo.html'
 
-    def get_context_data(self) -> Dict[str, Union[bool, str]]:
+    def get_context_data(self) -> Dict[str, Union[bool, object, str]]:
         """
         Prepare the context view to output.
 
@@ -43,7 +43,7 @@ class MonzoAuthView(generic.TemplateView):
         """
         return self._validate_monzo()
 
-    def _validate_monzo(self) -> Dict[str, Union[bool, str]]:
+    def _validate_monzo(self) -> Dict[str, Union[bool, object, str]]:
         """
         Validate and process the authentication request.
 
