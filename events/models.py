@@ -119,11 +119,8 @@ class Event(models.Model):
         Returns:
             Yes or no
         """
-        arranged = 'No'
         accommodation = Accommodation.objects.filter(for_event__exact=self)
-        if accommodation:
-            arranged = 'Yes'
-        return arranged
+        return 'Yes' if accommodation else 'No'
 
     @property
     def travel_arranged(self) -> str:
