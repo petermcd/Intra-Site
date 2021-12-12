@@ -45,7 +45,7 @@ function populate_form(form_data) {
     let $author_select = django.jQuery('#id_authors');
     for (let author of form_data['authors']) {
         if (!option_exists(author['id'])) {
-            $author_select.append(new Option(author['name'].htmlEscape(), author['id'].htmlEscape()));
+            $author_select.append(new Option(author['name'], author['id']));
         }
         $author_select.val(author['id']).change();
     }
