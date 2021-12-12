@@ -18,7 +18,7 @@
                     <div class="pages"><strong>Pages</strong>: {{ book.pages }}</div>
                     <div class="isbn10"><strong>ISBN 10</strong>: {{ book.isbn10 }}</div>
                     <div class="isbn13"><strong>ISBN 13</strong>: {{ book.isbn13 }}</div>
-                    {% if book.ebook_url %}<div class="ebook_url"><a href="{{ book.ebook_url }}" target="_blank">DOWNLOAD</a></div>{% endif %}
+                    {% if book.ebook %}<div class="ebook_url"><a href="{{ book.ebook.url }}" target="_blank">DOWNLOAD</a></div>{% endif %}
                 </aside>
             </div>
         </div>
