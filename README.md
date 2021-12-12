@@ -12,6 +12,7 @@ mkdir /home/pi/Intra-Site/downloads/
 sudo mount 192.168.0.5:/volume1/Web/ebooks /home/pi/Intra-Site/downloads/books
 sudo mount 192.168.0.5:/volume1/Web/event-tickets /home/pi/Intra-Site/downloads/event-tickets
 sudo mount 192.168.0.5:/volume1/Web/travel-tickets /home/pi/Intra-Site/downloads/travel-tickets
+sudo mount 192.168.0.5:/volume1/Web/documents /home/pi/Intra-Site/downloads/documents
 ```
 
 ## TODO

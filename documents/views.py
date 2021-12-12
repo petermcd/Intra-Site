@@ -1,24 +1,24 @@
 from django.views import generic
 
-from books.models import Book
+from documents.models import Document
 
 
 class IndexView(generic.ListView):
     paginate_by = 10
-    template_name = 'books/index.html'
-    context_object_name = 'book_list'
+    template_name = 'documents/index.html'
+    context_object_name = 'document_list'
 
     def get_queryset(self):
         """
-        Get book objects to display in index view matching the optional get query.
+        Get document objects to display in index view matching the optional get query.
 
         Return:
-            List of book objects
+            List of document objects
         """
         term = self.request.GET.get('q')
-        objects = Book.objects.all().order_by('title')
+        objects = Document.objects.all().order_by('name')
         if term:
-            objects = Book.objects.filter(title__icontains=term).order_by('title')
+            objects = Document.objects.filter(title__icontains=term).order_by('name')
         return objects
 
     def get_context_data(self, **kwargs):
@@ -34,17 +34,3 @@ class IndexView(generic.ListView):
         context = super().get_context_data(**kwargs)
         context['search_term'] = term
         return context
-
-
-class DetailView(generic.DetailView):
-    model = Book
-    template_name = 'books/detail.html'
-
-    def get_queryset(self):
-        """
-        Get book objects to display in detail view.
-
-        Return:
-            List of book objects
-        """
-        return Book.objects.all()

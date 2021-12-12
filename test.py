@@ -4,18 +4,18 @@ import sys
 sys.dont_write_bytecode = True
 
 # Django specific settings
-import os # NOQA E402
+import os  # NOQA E402
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Intranet.settings')
-import django # NOQA E402
+import django  # NOQA E402
 
 django.setup()
 
-from monzo.authentication import Authentication # NOQA E402
-from monzo.endpoints.account import Account # NOQA E402
+from monzo.authentication import Authentication  # NOQA E402
+from monzo.endpoints.account import Account  # NOQA E402
 
-from finance.models import MONZO_REDIRECT_URL, Monzo # NOQA E402
-from finance.views import MonzoStorage # NOQA E402
+from finance.models import MONZO_REDIRECT_URL, Monzo  # NOQA E402
+from finance.views import MonzoStorage  # NOQA E402
 
 
 class MonzoAutomation:
