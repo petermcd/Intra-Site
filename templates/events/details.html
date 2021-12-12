@@ -11,6 +11,7 @@
             <div class="details col-sm-12 col-lg-6">
                 <strong>Starts</strong> {{ event.start|date:'H:i d/m/y' }}{% if event.ends %}{% endif %}
                 {% if event.ends %}<br /><strong>Ends</strong> {{ event.ends|date:'H:i d/m/y' }}{% endif %}<br /><br />
+                {% if event.ticket_file %}<br /><strong>Ticket</strong> <a href="{{ event.ticket_file.url }}">Ticket</a>{% endif %}<br /><br />
                 {% if event.venue %}<strong>Where</strong><br /><pre>{{ event.venue.printable }}</pre>{% endif %}
                 <strong>Details</strong><br />{{ event.description }}<br /><br />
                 <h2>Accommodation</h2>

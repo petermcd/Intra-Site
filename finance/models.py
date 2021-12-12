@@ -92,12 +92,12 @@ def format_money(money: int, symbol_left: str = '£', symbol_right: str = '') ->
 
 
 class Monzo(models.Model):
-    client_id = models.CharField('Client ID', max_length=100)
-    client_secret = models.CharField('Client Secret', max_length=100)
-    owner_id = models.CharField('Owner ID', max_length=100)
-    access_token = models.CharField('Access Token', max_length=100, null=True, blank=True)
+    client_id = models.CharField('Client ID', max_length=300)
+    client_secret = models.CharField('Client Secret', max_length=300)
+    owner_id = models.CharField('Owner ID', max_length=300)
+    access_token = models.CharField('Access Token', max_length=300, null=True, blank=True)
     expiry = models.BigIntegerField('Expiry', null=True, blank=True)
-    refresh_token = models.CharField('Refresh Token', max_length=100, null=True, blank=True)
+    refresh_token = models.CharField('Refresh Token', max_length=300, null=True, blank=True)
 
     @property
     def linked(self):
