@@ -5,7 +5,7 @@ from monzo.authentication import Authentication
 from monzo.exceptions import MonzoAuthenticationError
 from monzo.handlers.storage import Storage
 
-from finance.models import MONZO_REDIRECT_URL, Monzo
+from finance.models import Monzo
 
 
 class MonzoStorage(Storage):
@@ -57,7 +57,7 @@ class MonzoAuthView(generic.TemplateView):
         monzo_auth = Authentication(
             client_id=monzo_record[0].client_id,
             client_secret=monzo_record[0].client_secret,
-            redirect_url=MONZO_REDIRECT_URL,
+            redirect_url=monzo_record[0].redirect_url,
             access_token=monzo_record[0].access_token,
             )
         handler = MonzoStorage()

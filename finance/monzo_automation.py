@@ -20,8 +20,7 @@ from monzo.authentication import Authentication  # NOQA E402
 from monzo.endpoints.account import Account  # NOQA E402
 from monzo.endpoints.transaction import Transaction  # NOQA E402
 
-from finance.models import (MONZO_REDIRECT_URL, Loan, LoanAudit,  # NOQA E402
-                            Merchant, Monzo)
+from finance.models import (Loan, LoanAudit, Merchant, Monzo)  # NOQA E402
 from finance.views import MonzoStorage  # NOQA E402
 
 
@@ -51,7 +50,7 @@ class MonzoAutomation:
         self._monzo_auth = Authentication(
             client_id=monzo_config.client_id,
             client_secret=monzo_config.client_secret,
-            redirect_url=MONZO_REDIRECT_URL,
+            redirect_url=monzo_config.redirect_url,
             access_token=monzo_config.access_token,
             access_token_expiry=monzo_config.expiry,
             refresh_token=monzo_config.refresh_token,
