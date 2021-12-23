@@ -129,15 +129,13 @@ class Monzo(models.Model):
         Returns:
              The link to authenticate Monzo otherwise 'Linked
         """
-        if not self.refresh_token or 1 == 1:
-            monzo_auth = Authentication(
-                client_id=self.client_id,
-                client_secret=self.client_secret,
-                redirect_url=self.redirect_url,
-                access_token=self.access_token,
-            )
-            return f'<a href="{monzo_auth.authentication_url}">LINK</a>'
-        return 'Linked'
+        monzo_auth = Authentication(
+            client_id=self.client_id,
+            client_secret=self.client_secret,
+            redirect_url=self.redirect_url,
+            access_token=self.access_token,
+        )
+        return f'<a href="{monzo_auth.authentication_url}">LINK</a>'
 
     def __str__(self):
         """
