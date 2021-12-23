@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from finance.models import Lender, Loan, Merchant, Monzo
+from finance.models import Lender, Loan, Monzo
 
 
 @admin.register(Monzo)
