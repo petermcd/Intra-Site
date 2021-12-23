@@ -22,8 +22,8 @@ class Lender(models.Model):
 
 
 class Merchant(models.Model):
-    name = models.CharField('Merchant', max_length=100, null=False, blank=False)
-    for_lender = models.ForeignKey(Lender, on_delete=models.RESTRICT, null=True, blank=True)
+    name = models.CharField('Merchant', unique=True, max_length=100, null=False, blank=False)
+    logo = models.URLField('Logo', null=True, blank=True)
 
     def __str__(self) -> str:
         """
@@ -35,32 +35,20 @@ class Merchant(models.Model):
         return self.name
 
 
-class Payment(models.Model):
-    transaction_id = models.CharField('Transaction ID', max_length=50, primary_key=True)
-    merchant = models.ForeignKey(Merchant, on_delete=models.RESTRICT)
-    amount = models.BigIntegerField('Amount', default=0, null=False, blank=False)
-    pending = models.BooleanField('Pending', default=False, null=False, blank=False)
-    when = models.DateTimeField('Created', null=False, blank=False)
-    settled = models.DateTimeField('Settled', null=True, blank=True)
-
-
-class DebtBalance(models.Model):
-    """
-    Model to host debt balances..
-    """
-    transaction_amount = models.BigIntegerField('Transaction Amount', null=False)
-    current_balance = models.BigIntegerField('Balance', null=False, default=0)
-    when = models.DateTimeField('When', blank=False, null=False)
-
-
 class Loan(models.Model):
     """
     Model to host loans.
     """
     lender = models.ForeignKey(Lender, on_delete=models.RESTRICT, null=False)
-    due_day = models.SmallIntegerField('Due day', null=False)
-    apr = models.FloatField('APR', null=False)
-    transactions = models.ManyToManyField(DebtBalance)
+    due_day = models.SmallIntegerField('Due day', null=False, default=1)
+    monthly_payments = models.BigIntegerField('Monthly Payments', null=False, default=0)
+    current_balance = models.BigIntegerField('Balance', null=False, default=0)
+    apr = models.DecimalField('APR', max_digits=5, decimal_places=3, null=False,  default=0.0)
+    merchant = models.ForeignKey(Merchant, on_delete=models.RESTRICT, blank=True, null=True)
+    variable_payment = models.BooleanField('Variable Payment', default=False)
+    start_date = models.DateTimeField('Start Date', blank=True, null=True)
+    last_payment = models.DateTimeField('Last Payment', blank=True, null=True)
+    notes = models.CharField('Notes', max_length=300, null=False, blank=False)
 
     def __str__(self) -> str:
         """
@@ -69,11 +57,28 @@ class Loan(models.Model):
         Returns:
             Lender name and amount remaining
         """
-        last_transaction = self.transactions.order_by('-when')[:1]
-        balance = format_money(0)
-        if last_transaction:
-            balance = format_money(last_transaction.current_balance)
-        return f'{self.lender.name} - {balance}'
+        return f'{self.lender.name} - {format_money(self.current_balance)}'
+
+    @property
+    def merchant_configured(self) -> str:
+        return '' if bool(self.merchant) else 'No'
+
+
+class LoanAudit(models.Model):
+    message = models.CharField('Message', max_length=100, null=False, blank=False)
+    transaction_value = models.BigIntegerField('Transaction Value', null=False, blank=False)
+    for_loan = models.ForeignKey(Loan, on_delete=models.RESTRICT, blank=False, null=False)
+    loan_balance = models.BigIntegerField('Loan Balance', null=False, default=0)
+    when = models.DateTimeField('When', blank=False, null=False)
+
+    def __str__(self) -> str:
+        """
+        To string.
+
+        Returns:
+            Summary of record
+        """
+        return f'{self.for_loan} - {self.message} - {self.transaction_value}'
 
 
 def format_money(money: int, symbol_left: str = '£', symbol_right: str = '') -> str:
@@ -98,6 +103,7 @@ class Monzo(models.Model):
     access_token = models.CharField('Access Token', max_length=300, null=True, blank=True)
     expiry = models.BigIntegerField('Expiry', null=True, blank=True)
     refresh_token = models.CharField('Refresh Token', max_length=300, null=True, blank=True)
+    last_fetch = models.DateTimeField('Last Fetch', blank=True, null=True)
 
     @property
     def linked(self):

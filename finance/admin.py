@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from finance.models import Lender, Loan, Merchant, Monzo
+from finance.models import Lender, Loan, Monzo
 
 
 @admin.register(Monzo)
@@ -21,6 +21,9 @@ class FinanceAdmin(admin.ModelAdmin):
         return super(FinanceAdmin, self).add_view(*args, **kwargs)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
+        """
+        Modify view so that some fields are hidden.
+        """
         self.exclude = ['access_token', 'expiry', 'refresh_token']
         return super(FinanceAdmin, self).change_view(request, object_id, form_url, extra_context)
 
@@ -39,19 +42,10 @@ class LenderAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
 
-@admin.register(Merchant)
-class MerchantAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
-    list_display = ('name', 'for_lender',)
-    ordering = ('name',)
-
-
 @admin.register(Loan)
 class LoanAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
-    list_display = ('lender', 'due_day', 'apr',)
+    list_display = ('lender', 'due_day', 'apr', 'merchant_configured',)
     ordering = ('lender', 'due_day',)
