@@ -16,7 +16,9 @@ django.setup()
 
 from monzo.authentication import Authentication  # NOQA E402
 from monzo.endpoints.account import Account  # NOQA E402
+
 from monzo.endpoints.transaction import Transaction  # NOQA E402
+
 
 from finance.models import MONZO_REDIRECT_URL, Monzo  # NOQA E402
 from finance.views import MonzoStorage  # NOQA E402
