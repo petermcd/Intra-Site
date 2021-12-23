@@ -1,5 +1,8 @@
 # Turn off bytecode generation
+import datetime
 import sys
+
+from typing import List
 
 sys.dont_write_bytecode = True
 
@@ -13,6 +16,7 @@ django.setup()
 
 from monzo.authentication import Authentication  # NOQA E402
 from monzo.endpoints.account import Account  # NOQA E402
+from monzo.endpoints.transaction import Transaction  # NOQA E402
 
 from finance.models import MONZO_REDIRECT_URL, Monzo  # NOQA E402
 from finance.views import MonzoStorage  # NOQA E402
@@ -39,10 +43,25 @@ class MonzoAutomation:
         handler = MonzoStorage()
         self._monzo_auth.register_callback_handler(handler)
 
-    def fetch_transactions(self):
-        accounts = Account.fetch(self._monzo_auth, 'uk_retail')
-        print(accounts)
+    def fetch_accounts(self) -> List[Account]:
+        return Account.fetch(auth=self._monzo_auth, account_type='uk_retail')
+
+    def fetch_transactions(self, account: Account) -> List[Transaction]:
+        today = datetime.date.today()
+        since_date = today - datetime.timedelta(days=7)
+        since = datetime.datetime(
+            year=since_date.year,
+            month=since_date.month,
+            day=since_date.day,
+        )
+        return Transaction.fetch(
+            auth=self._monzo_auth,
+            account_id=account.account_id,
+            since=since,
+        )
 
 
 a = MonzoAutomation()
-a.fetch_transactions()
+accounts = a.fetch_accounts()
+transactions = a.fetch_transactions(account=accounts[0])
+print(transactions)
