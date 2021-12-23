@@ -1,7 +1,7 @@
 from django.db import models
 from monzo.authentication import Authentication
 
-MONZO_REDIRECT_URL = 'http://127.0.0.1:8000/admin/finance/monzo.html'
+MONZO_REDIRECT_URL = 'http://intra.devfaq.com:8000/admin/finance/monzo.html'
 
 
 class Lender(models.Model):
