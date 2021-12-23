@@ -1,8 +1,6 @@
 from django.db import models
 from monzo.authentication import Authentication
 
-MONZO_REDIRECT_URL = 'http://intra.devfaq.com/admin/finance/monzo.html'
-
 
 class Lender(models.Model):
     """
@@ -97,6 +95,7 @@ def format_money(money: int, symbol_left: str = '£', symbol_right: str = '') ->
 
 
 class Monzo(models.Model):
+    site = models.CharField('Site', max_length=100)
     client_id = models.CharField('Client ID', max_length=300)
     client_secret = models.CharField('Client Secret', max_length=300)
     owner_id = models.CharField('Owner ID', max_length=300)
@@ -134,7 +133,7 @@ class Monzo(models.Model):
             monzo_auth = Authentication(
                 client_id=self.client_id,
                 client_secret=self.client_secret,
-                redirect_url=MONZO_REDIRECT_URL,
+                redirect_url=self.redirect_url,
                 access_token=self.access_token,
             )
             return f'<a href="{monzo_auth.authentication_url}">LINK</a>'
@@ -148,6 +147,15 @@ class Monzo(models.Model):
             The name of the Event
         """
         return 'Monzo Configuration'
+
+    @property
+    def redirect_url(self) -> str:
+        """
+        Fetch the redirect url.
+
+        Returns: redirect url as a string
+        """
+        return f'{self.site}/admin/finance/monzo.html'
 
     class Meta:
         verbose_name_plural = 'Monzo'

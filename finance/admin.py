@@ -5,7 +5,7 @@ from finance.models import Lender, Loan, Monzo
 
 
 @admin.register(Monzo)
-class FinanceAdmin(admin.ModelAdmin):
+class MonzoAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
@@ -17,17 +17,23 @@ class FinanceAdmin(admin.ModelAdmin):
         """
         Create view for configuring items.
         """
-        self.exclude = ['access_token', 'expiry', 'refresh_token']
-        return super(FinanceAdmin, self).add_view(*args, **kwargs)
+        self.exclude = ['access_token', 'expiry', 'last_fetch', 'refresh_token']
+        return super(MonzoAdmin, self).add_view(*args, **kwargs)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         """
         Modify view so that some fields are hidden.
         """
-        self.exclude = ['access_token', 'expiry', 'refresh_token']
-        return super(FinanceAdmin, self).change_view(request, object_id, form_url, extra_context)
+        self.exclude = ['access_token', 'expiry', 'last_fetch', 'refresh_token']
+        return super(MonzoAdmin, self).change_view(request, object_id, form_url, extra_context)
 
-    def output_link_url(self):
+    def output_link_url(self) -> str:
+        """
+        Output the link URL
+
+        Returns:
+            Link as a string
+        """
         return mark_safe(self.link_url())
 
     list_display = ('linked', output_link_url,)
