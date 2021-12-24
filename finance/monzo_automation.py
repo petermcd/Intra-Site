@@ -99,7 +99,7 @@ class MonzoAutomation:
                 month=since_date.month,
                 day=since_date.day,
                 hour=since_date.hour,
-                minute=since_date.hour,
+                minute=since_date.minute,
                 second=since_date.second,
             )
         account = self._fetch_accounts()
@@ -142,6 +142,9 @@ class MonzoAutomation:
                     'name': transaction.merchant['name'],
                     'logo': transaction.merchant['logo'],
                 }
+            monzo = Monzo.objects.all()[0]
+            monzo.last_fetch = transaction.created
+            monzo.save()
         return merchants
 
     def _fetch_transactions(self, account: Account, since: Optional[datetime.datetime] = None) -> List[Transaction]:
@@ -184,10 +187,6 @@ class MonzoAutomation:
             )
             audit.save()
 
-            monzo = Monzo.objects.all()[0]
-            monzo.last_fetch = transaction.created
-            monzo.save()
-
     def _process_loan_transaction(self, transaction: Transaction):
         """
         Method to process a transaction to update items in the database.
@@ -213,10 +212,6 @@ class MonzoAutomation:
                     when=transaction.created
                 )
                 audit.save()
-
-                monzo = Monzo.objects.all()[0]
-                monzo.last_fetch = transaction.created
-                monzo.save()
 
     @staticmethod
     def _fetch_merchant_model(name: str, logo: str = '') -> Merchant:
