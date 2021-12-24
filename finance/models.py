@@ -33,6 +33,81 @@ class Merchant(models.Model):
         return self.name
 
 
+class Bill(models.Model):
+    """
+    Model to host bills.
+    """
+    company = models.ForeignKey(Lender, on_delete=models.RESTRICT, null=False)
+    due_day = models.SmallIntegerField('Due day', null=False, default=1)
+    monthly_payments = models.BigIntegerField('Monthly Payments', null=False, default=0)
+    merchant = models.ForeignKey(Merchant, on_delete=models.RESTRICT, blank=True, null=True)
+    variable_payment = models.BooleanField('Variable Payment', default=False)
+    last_payment = models.DateTimeField('Last Payment', blank=True, null=True)
+    notes = models.CharField('Notes', max_length=300, null=False, blank=False)
+
+    def __str__(self) -> str:
+        """
+        To string.
+
+        Returns:
+            Lender name and amount remaining
+        """
+        return f'{self.company.name}'
+
+    @property
+    def merchant_configured(self) -> str:
+        return '' if bool(self.merchant) else 'No'
+
+    @property
+    def formatted_monthly_payment(self) -> str:
+        """
+        Fetch the monthly payment formatted.
+
+        Returns:
+            Monthly payment formatted
+        """
+        return format_money(money=self.monthly_payments)
+
+    @property
+    def bill_type(self) -> str:
+        """
+        Property for the bill type.
+
+        Returns:
+            bill type
+        """
+        return 'bill'
+
+
+class BillAudit(models.Model):
+    """
+    Model to host bill audit.
+    """
+    message = models.CharField('Message', max_length=100, null=False, blank=False)
+    transaction_value = models.BigIntegerField('Transaction Value', null=False, blank=False)
+    for_bill = models.ForeignKey(Bill, on_delete=models.RESTRICT, blank=False, null=False)
+    when = models.DateTimeField('When', blank=False, null=False)
+
+    def __str__(self) -> str:
+        """
+        To string.
+
+        Returns:
+            Summary of record
+        """
+        return f'{self.for_bill} - {self.message} - {self.transaction_value}'
+
+    @property
+    def formatted_transaction_value(self) -> str:
+        """
+        Fetch formatted transaction value.
+
+        Returns:
+            Formatted transaction value
+        """
+        return format_money(self.transaction_value)
+
+
 class Loan(models.Model):
     """
     Model to host loans.
@@ -61,8 +136,41 @@ class Loan(models.Model):
     def merchant_configured(self) -> str:
         return '' if bool(self.merchant) else 'No'
 
+    @property
+    def formatted_monthly_payment(self) -> str:
+        """
+        Fetch the monthly payment formatted.
+
+        Returns:
+            Monthly payment formatted
+        """
+        return format_money(money=self.monthly_payments)
+
+    @property
+    def formatted_current_balance(self) -> str:
+        """
+        Fetch the current balance formatted.
+
+        Returns:
+            Current balance formatted
+        """
+        return format_money(money=self.current_balance)
+
+    @property
+    def bill_type(self) -> str:
+        """
+        Property for the bill type.
+
+        Returns:
+            bill type
+        """
+        return 'loan'
+
 
 class LoanAudit(models.Model):
+    """
+    Model to host loan audit.
+    """
     message = models.CharField('Message', max_length=100, null=False, blank=False)
     transaction_value = models.BigIntegerField('Transaction Value', null=False, blank=False)
     for_loan = models.ForeignKey(Loan, on_delete=models.RESTRICT, blank=False, null=False)
@@ -77,6 +185,16 @@ class LoanAudit(models.Model):
             Summary of record
         """
         return f'{self.for_loan} - {self.message} - {self.transaction_value}'
+
+    @property
+    def formatted_transaction_value(self) -> str:
+        """
+        Fetch formatted transaction value.
+
+        Returns:
+            Formatted transaction value
+        """
+        return format_money(self.transaction_value)
 
 
 def format_money(money: int, symbol_left: str = '£', symbol_right: str = '') -> str:
@@ -129,7 +247,7 @@ class Monzo(models.Model):
         Returns:
              The link to authenticate Monzo otherwise 'Linked
         """
-        if not self.refresh_token or 1 == 1:
+        if not self.refresh_token:
             monzo_auth = Authentication(
                 client_id=self.client_id,
                 client_secret=self.client_secret,

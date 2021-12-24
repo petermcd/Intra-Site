@@ -20,7 +20,7 @@ from monzo.authentication import Authentication  # NOQA E402
 from monzo.endpoints.account import Account  # NOQA E402
 from monzo.endpoints.transaction import Transaction  # NOQA E402
 
-from finance.models import (Loan, LoanAudit, Merchant, Monzo)  # NOQA E402
+from finance.models import (Bill, BillAudit, Loan, LoanAudit, Merchant, Monzo)  # NOQA E402
 from finance.views import MonzoStorage  # NOQA E402
 
 
@@ -108,7 +108,8 @@ class MonzoAutomation:
         for transaction in transactions_sorted:
             if not transaction.merchant:
                 continue
-            self._process_transaction(transaction=transaction)
+            self._process_bill_transaction(transaction=transaction)
+            self._process_loan_transaction(transaction=transaction)
 
     def _fetch_accounts(self, account_type: str = 'uk_retail') -> List[Account]:
         """
@@ -161,7 +162,33 @@ class MonzoAutomation:
             expand=['merchant']
         )
 
-    def _process_transaction(self, transaction: Transaction):
+    def _process_bill_transaction(self, transaction: Transaction):
+        """
+        Method to process a transaction to update items in the database.
+
+        Args:
+            transaction: Transaction
+        """
+        merchant = self._fetch_merchant_model(transaction.merchant['name'])
+        bills = Bill.objects.filter(merchant=merchant)
+        for bill in bills:
+            amount = transaction.amount * -1
+            bill.last_payment = transaction.created
+            bill.save()
+
+            audit = BillAudit(
+                message='Updating balance from Monzo payment',
+                for_loan=bill,
+                transaction_value=amount,
+                when=transaction.created
+            )
+            audit.save()
+
+            monzo = Monzo.objects.all()[0]
+            monzo.last_fetch = transaction.created
+            monzo.save()
+
+    def _process_loan_transaction(self, transaction: Transaction):
         """
         Method to process a transaction to update items in the database.
 
@@ -175,6 +202,7 @@ class MonzoAutomation:
             if (not loan.variable_payment and loan.monthly_payments == amount) or loan.variable_payment:
                 previous_balance = loan.current_balance
                 loan.current_balance = previous_balance - amount
+                loan.last_payment = transaction.created
                 loan.save()
 
                 audit = LoanAudit(

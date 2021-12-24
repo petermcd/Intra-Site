@@ -1,7 +1,34 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from finance.models import Lender, Loan, Monzo
+from finance.models import Bill, Lender, Loan, Monzo
+
+
+@admin.register(Bill)
+class BillAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
+    list_display = ('company', 'due_day', 'merchant_configured',)
+    ordering = ('company', 'due_day',)
+
+
+@admin.register(Lender)
+class LenderAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
+    list_display = ('name', 'url',)
+    ordering = ('name',)
+
+
+@admin.register(Loan)
+class LoanAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
+    list_display = ('lender', 'due_day', 'apr', 'merchant_configured',)
+    ordering = ('lender', 'due_day',)
 
 
 @admin.register(Monzo)
@@ -37,21 +64,3 @@ class MonzoAdmin(admin.ModelAdmin):
         return mark_safe(self.link_url())
 
     list_display = ('linked', output_link_url,)
-
-
-@admin.register(Lender)
-class LenderAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
-    list_display = ('name', 'url',)
-    ordering = ('name',)
-
-
-@admin.register(Loan)
-class LoanAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
-    list_display = ('lender', 'due_day', 'apr', 'merchant_configured',)
-    ordering = ('lender', 'due_day',)
