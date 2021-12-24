@@ -1,0 +1,33 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Finance{% endblock %}
+{% block breadcrumbs %}<a href="/">Home</a> > <a href="/finance">Finance</a> > {{ bill.company }}{% endblock %}
+{% block content %}
+    <section id="item_details">
+        <div class="row">
+            <header>
+                <h1>{{ bill.company }}</h1>
+            </header>
+            <div class="details col-sm-12 col-lg-6">
+                <strong>Due Day</strong> {{ bill.due_day }}<br />
+                <strong>Monthly Payment</strong> {{ bill.formatted_monthly_payment }}<br />
+                <strong>Last Payment</strong> {{ bill.last_payment }}<br />
+                <strong>Notes</strong> {{ bill.notes }}<br />
+            </div>
+        </div>
+    </section>
+
+    <section id="table_list">
+        <div class="row" id="row_header">
+            <div class="title col-6">When</div>
+            <div class="when col-6">Payment</div>
+        </div>{% if recent_payments|length < 1 %}
+        <div class="row">
+            <div class="title">No payments found</div>
+        </div>{% endif %}{% for payment in recent_payments %}
+        <div class="row">
+            <div class="title col-6">{{ payment.when }}</div>
+            <div class="when col-6">{{ payment.formatted_transaction_value }}</div>
+        </div>{% endfor %}
+    </section>
+{% endblock %}

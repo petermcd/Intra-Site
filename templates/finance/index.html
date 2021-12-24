@@ -1,0 +1,40 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Finance{% endblock %}
+{% block breadcrumbs %}<a href="/">Home</a> > Finance{% endblock %}
+{% block content %}
+        <header>
+            <h1>Finance</h1>
+        </header>
+        <section id="table_list">
+            <div class="row" id="row_header">
+                <div class="title col-6">Company</div>
+                <div class="when col-3">Due Day</div>
+                <div class="where col-3">Payment</div>
+            </div>{% if object_list|length < 1 %}
+            <div class="row">
+                <div class="title">No bills or loans configured</div>
+            </div>{% endif %}{% for bill in bills_list %}
+            <div class="row">
+                <div class="title col-6">
+                    {% if bill.bill_type == 'loan' %}
+                        <a href="/finance/loan/{{ bill.pk }}/">{{ bill.lender }}</a>
+                    {% else %}
+                        <a href="/finance/bill/{{ bill.pk }}/">{{ bill.company }}</a>
+                    {% endif %}
+                </div>
+                <div class="when col-3">{{ bill.due_day }}</div>
+                <div class="where col-3">{{ bill.formatted_monthly_payment }}</div>
+            </div>{% endfor %}
+            <div class="row">
+                <div class="total col-6"></div>
+                <div class="to_pay col-3">To Pay</div>
+                <div class="to_pay col-3">{{ to_pay }}</div>
+            </div>
+            <div class="row">
+                <div class="total col-6"></div>
+                <div class="to_pay col-3">Total</div>
+                <div class="to_pay col-3">{{ monthly_total }}</div>
+            </div>
+        </section>
+{% endblock %}
