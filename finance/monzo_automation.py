@@ -20,7 +20,8 @@ from monzo.authentication import Authentication  # NOQA E402
 from monzo.endpoints.account import Account  # NOQA E402
 from monzo.endpoints.transaction import Transaction  # NOQA E402
 
-from finance.models import (Bill, BillAudit, Loan, LoanAudit, Merchant, Monzo)  # NOQA E402
+from finance.models import (Bill, BillAudit, Loan, LoanAudit,  # NOQA E402
+                            Merchant, Monzo)
 from finance.views import MonzoStorage  # NOQA E402
 
 
@@ -105,11 +106,14 @@ class MonzoAutomation:
         account = self._fetch_accounts()
         transactions = self._fetch_transactions(account=account[0], since=since)
         transactions_sorted = sorted(transactions, key=transaction_sorted)
+        monzo = Monzo.objects.all()[0]
         for transaction in transactions_sorted:
             if not transaction.merchant:
                 continue
             self._process_bill_transaction(transaction=transaction)
             self._process_loan_transaction(transaction=transaction)
+            monzo.last_fetch = transaction.created
+        monzo.save()
 
     def _fetch_accounts(self, account_type: str = 'uk_retail') -> List[Account]:
         """
@@ -142,9 +146,6 @@ class MonzoAutomation:
                     'name': transaction.merchant['name'],
                     'logo': transaction.merchant['logo'],
                 }
-            monzo = Monzo.objects.all()[0]
-            monzo.last_fetch = transaction.created
-            monzo.save()
         return merchants
 
     def _fetch_transactions(self, account: Account, since: Optional[datetime.datetime] = None) -> List[Transaction]:

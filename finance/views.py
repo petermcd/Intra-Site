@@ -1,12 +1,13 @@
-from django.utils.timezone import now
 from typing import Dict, Union
 
+from django.utils.timezone import now
 from django.views import generic
 from monzo.authentication import Authentication
 from monzo.exceptions import MonzoAuthenticationError
 from monzo.handlers.storage import Storage
 
-from finance.models import Bill, BillAudit, format_money, Loan, LoanAudit, Monzo
+from finance.models import (Bill, BillAudit, Loan, LoanAudit, Monzo,
+                            format_money)
 
 
 def order_objects(bill_object) -> int:
@@ -25,7 +26,7 @@ class BillDetailView(generic.DetailView):
             Context data ready for output in a template
         """
         context = super().get_context_data(**kwargs)
-        context['recent_payments'] = BillAudit.objects.filter(for_loan=context['bill']).order_by('-when')[:15]
+        context['recent_payments'] = BillAudit.objects.filter(for_bill=context['bill']).order_by('-when')[:15]
         return context
 
     def get_queryset(self):
