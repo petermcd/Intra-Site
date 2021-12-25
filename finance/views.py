@@ -51,7 +51,7 @@ class IndexView(generic.ListView):
             List of event objects
         """
         bills = Bill.objects.all().order_by('due_day')
-        items = [bill for bill in bills]
+        items = list(bills)
         loans = Loan.objects.all().filter(start_date__lt=now()).order_by('due_day')
         for loan in loans:
             items.append(loan)
