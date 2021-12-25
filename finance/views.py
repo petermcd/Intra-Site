@@ -69,7 +69,7 @@ class IndexView(generic.ListView):
         to_pay = 0
         for item in context['object_list']:
             monthly_total += item.monthly_payments
-            if item.last_payment and now().month != item.last_payment:
+            if item.last_payment and now().month != item.last_payment.month:
                 to_pay += item.monthly_payments
         context['monthly_total'] = format_money(monthly_total)
         context['to_pay'] = format_money(to_pay)
