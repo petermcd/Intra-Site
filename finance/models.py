@@ -5,6 +5,19 @@ from monzo.authentication import Authentication
 class PaidFrom(models.Model):
     name = models.CharField('Paid From', max_length=100, null=False, blank=False)
 
+    def __str__(self) -> str:
+        """
+        To string.
+
+        Returns:
+            Paid from name
+        """
+        return self.name
+
+    class Meta:
+        verbose_name = 'Paid From'
+        verbose_name_plural = 'Paid From'
+
 
 class Lender(models.Model):
     """
@@ -48,6 +61,7 @@ class Bill(models.Model):
     variable_payment = models.BooleanField('Variable Payment', default=False)
     last_payment = models.DateTimeField('Last Payment', blank=True, null=True)
     notes = models.CharField('Notes', max_length=300, null=False, blank=False)
+    paid_from = models.ForeignKey(PaidFrom, on_delete=models.RESTRICT, null=False)
 
     def __str__(self) -> str:
         """
@@ -126,6 +140,7 @@ class Loan(models.Model):
     start_date = models.DateTimeField('Start Date', blank=True, null=True)
     last_payment = models.DateTimeField('Last Payment', blank=True, null=True)
     notes = models.CharField('Notes', max_length=300, null=False, blank=False)
+    paid_from = models.ForeignKey(PaidFrom, on_delete=models.RESTRICT, null=False)
 
     def __str__(self) -> str:
         """
