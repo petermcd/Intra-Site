@@ -65,14 +65,18 @@ class IndexView(generic.ListView):
             Context data ready for output in a template
         """
         context = super().get_context_data(**kwargs)
-        monthly_total = 0
-        to_pay = 0
+        monthly_total = {}
+        to_pay = {}
         for item in context['object_list']:
-            monthly_total += item.monthly_payments
+            monthly_total[item.paid_from] = monthly_total.get(item.paid_from, 0) + item.monthly_payments
             if item.last_payment and now().month != item.last_payment.month:
-                to_pay += item.monthly_payments
-        context['monthly_total'] = format_money(monthly_total)
-        context['to_pay'] = format_money(to_pay)
+                to_pay[item.paid_from] = to_pay.get(item.paid_from, 0) + item.monthly_payments
+        for to_pay_key in to_pay:
+            to_pay[to_pay_key] = format_money(to_pay[to_pay_key])
+        for monthly_total_key in monthly_total:
+            monthly_total[monthly_total_key] = format_money(monthly_total[monthly_total_key])
+        context['to_pay'] = to_pay
+        context['monthly_total'] = monthly_total
         return context
 
 
