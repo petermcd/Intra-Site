@@ -2,6 +2,10 @@ from django.db import models
 from monzo.authentication import Authentication
 
 
+class PaidFrom(models.Model):
+    name = models.CharField('Paid From', max_length=100, null=False, blank=False)
+
+
 class Lender(models.Model):
     """
     Model to host lender details.

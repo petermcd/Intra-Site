@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from finance.models import Bill, Lender, Loan, Monzo
+from finance.models import Bill, Lender, Loan, Monzo, PaidFrom
 
 
 @admin.register(Bill)
@@ -64,3 +64,12 @@ class MonzoAdmin(admin.ModelAdmin):
         return mark_safe(self.link_url())
 
     list_display = ('linked', output_link_url,)
+
+
+@admin.register(PaidFrom)
+class PaidFromAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
+    list_display = ('name',)
+    ordering = ('name',)
