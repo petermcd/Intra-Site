@@ -182,7 +182,7 @@ class MonzoAutomation:
 
             audit = BillAudit(
                 message='Updating balance from Monzo payment',
-                for_loan=bill,
+                for_bill=bill,
                 transaction_value=amount,
                 when=transaction.created
             )
