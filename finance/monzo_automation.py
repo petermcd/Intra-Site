@@ -201,7 +201,7 @@ class MonzoAutomation:
             amount = transaction.amount * -1
             if (not loan.variable_payment and loan.monthly_payments == amount) or loan.variable_payment:
                 previous_balance = loan.current_balance
-                loan.current_balance = previous_balance - amount
+                loan.current_balance = previous_balance - transaction.amount
                 loan.last_payment = transaction.created
                 loan.save()
 

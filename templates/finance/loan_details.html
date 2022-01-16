@@ -22,15 +22,17 @@
 
     <section id="table_list">
         <div class="row" id="row_header">
-            <div class="title col-6">When</div>
-            <div class="when col-6">Payment</div>
+            <div class="title col-3">When</div>
+            <div class="when col-3">Payment</div>
+            <div class="when col-6">Notes</div>
         </div>{% if recent_payments|length < 1 %}
         <div class="row">
             <div class="title">No payments found</div>
         </div>{% endif %}{% for payment in recent_payments %}
         <div class="row">
-            <div class="title col-6">{{ payment.when }}</div>
-            <div class="when col-6">{{ payment.formatted_transaction_value }}</div>
+            <div class="title col-3">{{ payment.when }}</div>
+            <div class="when col-3">{{ payment.formatted_transaction_value }}</div>
+            <div class="notes col-6">{{ payment.message }}</div>
         </div>{% endfor %}
     </section>
 {% endblock %}
