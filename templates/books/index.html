@@ -6,11 +6,13 @@
         <section id="table_list">
             <div class="row" id="row_header">
                 <div class="title col-6">Title</div>
-                <div class="authors col-6">Authors</div>
+                <div class="authors col-4">Authors</div>
+                <div class="authors col-2">Published</div>
             </div>{% for book in book_list %}
             <div class="row">
                 <div class="title col-6"><a href='/books/{{ book.id }}/'>{{ book.title }}</a></div>
-                <div class="authors col-6"><ul>{% for author in book.authors.all %}<li>{{ author.name }}</li>{% endfor %}</ul></div>
+                <div class="authors col-4"><ul>{% for author in book.authors.all %}<li>{{ author.name }}</li>{% endfor %}</ul></div>
+                <div class="authors col-2">{{ book.published|date:'Y' }}</div>
             </div>{% endfor %}
             <div class="row text-end">
                 <div class="pagination col-6">
