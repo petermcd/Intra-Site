@@ -139,14 +139,10 @@ class MonzoAutomation:
         """
         account = self._fetch_accounts()
         transactions = self._fetch_transactions(account=account[0], since=since)
-        merchants: Dict[str, Dict[str, str]] = {}
-        for transaction in transactions:
-            if transaction.merchant:
-                merchants[transaction.merchant['name']] = {
+        return {transaction.merchant['name']: {
                     'name': transaction.merchant['name'],
                     'logo': transaction.merchant['logo'],
-                }
-        return merchants
+                } for transaction in transactions if transaction.merchant}
 
     def _fetch_transactions(self, account: Account, since: Optional[datetime.datetime] = None) -> List[Transaction]:
         """
@@ -201,7 +197,7 @@ class MonzoAutomation:
             amount = transaction.amount * -1
             if (not loan.variable_payment and loan.monthly_payments == amount) or loan.variable_payment:
                 previous_balance = loan.current_balance
-                loan.current_balance = previous_balance - amount
+                loan.current_balance = previous_balance - transaction.amount
                 loan.last_payment = transaction.created
                 loan.save()
 
