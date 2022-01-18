@@ -296,3 +296,28 @@ class Monzo(models.Model):
 
     class Meta:
         verbose_name_plural = 'Monzo'
+
+
+class Investments(models.Model):
+    company = models.ForeignKey(Lender, on_delete=models.RESTRICT, null=False)
+    value = models.BigIntegerField('Value', null=False, default=0)
+    notes = models.CharField('Notes', max_length=300, null=False, blank=False)
+
+    def __str__(self) -> str:
+        """
+        To string.
+
+        Returns:
+            Paid from name
+        """
+        return f'{self.company} - {self.formatted_value}'
+
+    @property
+    def formatted_value(self) -> str:
+        """
+        Fetch the monthly payment formatted.
+
+        Returns:
+            Monthly payment formatted
+        """
+        return format_money(money=self.value)

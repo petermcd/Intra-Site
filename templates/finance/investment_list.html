@@ -1,0 +1,29 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Investments{% endblock %}
+{% block breadcrumbs %}<a href="/">Home</a> > <a href="/finance/"> Finance</a> > Investments{% endblock %}
+{% block content %}
+        <header>
+            <h1>Investments</h1>
+        </header>
+        <section id="table_list">
+            <div class="row" id="row_header">
+                <div class="company col-3">Company</div>
+                <div class="notes col-6">Notes</div>
+                <div class="value col-3">Value</div>
+            </div>{% if investment_list|length < 1 %}
+            <div class="row">
+                <div class="title">No investments tracked</div>
+            </div>{% else %}{% for investment in investment_list %}
+            <div class="row">
+                <div class="company col-3">{{ investment.company }}</div>
+                <div class="notes col-6">{{ investment.notes }}</div>
+                <div class="value col-3">{{ investment.formatted_value }}</div>
+            </div>{% endfor %}
+            <div class="row">
+                <div class="col-9"></div>
+                <div class="when col-3">{{ total_value }}</div>
+            </div>
+        {% endif %}
+        </section>
+{% endblock %}

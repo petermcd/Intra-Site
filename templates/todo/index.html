@@ -1,0 +1,29 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}ToDo{% endblock %}
+{% block breadcrumbs %}<a href="/">Home</a> > ToDo{% endblock %}
+{% block content %}
+        <header>
+            <h1>ToDo</h1>
+        </header>
+        <section id="table_list">
+            <div class="row" id="row_header">
+                <div class="col-1"></div>
+                <div class="item col-11">Item</div>
+            </div>
+            {% if todo_list|length < 1 %}
+            <div class="row">
+                <div class="col-12"><p>No todo items</p></div>
+            </div>
+            {% else %}
+                {% for todo in todo_list %}
+                <div class="row">
+                    <div class="col-1"><input type="checkbox" value="{{ todo.pk }}" name=""></div>
+                    <div class="col-11"><label for="{{ todo.pk }}">{{ todo.description }} - {{ todo.added }}</label></div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </section>
+        <section id="todo_add">
+        </section>
+{% endblock %}
