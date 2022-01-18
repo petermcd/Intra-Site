@@ -6,8 +6,8 @@ from monzo.authentication import Authentication
 from monzo.exceptions import MonzoAuthenticationError
 from monzo.handlers.storage import Storage
 
-from finance.models import (Bill, BillAudit, Loan, LoanAudit, Monzo,
-                            format_money)
+from finance.models import (Bill, BillAudit, Investments, Loan, LoanAudit,
+                            Monzo, format_money)
 
 
 def order_objects(bill_object) -> int:
@@ -34,7 +34,7 @@ class BillDetailView(generic.DetailView):
         Get event objects to display in detail view.
 
         Return:
-            List of event objects
+            List of bill objects
         """
         return Bill.objects.all()
 
@@ -178,4 +178,29 @@ class MonzoAuthView(generic.TemplateView):
         except MonzoAuthenticationError as exc:
             context = {'success': False, 'error': exc}
 
+        return context
+
+
+class InvestmentView(generic.ListView):
+    template_name = 'finance/investment_list.html'
+    context_object_name = 'investment_list'
+
+    def get_queryset(self):
+        """
+        Get event objects to display in index view.
+
+        Return:
+            List of investment objects
+        """
+        return Investments.objects.all().order_by('company')
+
+    def get_context_data(self, **kwargs):
+        """
+        Obtain context data ready for output
+
+        Return:
+            Context data ready for output in a template
+        """
+        context = super().get_context_data(**kwargs)
+        context['total_value'] = format_money(sum(item.value for item in context['investment_list']))
         return context

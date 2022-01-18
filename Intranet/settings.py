@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'finance.apps.FinanceConfig',
     'network.apps.NetworkConfig',
     'settings.apps.SettingsConfig',
+    'todo.apps.TodoConfig',
 ]
 
 MIDDLEWARE = [
