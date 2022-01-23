@@ -14,5 +14,6 @@ urlpatterns = [
     path('events/', include('events.urls')),
     path('finance/', include('finance.urls')),
     path('network/', include('network.urls')),
+    path('networkv2/', include('networkv2.urls')),
     path('todo/', include('todo.urls')),
 ]
