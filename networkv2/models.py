@@ -44,7 +44,7 @@ class Vendor(models.Model):
     """
     Model for operating system vendor.
     """
-    name = models.CharField('Model', max_length=200, unique=True, null=False)
+    name = models.CharField('Vendor', max_length=200, unique=True, null=False)
     url = models.URLField('URL', max_length=200, unique=True, null=False)
 
     def __str__(self) -> str:
@@ -61,8 +61,9 @@ class OperatingSystem(models.Model):
     """
     Model for operating system.
     """
-    vendor = models.ForeignKey(Vendor, on_delete=models.RESTRICT, null=False, blank=False)
+    name = models.CharField('Name', max_length=100, null=False, blank=False)
     version = models.CharField('Version', max_length=10, null=False, blank=False)
+    vendor = models.ForeignKey(Vendor, on_delete=models.RESTRICT, null=False, blank=False)
 
     def __str__(self) -> str:
         """
@@ -71,7 +72,7 @@ class OperatingSystem(models.Model):
         Returns:
             string representation of the object.
         """
-        return f'{self.vendor.name} - {self.version}'
+        return f'{self.vendor.name} - {self.name} - {self.version}'
 
 
 class ConnectionTypes(models.Model):
@@ -138,6 +139,15 @@ class Device(models.Model):
         """
         return self.hostname
 
+    def ip_changed(self) -> bool:
+        """
+        Check if IP has changed.
+
+        returns:
+        True if changed otherwise false
+        """
+        return self.__original_ip != self.ip
+
 
 class Registrar(models.Model):
     """
@@ -160,7 +170,7 @@ class Domain(models.Model):
     """
     Model for domain.
     """
-    name = models.CharField('Registrar', max_length=30, unique=True, null=False, blank=False)
+    name = models.CharField('Domain', max_length=30, unique=True, null=False, blank=False)
     registrar = models.ForeignKey(Registrar, on_delete=models.RESTRICT, null=False, blank=False)
 
     def __str__(self) -> str:
@@ -180,14 +190,15 @@ class Subdomain(models.Model):
     name = models.CharField('Subdomain', max_length=30, unique=True, null=False, blank=False)
     domain = models.ForeignKey(Domain, on_delete=models.RESTRICT, null=False, blank=False)
     hosted_on = models.ForeignKey(Device, on_delete=models.RESTRICT, null=False, blank=False)
-    __original_device = None
+    __originally_hosted_on = None
 
     def __init__(self, *args, **kwargs):
         """
         Overridden init.
         """
         super(Subdomain, self).__init__(*args, **kwargs)
-        self.__original_device = self.hosted_on
+        if hasattr(self, 'hosted_on'):
+            self.__originally_hosted_on = self.hosted_on
 
     def __str__(self) -> str:
         """
@@ -197,6 +208,15 @@ class Subdomain(models.Model):
             string representation of the object.
         """
         return self.name
+
+    def hosted_on_changed(self) -> bool:
+        """
+        Check if hosted on changed.
+
+        Returns:
+            True if changed otherwise False
+        """
+        return self.__originally_hosted_on != self.hosted_on
 
 
 class Website(models.Model):
@@ -208,7 +228,7 @@ class Website(models.Model):
     secure = models.BooleanField('HTTPs', default=True, null=False, blank=False)
     subdomain = models.ForeignKey(Subdomain, on_delete=models.RESTRICT, null=False, blank=False)
     port = models.IntegerField('Port', default=443, null=False, blank=False)
-    path = models.CharField('Pth', max_length=1000, default='/', null=False, blank=False)
+    path = models.CharField('Path', max_length=1000, default='/', null=False, blank=False)
 
     def __str__(self) -> str:
         """
@@ -244,13 +264,13 @@ def device_subdomain_dns(sender, instance, **kwargs):
         instance: Instance object being updated
         kwargs: Not used but required by the API
     """
-    if instance.__original_ip != instance.ip:
+    if instance.ip_changed():
         auto = Automation()
-        subdomains = Subdomain.objects.filter(device=instance)
+        subdomains = Subdomain.objects.filter(hosted_on=instance)
         for subdomain in subdomains:
             auto.update_dns(
                 hostname=subdomain.__str__(),
-                ip=subdomain.device.ip.address,
+                ip=subdomain.device.ip,
                 dns_provider=subdomain.domain.registrar.name
             )
 
@@ -271,8 +291,8 @@ def subdomain_delete_dns(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Subdomain)
 def subdomain_save_dns(sender, instance, **kwargs):
-    if instance.hosted_on__id != instance.__original_device__id:
+    if instance.hosted_on_changed():
         auto = Automation()
         auto.update_dns(
-            hostname=instance.__str__(), ip=instance.device.ip.address, dns_provider=instance.domain.registrar.name
+            hostname=instance.name, ip=instance.hosted_on.ip, dns_provider=instance.domain.registrar.name
         )
