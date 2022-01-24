@@ -189,6 +189,16 @@ class Subdomain(models.Model):
         super(Subdomain, self).__init__(*args, **kwargs)
         self.__original_device = self.hosted_on
 
+    @property
+    def full_domain(self) -> str:
+        """
+        Property for full domain
+
+        Returns:
+            Concatenation of the domain and subdomain
+        """
+        return f'{self.name}.{self.domain.name}'
+
     def __str__(self) -> str:
         """
         To string method.
@@ -231,7 +241,7 @@ class Website(models.Model):
         port = f':{self.port}'
         if (self.secure and self.port == 443) or (not self.secure and port == 80):
             port = ''
-        return f'{schema}{self.subdomain.name}:{port}{self.path}'
+        return f'{schema}{self.subdomain.full_domain}{port}{self.path}'
 
 
 @receiver(post_save, sender=Device)
