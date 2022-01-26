@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'documents.apps.DocumentsConfig',
     'events.apps.EventsConfig',
     'finance.apps.FinanceConfig',
-    'network.apps.NetworkConfig',
     'networkv2.apps.Networkv2Config',
     'settings.apps.SettingsConfig',
     'todo.apps.TodoConfig',
