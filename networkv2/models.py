@@ -104,6 +104,8 @@ class Device(models.Model):
     connected_via = models.ForeignKey(ConnectionTypes, on_delete=models.RESTRICT, null=False, blank=False)
     connected_too = models.ForeignKey('Device', on_delete=models.RESTRICT, null=True, blank=True)
     port = models.IntegerField('Port', default=0, null=False, blank=False)
+    rack_shelf = models.IntegerField('Rack Shelf', null=True, blank=True)
+    rack_shelf_position = models.IntegerField('Rack Shelf Position', null=True, blank=True)
     notes = models.CharField('Notes', max_length=1000, null=False, blank=False)
     __original_ip = None
 
