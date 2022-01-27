@@ -1,0 +1,12 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Rack{% endblock %}
+{% block breadcrumbs %}<a href="/">Home</a> > <a href="/">Network</a> > Rack{% endblock %}
+{% block content %}
+        <header>
+            <h1>Rack</h1>
+        </header>
+        <section id="rack">
+        </section>
+        <script type="text/javascript" src="{% static 'networkv2/js/rack.js' %}"></script>
+{% endblock %}

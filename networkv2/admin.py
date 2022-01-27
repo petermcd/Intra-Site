@@ -1,8 +1,44 @@
 from django.contrib import admin
 
-from networkv2.models import (ConnectionTypes, Device, Domain, Manufacturer,
+from networkv2.models import (ConnectionType, Device, DeviceType, Domain, Manufacturer,
                               Model, OperatingSystem, Registrar, Subdomain,
                               Vendor, Website)
+
+
+@admin.register(ConnectionType)
+class ConnectionTypesAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
+    list_display = ('name', 'unique_port',)
+    ordering = ('name',)
+
+
+@admin.register(Device)
+class DeviceAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
+    list_display = ('hostname', 'ip',)
+    ordering = ('hostname',)
+
+
+@admin.register(DeviceType)
+class DeviceTypeAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
+    list_display = ('name', 'image',)
+    ordering = ('name',)
+
+
+@admin.register(Domain)
+class DomainAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
+    list_display = ('name', 'registrar',)
+    ordering = ('name',)
 
 
 @admin.register(Manufacturer)
@@ -23,15 +59,6 @@ class ModelAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
 
-@admin.register(Vendor)
-class VendorAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
-    list_display = ('name', 'url',)
-    ordering = ('name',)
-
-
 @admin.register(OperatingSystem)
 class OperatingSystemAdmin(admin.ModelAdmin):
     """
@@ -39,24 +66,6 @@ class OperatingSystemAdmin(admin.ModelAdmin):
     """
     list_display = ('vendor', 'version',)
     ordering = ('vendor', 'version',)
-
-
-@admin.register(ConnectionTypes)
-class ConnectionTypesAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
-    list_display = ('name', 'unique_port',)
-    ordering = ('name',)
-
-
-@admin.register(Device)
-class DeviceAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
-    list_display = ('hostname', 'ip',)
-    ordering = ('hostname',)
 
 
 @admin.register(Registrar)
@@ -68,21 +77,21 @@ class RegistrarAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
 
-@admin.register(Domain)
-class DomainAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
-    list_display = ('name', 'registrar',)
-    ordering = ('name',)
-
-
 @admin.register(Subdomain)
 class SubdomainAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
     list_display = ('name', 'domain', 'hosted_on',)
+    ordering = ('name',)
+
+
+@admin.register(Vendor)
+class VendorAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
+    list_display = ('name', 'url',)
     ordering = ('name',)
 
 

@@ -6,7 +6,7 @@ from monzo.authentication import Authentication
 from monzo.exceptions import MonzoAuthenticationError
 from monzo.handlers.storage import Storage
 
-from finance.models import (Bill, BillAudit, Investments, Loan, LoanAudit,
+from finance.models import (Bill, BillAudit, Investment, Loan, LoanAudit,
                             Monzo, format_money)
 
 
@@ -192,7 +192,7 @@ class InvestmentView(generic.ListView):
         Return:
             List of investment objects
         """
-        return Investments.objects.all().order_by('company')
+        return Investment.objects.all().order_by('company')
 
     def get_context_data(self, **kwargs):
         """

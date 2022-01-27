@@ -51,3 +51,21 @@ img{
     height: calc(100vh - 250px);
     background-color: black;
 }
+
+#rack{
+    width: 500px;
+}
+
+.rack_row{
+    border: 10px solid black;
+    height: 80px;
+}
+
+.rack_column{
+    border: 3px solid black;
+    text-align: center;
+}
+
+.device_image{
+    height: 50px;
+}

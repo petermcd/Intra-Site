@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from finance.models import Bill, Investments, Lender, Loan, Monzo, PaidFrom
+from finance.models import Bill, Investment, Lender, Loan, Monzo, PaidFrom
 
 
 @admin.register(Bill)
@@ -75,8 +75,8 @@ class PaidFromAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
 
-@admin.register(Investments)
-class InvestmentsAdmin(admin.ModelAdmin):
+@admin.register(Investment)
+class InvestmentAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """

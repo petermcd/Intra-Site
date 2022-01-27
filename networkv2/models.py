@@ -6,6 +6,20 @@ from django.dispatch import receiver
 from automation.automation import Automation
 
 
+class DeviceType(models.Model):
+    name = models.CharField('Device Type', max_length=200, unique=True, blank=False, null=False)
+    image = models.CharField('Image', max_length=50, unique=False, blank=False, null=False)
+
+    def __str__(self) -> str:
+        """
+        To string method.
+
+        Returns:
+            string representation of the object.
+        """
+        return self.name
+
+
 class Manufacturer(models.Model):
     """
     Model for device manufacturer.
@@ -37,7 +51,7 @@ class Model(models.Model):
         Returns:
             string representation of the object.
         """
-        return self.name
+        return f'{self.manufacturer.name} - {self.name}'
 
 
 class Vendor(models.Model):
@@ -75,7 +89,7 @@ class OperatingSystem(models.Model):
         return f'{self.vendor.name} - {self.name} - {self.version}'
 
 
-class ConnectionTypes(models.Model):
+class ConnectionType(models.Model):
     """
     Model for connection types.
     """
@@ -97,11 +111,12 @@ class Device(models.Model):
     Model for device.
     """
     hostname = models.CharField('Hostname', max_length=200, unique=True, null=False)
-    mac_address = models.CharField('MAC Address', max_length=48, unique=True, null=True, blank=True)
+    device_type = models.ForeignKey(DeviceType, on_delete=models.RESTRICT, null=True, blank=True)
     ip = models.GenericIPAddressField('IP Address', unique=True, null=False, blank=False)
+    mac_address = models.CharField('MAC Address', max_length=48, unique=True, null=True, blank=True)
     model = models.ForeignKey(Model, on_delete=models.RESTRICT, null=False, blank=False)
     operating_system = models.ForeignKey(OperatingSystem, on_delete=models.RESTRICT, null=False, blank=False)
-    connected_via = models.ForeignKey(ConnectionTypes, on_delete=models.RESTRICT, null=False, blank=False)
+    connected_via = models.ForeignKey(ConnectionType, on_delete=models.RESTRICT, null=False, blank=False)
     connected_too = models.ForeignKey('Device', on_delete=models.RESTRICT, null=True, blank=True)
     port = models.IntegerField('Port', default=0, null=False, blank=False)
     rack_shelf = models.IntegerField('Rack Shelf', null=True, blank=True)

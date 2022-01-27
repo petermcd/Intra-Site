@@ -1,6 +1,6 @@
 {% extends "main.html" %}
 {% load static %}
-{% block title %}Books{% endblock %}
+{% block title %}Network{% endblock %}
 {% block breadcrumbs %}<a href="/">Home</a> > Network{% endblock %}
 {% block content %}
         <header>
@@ -14,8 +14,8 @@
             </aside>
             <div class="col-12 col-md-10" id="graph"></div>
         </div>
-        <script src="//unpkg.com/three"></script>
-        <script src="//unpkg.com/three-spritetext"></script>
-        <script src="//unpkg.com/3d-force-graph"></script>
-        <script src="{% static 'networkv2/js/graph.js' %}"></script>
+        <script type="text/javascript" src="//unpkg.com/three"></script>
+        <script type="text/javascript" src="//unpkg.com/three-spritetext"></script>
+        <script type="text/javascript" src="//unpkg.com/3d-force-graph"></script>
+        <script type="text/javascript" src="{% static 'networkv2/js/graph.js' %}"></script>
 {% endblock %}

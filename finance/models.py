@@ -298,7 +298,7 @@ class Monzo(models.Model):
         verbose_name_plural = 'Monzo'
 
 
-class Investments(models.Model):
+class Investment(models.Model):
     company = models.ForeignKey(Lender, on_delete=models.RESTRICT, null=False)
     value = models.BigIntegerField('Value', null=False, default=0)
     notes = models.CharField('Notes', max_length=300, null=False, blank=False)

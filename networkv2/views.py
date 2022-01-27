@@ -8,7 +8,7 @@ from networkv2.models import Device, Website
 
 def index(request) -> HttpResponse:
     """
-    Handle the Network topology index
+    Handle the Network topology index.
 
     Return:
         HttpResponse for the index page
@@ -64,3 +64,13 @@ def network(request) -> JsonResponse:
         except Device.DoesNotExist:
             pass
     return JsonResponse(data)
+
+
+def rack(request) -> HttpResponse:
+    """
+    Handle the Rack page.
+
+    Return:
+        HttpResponse for the rack page
+    """
+    return render(request, 'networkv2/rack.html', {})
