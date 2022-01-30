@@ -74,3 +74,35 @@ def rack(request) -> HttpResponse:
         HttpResponse for the rack page
     """
     return render(request, 'networkv2/rack.html', {})
+
+
+def rack_json(request) -> JsonResponse:
+    """
+    Handle the Rack json.
+
+    Return:
+        JsonResponse for the rack json
+    """
+    rack_json_res = {}
+    devices = Device.objects.all().filter(
+        rack_shelf__isnull=False,
+        rack_shelf_position__isnull=False
+    ).order_by('rack_shelf', 'rack_shelf_position')
+    for device in devices:
+        if device.rack_shelf not in rack_json_res:
+            rack_json_res[device.rack_shelf] = {
+                'width': 1,
+                'devices': {},
+            }
+        device_details = {
+            'hostname': device.hostname,
+            'image': '/static/networkv2/img/unknown.png',
+            'ip': device.ip,
+            'description': device.notes,
+        }
+        if device.device_type:
+            device_details['image'] = device.device_type.image
+        rack_json_res[device.rack_shelf]['devices'][device.rack_shelf_position] = device_details
+        if device.rack_shelf_position > rack_json_res[device.rack_shelf]['width']:
+            rack_json_res[device.rack_shelf]['width'] = device.rack_shelf_position
+    return JsonResponse(rack_json_res)

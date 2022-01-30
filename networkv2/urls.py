@@ -6,5 +6,6 @@ app_name = 'networkv2'
 urlpatterns = [
     path('', views.index, name="index"),
     path('network.json', views.network, name="network"),
-    path('rack.html', views.rack, name="rack"),
+    path('rack', views.rack, name="rack"),
+    path('rack.json', views.rack_json, name="rack.json"),
 ]
