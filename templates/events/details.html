@@ -37,7 +37,7 @@
                                 From: {{ to_event.departing_station }}<br />
                                 Method: {{ to_event.travel_type }}<br />
                                 When: {{ to_event.departure|date:'H:i d/m/y' }}<br />
-                                {% if to_event.ticket_file %}Ticket: <a href="{{ to_event.ticket_file.url }}">to_event.ticket_file.name</a></a><br />{% endif %}
+                                {% if to_event.ticket_file %}Ticket: <a href="{{ to_event.ticket_file.url }}">Ticket</a></a><br />{% endif %}
                                 {% if to_event.notes %}Notes: {{ to_event.notes }}<br />{% endif %}
                                 <br />
                             {% endfor %}
@@ -52,7 +52,7 @@
                                 From: {{ from_event.departing_station }}<br />
                                 Method: {{ from_event.travel_type }}<br />
                                 When: {{ from_event.departure|date:'H:i d/m/y' }}<br />
-                                {% if from_event.ticket_file %}Ticket: <a href="{{ from_event.ticket_file.url }}">from_event.ticket_file.name</a></a><br />{% endif %}
+                                {% if from_event.ticket_file %}Ticket: <a href="{{ from_event.ticket_file.url }}">Ticket</a></a><br />{% endif %}
                                 {% if from_event.notes %}notes: {{ from_event.notes }}<br />{% endif %}
                                 <br />
                             {% endfor %}

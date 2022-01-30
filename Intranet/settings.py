@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'books.apps.BooksConfig',
     'documents.apps.DocumentsConfig',
+    'downloads.apps.DownloadsConfig',
     'events.apps.EventsConfig',
     'finance.apps.FinanceConfig',
     'networkv2.apps.Networkv2Config',
