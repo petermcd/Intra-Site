@@ -17,6 +17,10 @@ def document_file_name(instance, filename) -> str:
 
 
 class Document(models.Model):
-    name = models.CharField(max_length=200)
-    document = models.FileField(storage=OverwriteStorage, null=True, blank=True, upload_to=document_file_name)
-    description = models.CharField(max_length=1000, verbose_name='Description')
+    name: models.CharField = models.CharField(max_length=200)
+    document: models.FileField = models.FileField(
+        storage=OverwriteStorage,
+        null=True, blank=True,
+        upload_to=document_file_name
+    )
+    description: models.CharField = models.CharField(max_length=1000, verbose_name='Description')

@@ -1,4 +1,4 @@
-from typing import Dict, Union
+from typing import Any, Dict, Union
 
 from django.utils.timezone import now
 from django.views import generic
@@ -142,7 +142,7 @@ class MonzoAuthView(generic.TemplateView):
     """
     template_name = 'admin/monzo/monzo.html'
 
-    def get_context_data(self) -> Dict[str, Union[bool, object, str]]:
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Union[bool, object, str]]:
         """
         Prepare the context view to output.
 

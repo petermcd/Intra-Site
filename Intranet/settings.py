@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'networkv2.apps.Networkv2Config',
     'settings.apps.SettingsConfig',
     'todo.apps.TodoConfig',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [

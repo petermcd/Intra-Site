@@ -1,8 +1,17 @@
 from django.contrib import admin
 
-from networkv2.models import (ConnectionType, Device, DeviceType, Domain, Manufacturer,
-                              Model, OperatingSystem, Registrar, Subdomain,
-                              Vendor, Website)
+from networkv2.models import (Application, ConnectionType, Device, DeviceType,
+                              Domain, Manufacturer, Model, OperatingSystem,
+                              Playbook, Registrar, Subdomain, Vendor, Website)
+
+
+@admin.register(Application)
+class ApplicationAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
+    list_display = ('name', 'description',)
+    ordering = ('name',)
 
 
 @admin.register(ConnectionType)
@@ -64,8 +73,17 @@ class OperatingSystemAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
-    list_display = ('vendor', 'version',)
-    ordering = ('vendor', 'version',)
+    list_display = ('name', 'version', 'vendor',)
+    ordering = ('name', 'version', 'vendor',)
+
+
+@admin.register(Playbook)
+class PlaybookAdmin(admin.ModelAdmin):
+    """
+    Configure the admin page.
+    """
+    list_display = ('name', 'description',)
+    ordering = ('name',)
 
 
 @admin.register(Registrar)

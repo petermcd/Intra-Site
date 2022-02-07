@@ -3,5 +3,8 @@ from django.utils import timezone
 
 
 class ToDo(models.Model):
-    description = models.CharField('ToDo Item', max_length=1000, null=False, blank=False)
-    added = models.DateTimeField('Added', blank=False, null=False, default=timezone.now)
+    """
+    Model for todo item.
+    """
+    description: models.CharField = models.CharField('ToDo Item', max_length=1000, null=False, blank=False)
+    added: models.DateTimeField = models.DateTimeField('Added', blank=False, null=False, default=timezone.now)

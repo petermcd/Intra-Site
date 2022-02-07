@@ -6,9 +6,19 @@ from django.dispatch import receiver
 from automation.automation import Automation
 
 
-class DeviceType(models.Model):
-    name = models.CharField('Device Type', max_length=200, unique=True, blank=False, null=False)
-    image = models.CharField('Image', max_length=50, unique=False, blank=False, null=False)
+class Playbook(models.Model):
+    """
+    Model for playbook.
+    """
+    name: models.CharField = models.CharField('Playbook', max_length=50, unique=True, blank=False, null=False)
+    description: models.CharField = models.CharField(
+        'description',
+        max_length=2000,
+        unique=False,
+        blank=False,
+        null=False
+    )
+    playbook: models.TextField = models.TextField('playbook', max_length=10000, unique=False, blank=False, null=False)
 
     def __str__(self) -> str:
         """
@@ -17,15 +27,56 @@ class DeviceType(models.Model):
         Returns:
             string representation of the object.
         """
-        return self.name
+        return str(self.name)
+
+
+class Application(models.Model):
+    """
+    Model for applications.
+    """
+    name: models.CharField = models.CharField('Application', max_length=200, unique=True, blank=False, null=False)
+    description: models.CharField = models.CharField(
+        'description',
+        max_length=2000,
+        unique=False,
+        blank=False,
+        null=False
+    )
+    with_playbook: models.ForeignKey = models.ForeignKey(Playbook, on_delete=models.RESTRICT, null=True, blank=True)
+
+    def __str__(self) -> str:
+        """
+        To string method.
+
+        Returns:
+            string representation of the object.
+        """
+        return str(self.name)
+
+
+class DeviceType(models.Model):
+    """
+    Model for device type.
+    """
+    name: models.CharField = models.CharField('Device Type', max_length=200, unique=True, blank=False, null=False)
+    image: models.CharField = models.CharField('Image', max_length=50, unique=False, blank=False, null=False)
+
+    def __str__(self) -> str:
+        """
+        To string method.
+
+        Returns:
+            string representation of the object.
+        """
+        return str(self.name)
 
 
 class Manufacturer(models.Model):
     """
     Model for device manufacturer.
     """
-    name = models.CharField('Manufacturer', max_length=200, unique=True, null=False)
-    url = models.URLField('URL', max_length=200, unique=True, null=False)
+    name: models.CharField = models.CharField('Manufacturer', max_length=200, unique=True, null=False)
+    url: models.URLField = models.URLField('URL', max_length=200, unique=True, null=False)
 
     def __str__(self) -> str:
         """
@@ -34,15 +85,20 @@ class Manufacturer(models.Model):
         Returns:
             string representation of the object.
         """
-        return self.name
+        return str(self.name)
 
 
 class Model(models.Model):
     """
     Model for device model.
     """
-    name = models.CharField('Model', max_length=200, unique=True, null=False)
-    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.RESTRICT, null=False, blank=False)
+    name: models.CharField = models.CharField('Model', max_length=200, unique=True, null=False)
+    manufacturer: models.ForeignKey = models.ForeignKey(
+        Manufacturer,
+        on_delete=models.RESTRICT,
+        null=False,
+        blank=False
+    )
 
     def __str__(self) -> str:
         """
@@ -58,8 +114,8 @@ class Vendor(models.Model):
     """
     Model for operating system vendor.
     """
-    name = models.CharField('Vendor', max_length=200, unique=True, null=False)
-    url = models.URLField('URL', max_length=200, unique=True, null=False)
+    name: models.CharField = models.CharField('Vendor', max_length=200, unique=True, null=False)
+    url: models.URLField = models.URLField('URL', max_length=200, unique=True, null=False)
 
     def __str__(self) -> str:
         """
@@ -68,16 +124,18 @@ class Vendor(models.Model):
         Returns:
             string representation of the object.
         """
-        return self.name
+        return str(self.name)
 
 
 class OperatingSystem(models.Model):
     """
     Model for operating system.
     """
-    name = models.CharField('Name', max_length=100, null=False, blank=False)
-    version = models.CharField('Version', max_length=10, null=False, blank=False)
-    vendor = models.ForeignKey(Vendor, on_delete=models.RESTRICT, null=False, blank=False)
+    name: models.CharField = models.CharField('Name', max_length=100, null=False, blank=False)
+    version: models.CharField = models.CharField('Version', max_length=10, null=False, blank=False)
+    vendor: models.ForeignKey = models.ForeignKey(Vendor, on_delete=models.RESTRICT, null=False, blank=False)
+    parent: models.ForeignKey = models.ForeignKey('OperatingSystem', on_delete=models.RESTRICT, null=True, blank=True)
+    with_playbook: models.ForeignKey = models.ForeignKey(Playbook, on_delete=models.RESTRICT, null=True, blank=True)
 
     def __str__(self) -> str:
         """
@@ -93,8 +151,8 @@ class ConnectionType(models.Model):
     """
     Model for connection types.
     """
-    name = models.CharField('Connection Type', max_length=30, unique=True, null=False, blank=False)
-    unique_port = models.BooleanField('Unique Port', default=True, null=False, blank=False)
+    name: models.CharField = models.CharField('Connection Type', max_length=30, unique=True, null=False, blank=False)
+    unique_port: models.BooleanField = models.BooleanField('Unique Port', default=True, null=False, blank=False)
 
     def __str__(self) -> str:
         """
@@ -103,25 +161,35 @@ class ConnectionType(models.Model):
         Returns:
             string representation of the object.
         """
-        return self.name
+        return str(self.name)
 
 
 class Device(models.Model):
     """
     Model for device.
     """
-    hostname = models.CharField('Hostname', max_length=200, unique=True, null=False)
-    device_type = models.ForeignKey(DeviceType, on_delete=models.RESTRICT, null=True, blank=True)
-    ip = models.GenericIPAddressField('IP Address', unique=True, null=False, blank=False)
-    mac_address = models.CharField('MAC Address', max_length=48, unique=True, null=True, blank=True)
-    model = models.ForeignKey(Model, on_delete=models.RESTRICT, null=False, blank=False)
-    operating_system = models.ForeignKey(OperatingSystem, on_delete=models.RESTRICT, null=False, blank=False)
-    connected_via = models.ForeignKey(ConnectionType, on_delete=models.RESTRICT, null=False, blank=False)
-    connected_too = models.ForeignKey('Device', on_delete=models.RESTRICT, null=True, blank=True)
-    port = models.IntegerField('Port', default=0, null=False, blank=False)
-    rack_shelf = models.IntegerField('Rack Shelf', null=True, blank=True)
-    rack_shelf_position = models.IntegerField('Rack Shelf Position', null=True, blank=True)
-    notes = models.CharField('Notes', max_length=1000, null=False, blank=False)
+    hostname: models.CharField = models.CharField('Hostname', max_length=200, unique=True, null=False)
+    device_type: models.ForeignKey = models.ForeignKey(DeviceType, on_delete=models.RESTRICT, null=True, blank=True)
+    ip: models.GenericIPAddressField = models.GenericIPAddressField('IP Address', unique=True, null=False, blank=False)
+    mac_address: models.CharField = models.CharField('MAC Address', max_length=48, unique=True, null=True, blank=True)
+    model: models.ForeignKey = models.ForeignKey(Model, on_delete=models.RESTRICT, null=False, blank=False)
+    operating_system: models.ForeignKey = models.ForeignKey(
+        OperatingSystem,
+        on_delete=models.RESTRICT,
+        null=False, blank=False
+    )
+    connected_via: models.ForeignKey = models.ForeignKey(
+        ConnectionType,
+        on_delete=models.RESTRICT,
+        null=False,
+        blank=False
+    )
+    connected_too: models.ForeignKey = models.ForeignKey('Device', on_delete=models.RESTRICT, null=True, blank=True)
+    port: models.IntegerField = models.IntegerField('Port', default=0, null=False, blank=False)
+    rack_shelf: models.IntegerField = models.IntegerField('Rack Shelf', null=True, blank=True)
+    rack_shelf_position: models.IntegerField = models.IntegerField('Rack Shelf Position', null=True, blank=True)
+    notes: models.CharField = models.CharField('Notes', max_length=1000, null=False, blank=False)
+    installed_applications: models.ManyToManyField = models.ManyToManyField(Application, blank=True)
     __original_ip = None
 
     def __init__(self, *args, **kwargs):
@@ -154,7 +222,7 @@ class Device(models.Model):
         Returns:
             string representation of the object.
         """
-        return self.hostname
+        return str(self.hostname)
 
     def ip_changed(self) -> bool:
         """
@@ -170,8 +238,8 @@ class Registrar(models.Model):
     """
     Model for registrar.
     """
-    name = models.CharField('Registrar', max_length=30, unique=True, null=False, blank=False)
-    url = models.URLField('URL', max_length=200, unique=True, null=False)
+    name: models.CharField = models.CharField('Registrar', max_length=30, unique=True, null=False, blank=False)
+    url: models.URLField = models.URLField('URL', max_length=200, unique=True, null=False)
 
     def __str__(self) -> str:
         """
@@ -180,15 +248,15 @@ class Registrar(models.Model):
         Returns:
             string representation of the object.
         """
-        return self.name
+        return str(self.name)
 
 
 class Domain(models.Model):
     """
     Model for domain.
     """
-    name = models.CharField('Domain', max_length=30, unique=True, null=False, blank=False)
-    registrar = models.ForeignKey(Registrar, on_delete=models.RESTRICT, null=False, blank=False)
+    name: models.CharField = models.CharField('Domain', max_length=30, unique=True, null=False, blank=False)
+    registrar: models.ForeignKey = models.ForeignKey(Registrar, on_delete=models.RESTRICT, null=False, blank=False)
 
     def __str__(self) -> str:
         """
@@ -197,16 +265,16 @@ class Domain(models.Model):
         Returns:
             string representation of the object.
         """
-        return self.name
+        return str(self.name)
 
 
 class Subdomain(models.Model):
     """
     Model for subdomain.
     """
-    name = models.CharField('Subdomain', max_length=30, unique=True, null=False, blank=False)
-    domain = models.ForeignKey(Domain, on_delete=models.RESTRICT, null=False, blank=False)
-    hosted_on = models.ForeignKey(Device, on_delete=models.RESTRICT, null=False, blank=False)
+    name: models.CharField = models.CharField('Subdomain', max_length=30, unique=True, null=False, blank=False)
+    domain: models.ForeignKey = models.ForeignKey(Domain, on_delete=models.RESTRICT, null=False, blank=False)
+    hosted_on: models.ForeignKey = models.ForeignKey(Device, on_delete=models.RESTRICT, null=False, blank=False)
     __originally_hosted_on = None
 
     def __init__(self, *args, **kwargs):
@@ -250,12 +318,12 @@ class Website(models.Model):
     """
     Model for subdomain.
     """
-    name = models.CharField('Website', max_length=30, unique=True, null=False, blank=False)
-    description = models.CharField('Description', max_length=1000, null=False, blank=False)
-    secure = models.BooleanField('HTTPs', default=True, null=False, blank=False)
-    subdomain = models.ForeignKey(Subdomain, on_delete=models.RESTRICT, null=False, blank=False)
-    port = models.IntegerField('Port', default=443, null=False, blank=False)
-    path = models.CharField('Path', max_length=1000, default='/', null=False, blank=False)
+    name: models.CharField = models.CharField('Website', max_length=30, unique=True, null=False, blank=False)
+    description: models.CharField = models.CharField('Description', max_length=1000, null=False, blank=False)
+    secure: models.BooleanField = models.BooleanField('HTTPs', default=True, null=False, blank=False)
+    subdomain: models.ForeignKey = models.ForeignKey(Subdomain, on_delete=models.RESTRICT, null=False, blank=False)
+    port: models.IntegerField = models.IntegerField('Port', default=443, null=False, blank=False)
+    path: models.CharField = models.CharField('Path', max_length=1000, default='/', null=False, blank=False)
 
     def __str__(self) -> str:
         """
@@ -264,7 +332,7 @@ class Website(models.Model):
         Returns:
             string representation of the object.
         """
-        return self.name
+        return str(self.name)
 
     @property
     def full_url(self) -> str:
