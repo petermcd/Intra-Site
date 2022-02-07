@@ -53,8 +53,7 @@ class IndexView(generic.ListView):
         bills = Bill.objects.all().order_by('due_day')
         items = list(bills)
         loans = Loan.objects.all().filter(start_date__lt=now()).order_by('due_day')
-        for loan in loans:
-            items.append(loan)
+        items.extend(iter(loans))
         return sorted(items, key=order_objects)
 
     def get_context_data(self, **kwargs):
