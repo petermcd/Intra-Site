@@ -52,7 +52,12 @@ class Book(models.Model):
     description: models.CharField = models.CharField(max_length=5000)
     pages: models.IntegerField = models.IntegerField()
     thumbnail: models.URLField = models.URLField(max_length=255, default=None, blank=True)
-    ebook: models.FileField = models.FileField(storage=OverwriteStorage, null=True, blank=True, upload_to=content_file_name)
+    ebook: models.FileField = models.FileField(
+        storage=OverwriteStorage,
+        null=True,
+        blank=True,
+        upload_to=content_file_name
+    )
     read: models.BooleanField = models.BooleanField(default=False)
 
     def __str__(self) -> str:

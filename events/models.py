@@ -97,7 +97,12 @@ class Event(models.Model):
     venue: models.ForeignKey = models.ForeignKey(Venue, on_delete=models.RESTRICT)
     start: models.DateTimeField = models.DateTimeField(verbose_name='Starts')
     ends: models.DateTimeField = models.DateTimeField(verbose_name='Ends')
-    ticket_file: models.FileField = models.FileField(storage=OverwriteStorage, null=True, blank=True, upload_to=ticket_file_name)
+    ticket_file: models.FileField = models.FileField(
+        storage=OverwriteStorage,
+        null=True,
+        blank=True,
+        upload_to=ticket_file_name
+    )
     notes: models.TextField = models.TextField(max_length=500)
 
     def __str__(self) -> str:

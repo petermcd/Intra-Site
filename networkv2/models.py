@@ -11,7 +11,13 @@ class Playbook(models.Model):
     Model for playbook.
     """
     name: models.CharField = models.CharField('Playbook', max_length=50, unique=True, blank=False, null=False)
-    description: models.CharField = models.CharField('description', max_length=2000, unique=False, blank=False, null=False)
+    description: models.CharField = models.CharField(
+        'description',
+        max_length=2000,
+        unique=False,
+        blank=False,
+        null=False
+    )
     playbook: models.TextField = models.TextField('playbook', max_length=10000, unique=False, blank=False, null=False)
 
     def __str__(self) -> str:
@@ -29,7 +35,13 @@ class Application(models.Model):
     Model for applications.
     """
     name: models.CharField = models.CharField('Application', max_length=200, unique=True, blank=False, null=False)
-    description: models.CharField = models.CharField('description', max_length=2000, unique=False, blank=False, null=False)
+    description: models.CharField = models.CharField(
+        'description',
+        max_length=2000,
+        unique=False,
+        blank=False,
+        null=False
+    )
     with_playbook: models.ForeignKey = models.ForeignKey(Playbook, on_delete=models.RESTRICT, null=True, blank=True)
 
     def __str__(self) -> str:
@@ -81,7 +93,12 @@ class Model(models.Model):
     Model for device model.
     """
     name: models.CharField = models.CharField('Model', max_length=200, unique=True, null=False)
-    manufacturer: models.ForeignKey = models.ForeignKey(Manufacturer, on_delete=models.RESTRICT, null=False, blank=False)
+    manufacturer: models.ForeignKey = models.ForeignKey(
+        Manufacturer,
+        on_delete=models.RESTRICT,
+        null=False,
+        blank=False
+    )
 
     def __str__(self) -> str:
         """
@@ -156,8 +173,17 @@ class Device(models.Model):
     ip: models.GenericIPAddressField = models.GenericIPAddressField('IP Address', unique=True, null=False, blank=False)
     mac_address: models.CharField = models.CharField('MAC Address', max_length=48, unique=True, null=True, blank=True)
     model: models.ForeignKey = models.ForeignKey(Model, on_delete=models.RESTRICT, null=False, blank=False)
-    operating_system: models.ForeignKey = models.ForeignKey(OperatingSystem, on_delete=models.RESTRICT, null=False, blank=False)
-    connected_via: models.ForeignKey = models.ForeignKey(ConnectionType, on_delete=models.RESTRICT, null=False, blank=False)
+    operating_system: models.ForeignKey = models.ForeignKey(
+        OperatingSystem,
+        on_delete=models.RESTRICT,
+        null=False, blank=False
+    )
+    connected_via: models.ForeignKey = models.ForeignKey(
+        ConnectionType,
+        on_delete=models.RESTRICT,
+        null=False,
+        blank=False
+    )
     connected_too: models.ForeignKey = models.ForeignKey('Device', on_delete=models.RESTRICT, null=True, blank=True)
     port: models.IntegerField = models.IntegerField('Port', default=0, null=False, blank=False)
     rack_shelf: models.IntegerField = models.IntegerField('Rack Shelf', null=True, blank=True)
