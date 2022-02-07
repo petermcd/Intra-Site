@@ -47,7 +47,7 @@ def get_book_details(request, search_type: str, search: str):
                     new_author = Author(name=author)
                     new_author.save()
                     author_dict = {
-                        'id': new_author.id,
+                        'id': new_author.pk,
                         'name': author,
                     }
                     record['authors'].append(author_dict)

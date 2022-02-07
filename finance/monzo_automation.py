@@ -25,7 +25,7 @@ from finance.models import (Bill, BillAudit, Loan, LoanAudit,  # NOQA E402
 from finance.views import MonzoStorage  # NOQA E402
 
 
-def transaction_sorted(transaction: Transaction) -> datetime:
+def transaction_sorted(transaction: Transaction) -> datetime.datetime:
     """
     Sort method for transactions
 

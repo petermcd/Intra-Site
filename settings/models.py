@@ -5,9 +5,9 @@ class Setting(models.Model):
     """
     Model to house the settings for the application.
     """
-    name = models.CharField(max_length=100, unique=True)
-    value = models.CharField(max_length=255, blank=True, null=True)
-    description = models.CharField(max_length=255)
+    name: models.CharField = models.CharField(max_length=100, unique=True)
+    value: models.CharField = models.CharField(max_length=255, blank=True, null=True)
+    description: models.CharField = models.CharField(max_length=255)
 
     def __str__(self) -> str:
         """
@@ -16,7 +16,7 @@ class Setting(models.Model):
         Returns:
             The name of the setting
         """
-        return self.name
+        return str(self.name)
 
     def configured(self) -> str:
         """

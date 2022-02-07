@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Set
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -14,6 +14,60 @@ def index(request) -> HttpResponse:
         HttpResponse for the index page
     """
     return render(request, 'networkv2/index.html', {})
+
+
+def inventory(request) -> HttpResponse:
+    """
+    Create and output the inventory list for Ansible.
+
+    Return:
+        Inventory list in ini format
+    """
+    devices = Device.objects.all()
+    groups: Dict[str, Set[Dict[str, Device]]] = {}
+    for device in devices:
+        if device.operating_system.name not in groups:
+            groups[device.operating_system.name] = {
+                'children': set(),
+                'devices': set(),
+            }
+        groups[device.operating_system.name]['devices'].add(device)
+        if device.operating_system.parent:
+            if (
+                device.operating_system.parent.with_playbook
+                and device.operating_system.parent.name not in groups
+            ):
+                groups[device.operating_system.parent.name] = {
+                    'children': set(),
+                    'devices': set(),
+                }
+                groups[device.operating_system.parent.name]['children'].add(device.operating_system.name)
+            elif device.operating_system.with_playbook:
+                groups[device.operating_system.parent.name]['children'].add(device.operating_system.name)
+        for application in device.installed_applications.all():
+            if application.with_playbook:
+                if application.name not in groups:
+                    groups[application.name] = {
+                        'children': set(),
+                        'devices': set(),
+                    }
+                groups[application.name]['devices'].add(device)
+    output = ''
+    for group, value in groups.items():
+        output += f'[{group}]\n'
+        for device in value['devices']:
+            output += f'{device.hostname}\tansible_host={device.ip}\n'
+        output += '\n'
+
+    for group, value in groups.items():
+        if not value['children']:
+            continue
+        output += f'[{group}:children]\n'
+        for child in value['children']:
+            output += f'{child}'
+        output += '\n'
+
+    return HttpResponse(content_type='text/plain', content=output)
 
 
 def network(request) -> JsonResponse:
