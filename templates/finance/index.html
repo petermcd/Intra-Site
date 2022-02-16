@@ -40,14 +40,14 @@
                 <tfoot>
                     {% for method, value in to_pay.items %}
                         <tr>
-                            <td></td>
+                            <td colspan="2"></td>
                             <td class="to_pay col-3">To Pay ({{ method }})</td>
                             <td class="to_pay col-3">{{ value }}</td>
                         </tr>
                     {% endfor %}
                     {% for method, value in monthly_total.items %}
                         <tr>
-                            <td></td>
+                            <td colspan="2"></td>
                             <td>Monthly Total ({{ method }})</td>
                             <td>{{ value }}</td>
                         </tr>
