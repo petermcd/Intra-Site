@@ -7,31 +7,46 @@
             <h1>Books</h1>
         </header>
         <section id="table_list">
-            <div class="row" id="row_header">
-                <div class="title col-6">Title</div>
-                <div class="authors col-4">Authors</div>
-                <div class="authors col-2">Published</div>
-            </div>{% for book in book_list %}
-            <div class="row">
-                <div class="title col-6"><a href='/books/{{ book.id }}/'>{{ book.title }}</a></div>
-                <div class="authors col-4"><ul>{% for author in book.authors.all %}<li>{{ author.name }}</li>{% endfor %}</ul></div>
-                <div class="authors col-2">{{ book.published|date:'Y' }}</div>
-            </div>{% endfor %}
-            <div class="row text-end">
-                <div class="pagination col-6">
-                    {% if page_obj.has_previous %}
-                        <a href="?page={{ page_obj.previous_page_number }}{{ search_term }}">&lt;</a>&nbsp;
-                        <a href="?page={{ page_obj.previous_page_number }}{{ search_term }}">{{ page_obj.previous_page_number }}</a>&nbsp;
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Authors</th>
+                        <th>Published</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in book_list %}
+                        <tr>
+                            <td><a href='/books/{{ book.id }}/'>{{ book.title }}</a></td>
+                            <td><ul>{% for author in book.authors.all %}<li>{{ author.name }}</li>{% endfor %}</ul></td>
+                            <td>{{ book.published|date:'Y' }}</td>
+                        </tr>
+                    {% endfor %}
+                    {% if book_list|length < 1 %}
+                        <tr>
+                            <td colspan="3">No books</td>
+                        </tr>
                     {% endif %}
-                    {{ page_obj.number }}&nbsp;
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}{{ search_term }}">{{ page_obj.next_page_number }}</a>&nbsp;
-                        <a href="?page={{ page_obj.next_page_number }}{{ search_term }}">&gt;</a>
-                    {% endif %}
-                </div>
-                <div class="search col-6">
-                    <form><label for="search">Name</label><input type="text" name="q" id="search" /><button>Search</button></form>
-                </div>
-            </div>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">
+                            {% if page_obj.has_previous %}
+                                <a href="?page={{ page_obj.previous_page_number }}{{ search_term }}">&lt;</a>&nbsp;
+                                <a href="?page={{ page_obj.previous_page_number }}{{ search_term }}">{{ page_obj.previous_page_number }}</a>&nbsp;
+                            {% endif %}
+                            {{ page_obj.number }}&nbsp;
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}{{ search_term }}">{{ page_obj.next_page_number }}</a>&nbsp;
+                                <a href="?page={{ page_obj.next_page_number }}{{ search_term }}">&gt;</a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form><label for="search">Name</label><input type="text" name="q" id="search" /><button>Search</button></form>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
         </section>
 {% endblock %}
