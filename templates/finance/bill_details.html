@@ -19,18 +19,28 @@
     </section>
 
     <section id="table_list">
-        <div class="row" id="row_header">
-            <div class="title col-3">When</div>
-            <div class="when col-3">Payment</div>
-            <div class="when col-6">Payment</div>
-        </div>{% if recent_payments|length < 1 %}
-        <div class="row">
-            <div class="title">No payments found</div>
-        </div>{% endif %}{% for payment in recent_payments %}
-        <div class="row">
-            <div class="title col-3">{{ payment.when }}</div>
-            <div class="when col-3">{{ payment.formatted_transaction_value }}</div>
-            <div class="notes col-6">{{ payment.message }}</div>
-        </div>{% endfor %}
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>When</th>
+                    <th>Payment</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in recent_payments %}
+                    <tr>
+                        <td>{{ payment.when }}</td>
+                        <td>{{ payment.formatted_transaction_value }}</td>
+                        <td>{{ payment.message }}</td>
+                    </tr>
+                {% endfor %}
+                {% if recent_payments|length < 1 %}
+                    <tr>
+                        <td colspan="3">No payments found</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
     </section>
 {% endblock %}
