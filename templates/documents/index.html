@@ -4,24 +4,38 @@
 {% block breadcrumbs %}<a href="/">Home</a> > Documents{% endblock %}
 {% block content %}
         <section id="table_list">
-            <div class="row" id="row_header">
-                <div class="title col-3">Name</div>
-                <div class="authors col-3">Download</div>
-                <div class="authors col-6">Description</div>
-            </div>{% for document in document_list %}
-            <div class="row">
-                <div class="title col-3">{{ document.name }}</div>
-                <div class="authors col-3"><a href="{{ document.document.url }}">DOWNLOAD</a></div>
-                <div class="authors col-6">{{ document.description }}</div>
-            </div>{% endfor %}
-            <div class="row text-end">
-                <div class="pagination col-3">
-                    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}{{ search_term }}">Previous</a>{% else %}Previous{% endif %}&nbsp;
-                    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}{{ search_term }}">Next</a>{% else %}Next{% endif %}
-                </div>
-                <div class="search col-9">
-                    <form><label for="search">Name</label><input type="text" name="q" id="search" /><button>Search</button></form>
-                </div>
-            </div>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Download</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for document in document_list %}
+                        <tr>
+                            <td>{{ document.name }}</tr>
+                            <td><a href="{{ document.document.url }}">DOWNLOAD</a></td>
+                            <td>{{ document.description }}</td>
+                        </tr>{% endfor %}
+                    {% if document_list|length < 1 %}
+                        <tr>
+                            <td colspan="3">No documents</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">
+                            {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}{{ search_term }}">Previous</a>{% else %}Previous{% endif %}&nbsp;
+                            {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}{{ search_term }}">Next</a>{% else %}Next{% endif %}
+                        </td>
+                        <td>
+                            <form><label for="search">Name</label><input type="text" name="q" id="search" /><button>Search</button></form>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
         </section>
 {% endblock %}

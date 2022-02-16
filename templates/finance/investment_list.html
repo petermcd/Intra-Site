@@ -7,23 +7,34 @@
             <h1>Investments</h1>
         </header>
         <section id="table_list">
-            <div class="row" id="row_header">
-                <div class="company col-3">Company</div>
-                <div class="notes col-6">Notes</div>
-                <div class="value col-3">Value</div>
-            </div>{% if investment_list|length < 1 %}
-            <div class="row">
-                <div class="title">No investments tracked</div>
-            </div>{% else %}{% for investment in investment_list %}
-            <div class="row">
-                <div class="company col-3">{{ investment.company }}</div>
-                <div class="notes col-6">{{ investment.notes }}</div>
-                <div class="value col-3">{{ investment.formatted_value }}</div>
-            </div>{% endfor %}
-            <div class="row">
-                <div class="col-9"></div>
-                <div class="when col-3">{{ total_value }}</div>
-            </div>
-        {% endif %}
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Notes</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for investment in investment_list %}
+                        <tr>
+                            <td>{{ investment.company }}</td>
+                            <td>{{ investment.notes }}</td>
+                            <td>{{ investment.formatted_value }}</td>
+                        </tr>
+                    {% endfor %}
+                    {% if investment_list|length < 1 %}
+                        <tr>
+                            <td colspan="3">No investments tracked</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"></td>
+                    <td>{{ total_value }}</td>
+                </tr>
+            </tfoot>
+            </table>
         </section>
 {% endblock %}
