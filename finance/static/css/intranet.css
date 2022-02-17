@@ -3,40 +3,12 @@
   padding: 0 15px;
 }
 
-.widget{
-    height: 200px;
-    padding-top: 50px;
-}
-
 img{
     border-radius: 25%;
 }
 
 #table_list{
     margin-top: 20px;
-}
-
-#table_list #row_header{
-    font-weight: bold;
-    text-align: center;
-}
-
-#table_list .row div{
-    border-width: 1px;
-    border-color: lightgrey;
-    border-style: solid;
-}
-
-#table_list .row:nth-child(odd){
-    background-color: lightblue;
-}
-
-#table_list .row:first-child{
-    background-color: lightgray;
-}
-
-#table_list .row:last-child{
-    background-color: lightgray;
 }
 
 #item_details{
