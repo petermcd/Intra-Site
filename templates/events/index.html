@@ -1,7 +1,10 @@
 {% extends "main.html" %}
 {% load static %}
 {% block title %}Events{% endblock %}
-{% block breadcrumbs %}<a href="/">Home</a> > Events{% endblock %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Events</li>
+{% endblock %}
 {% block content %}
         <header>
             <h1>Events</h1>

@@ -18,7 +18,7 @@ class IndexView(generic.ListView):
         term = self.request.GET.get('q')
         objects = Document.objects.all().order_by('name')
         if term:
-            objects = Document.objects.filter(title__icontains=term).order_by('name')
+            objects = Document.objects.filter(name__icontains=term).order_by('name')
         return objects
 
     def get_context_data(self, **kwargs):

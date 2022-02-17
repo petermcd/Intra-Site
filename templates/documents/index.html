@@ -1,7 +1,10 @@
 {% extends "main.html" %}
 {% load static %}
 {% block title %}Documents{% endblock %}
-{% block breadcrumbs %}<a href="/">Home</a> > Documents{% endblock %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Documents</li>
+{% endblock %}
 {% block content %}
         <section id="table_list">
             <table class="table table-striped table-bordered">
@@ -15,7 +18,7 @@
                 <tbody>
                     {% for document in document_list %}
                         <tr>
-                            <td>{{ document.name }}</tr>
+                            <td>{{ document.name }}</td>
                             <td><a href="{{ document.document.url }}">DOWNLOAD</a></td>
                             <td>{{ document.description }}</td>
                         </tr>{% endfor %}
