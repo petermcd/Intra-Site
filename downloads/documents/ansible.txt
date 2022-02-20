@@ -1,0 +1,5 @@
+Debian based
+	Add Ansible user
+	Add user to sudo group
+	ssh-copy-id
+	remove password based authentication
