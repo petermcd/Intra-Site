@@ -20,7 +20,7 @@ class IndexView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         """
-        Obtain context data ready for output
+        Obtain context data ready for output.
 
         Return:
             Context data ready for output in a template
@@ -34,7 +34,8 @@ class DetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         """
-        Obtain context data ready for output
+        Obtain context data ready for output.
+
         Return:
             Context data ready for output in a template
         """
@@ -48,6 +49,7 @@ class DetailView(generic.DetailView):
     def get_queryset(self):
         """
         Get event objects to display in detail view.
+
         Return:
             List of event objects
         """

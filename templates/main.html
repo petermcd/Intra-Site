@@ -12,7 +12,11 @@
     </head>
     <body class="d-flex flex-column h-100">
         <header>
-            <div class="container">{% block breadcrumbs %}Home{% endblock %}</div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    {% block breadcrumbs %}<li class="breadcrumb-item active" aria-current="page">Home</li>{% endblock %}
+                </ol>
+            </nav>
         </header>
         <main class="flex-shrink-0">
             <div class="container">

@@ -1,13 +1,16 @@
 {% extends "main.html" %}
 {% load static %}
 {% block title %}Network{% endblock %}
-{% block breadcrumbs %}<a href="/">Home</a> > Network{% endblock %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Network</li>
+{% endblock %}
 {% block content %}
         <header>
             <h1>Network</h1>
         </header>
         <div class="row">
-            <p>View rack <a href="/networkv2/rack">HERE</a></p>
+            <p>View rack <a href="/networkv2/rack/">HERE</a></p>
         </div>
         <div class="row">
             <aside class="col-12 col-md-2" id="graph-item-details">

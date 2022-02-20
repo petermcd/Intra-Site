@@ -1,43 +1,66 @@
 {% extends "main.html" %}
 {% load static %}
 {% block title %}Index{% endblock %}
-{% block breadcrumbs %}Home{% endblock %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+{% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col-6 col-lg-3 widget">
-            <a href="finance/">
-                <img src="{% static 'img/finance.png' %}" alt="Finance" width="100" height="100" class="align-middle my-auto mx-auto d-block" />
-            </a>
+        <div class="card-container col-6 col-lg-3">
+        <div class="card">
+            <div class="card-header">Finance</div>
+            <div class="card-body">
+                <a href="finance/"><img src="{% static 'img/finance.png' %}" class="card-img rounded" alt="Finance"></a>
+            </div>
         </div>
-        <div class="col-6 col-lg-3 widget">
-            <a href="finance/investments">
-                <img src="{% static 'img/investments.png' %}" alt="Investments" width="100" height="100" class="align-middle my-auto mx-auto d-block" />
-            </a>
         </div>
-        <div class="col-6 col-lg-3 widget">
-            <a href="todo/">
-                <img src="{% static 'img/todo.png' %}" alt="ToDo" width="100" height="100" class="align-middle my-auto mx-auto d-block" />
-            </a>
+        <div class="col-6 col-lg-3">
+        <div class="card">
+            <div class="card-header">Investments</div>
+            <div class="card-body">
+                <a href="finance/investments/"><img src="{% static 'img/investments.png' %}" class="card-img rounded" alt="Investments"></a>
+            </div>
         </div>
-        <div class="col-6 col-lg-3 widget">
-            <a href="events/">
-                <img src="{% static 'img/events.png' %}" alt="Events" width="100" height="100" class="align-middle my-auto mx-auto d-block" />
-            </a>
         </div>
-        <div class="col-6 col-lg-3 widget">
-            <a href="networkv2/">
-                <img src="{% static 'img/network.png' %}" alt="Network" width="100" height="100" class="align-middle my-auto mx-auto d-block" />
-            </a>
+        <div class="col-6 col-lg-3">
+        <div class="card">
+            <div class="card-header">ToDo</div>
+            <div class="card-body">
+                <a href="todo/"><img src="{% static 'img/todo.png' %}" class="card-img rounded" alt="ToDo"></a>
+            </div>
         </div>
-        <div class="col-6 col-lg-3 widget">
-            <a href="books/">
-                <img src="{% static 'img/books.png' %}" alt="Books" width="100" height="100" class="align-middle my-auto mx-auto d-block" />
-            </a>
         </div>
-        <div class="col-6 col-lg-3 widget">
-            <a href="documents/">
-                <img src="{% static 'img/documents.png' %}" alt="Documents" width="100" height="100" class="align-middle my-auto mx-auto d-block" />
-            </a>
+        <div class="col-6 col-lg-3">
+        <div class="card">
+            <div class="card-header">Events</div>
+            <div class="card-body">
+                <a href="events/"><img src="{% static 'img/events.png' %}" class="card-img rounded" alt="Events"></a>
+            </div>
+        </div>
+        </div>
+        <div class="col-6 col-lg-3">
+        <div class="card">
+            <div class="card-header">Network</div>
+            <div class="card-body">
+                <a href="networkv2/"><img src="{% static 'img/network.png' %}" class="card-img rounded" alt="Network"></a>
+            </div>
+        </div>
+        </div>
+        <div class="col-6 col-lg-3">
+        <div class="card">
+            <div class="card-header">Books</div>
+            <div class="card-body">
+                <a href="books/"><img src="{% static 'img/books.png' %}" class="card-img rounded" alt="Books"></a>
+            </div>
+        </div>
+        </div>
+        <div class="col-6 col-lg-3">
+        <div class="card">
+            <div class="card-header">Documents</div>
+            <div class="card-body">
+                <a href="documents/"><img src="{% static 'img/documents.png' %}" class="card-img rounded" alt="Documents"></a>
+            </div>
+        </div>
         </div>
     </div>
 {% endblock %}

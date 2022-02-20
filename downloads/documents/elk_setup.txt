@@ -1,0 +1,70 @@
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+sudo apt-get install apt-transport-https
+echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-7.x.list
+sudo apt-get update && sudo apt-get install elasticsearch
+sudo /bin/systemctl daemon-reload
+sudo /bin/systemctl enable elasticsearch.service
+sudo /bin/systemctl start elasticsearch.service
+
+sudo apt-get update && sudo apt-get install kibana
+Edit /etc/kibana/kibana.yml to update host to be 0.0.0.0
+sudo /bin/systemctl daemon-reload
+sudo /bin/systemctl enable kibana.service
+sudo systemctl start kibana.service
+sudo ufw allow 5601
+
+sudo apt-get update && sudo apt-get install logstash
+sudo /bin/systemctl daemon-reload
+sudo /bin/systemctl enable logstash.service
+sudo systemctl start logstash.service
+
+sudo apt-get update && sudo apt-get install filebeat
+sudo /bin/systemctl daemon-reload
+sudo systemctl enable filebeat.service
+sudo systemctl start filebeat.service
+sudo filebeat modules enable system elasticsearch
+
+sudo apt-get update && sudo apt-get install apm-server
+
+sudo apt-get update && sudo apt-get install elastic-agent
+sudo /bin/systemctl daemon-reload
+sudo systemctl enable elastic-agent.service
+sudo systemctl start elastic-agent.service
+
+sudo systemctl stop elasticsearch
+sudo systemctl stop kibana
+add the following to /etc/elasticsearch/elasticsearch.yml
+
+	xpack.security.enabled: true
+	discovery.type: single-node
+
+sudo systemctl start elasticsearch
+
+sudo /usr/share/elasticsearch/bin/elasticsearch-setup-passwords auto
+
+apm_system = zJsVTFJtJ9IbFEGQetyW
+kibana_system = SVweeOj7v6yJFF90ctsD
+kibana = SVweeOj7v6yJFF90ctsD
+password for user logstash_system
+password for user beats_system
+beats_system = gD8lkCOEDsNND7pSLgGm
+remote_monitoring_user = 2jQOCOlIHB7agDW8XlqT
+elastic = FchaoZ2D1szBIsBfGLBv
+
+
+edit  /etc/kibana/kibana.yml and uncomment
+
+	elasticsearch.username: "kibana_system"
+
+sudo /usr/share/kibana/bin/kibana-keystore add elasticsearch.password
+	Enter the kibana_system password from above
+
+sudo systemctl start kibana.service
+
+sudo apt install metricbeat
+edit  /etc/metricbeat/metricbeat.yml and update username and password for output
+sudo systemctl enable metricbeat
+sudo systemctl start metricbeat
+
+edit  /etc/filebeat/filebeat.yml and update username and password for output
+sudo systemctl start filebeat

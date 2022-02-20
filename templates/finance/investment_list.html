@@ -1,7 +1,11 @@
 {% extends "main.html" %}
 {% load static %}
 {% block title %}Investments{% endblock %}
-{% block breadcrumbs %}<a href="/">Home</a> > <a href="/finance/"> Finance</a> > Investments{% endblock %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item"><a href="/finance/">Finance</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Investments</li>
+{% endblock %}
 {% block content %}
         <header>
             <h1>Investments</h1>
