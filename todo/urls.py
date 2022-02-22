@@ -4,7 +4,8 @@ from todo import views
 
 app_name = 'todo'
 urlpatterns = [
-    path('', views.IndexView.as_view(), name='todo'),
-    path('add', views.IndexView.as_view(), name='todo'),
-    path('delete', views.IndexView.as_view(), name='todo'),
+    path('', views.TodoList.as_view(), name='todo_list'),
+    path('form', views.todo_output_form, name='todo_add_form'),
+    path('add', views.todo_add, name='todo_add'),
+    path('<int:pk>/delete', views.todo_delete, name='todo_delete'),
 ]
