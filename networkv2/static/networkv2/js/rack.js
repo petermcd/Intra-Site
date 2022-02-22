@@ -1,19 +1,19 @@
 // jshint esversion: 6
 $.getJSON( "/networkv2/rack.json", function( data ) {
-  process_data(data)
+  process_data(data);
 });
 function process_data(shelf_data) {
     let container = $('#rack');
     let row_iter = 0;
     while (row_iter < 19) {
         row_iter++;
-        let row_id = ' id="shelf' + row_iter + '"'
+        let row_id = ' id="shelf' + row_iter + '"';
         const row = '<div class="row rack_row"' + row_id + '></div>';
         container.append(row);
     }
     let tab_index = 1;
     for (let shelf in shelf_data) {
-        const col_width = 100 / shelf_data[shelf]['width']
+        const col_width = 100 / shelf_data[shelf]['width'];
         const row = $('#shelf' + shelf);
         let col_iter = 0;
         while (col_iter < shelf_data[shelf]['width']) {

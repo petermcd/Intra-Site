@@ -1,10 +1,6 @@
 {% extends "main.html" %}
 {% load static %}
 {% block title %}ToDo{% endblock %}
-{% block breadcrumbs %}
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active" aria-current="page">ToDo</li>
-{% endblock %}
 {% block content %}
         <header>
             <h1>ToDo</h1>
@@ -15,23 +11,41 @@
                     <tr>
                         <th></th>
                         <th>Item</th>
+                        <th>Added</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">
+                              <button hx-get="form"
+                                      hx-trigger="click"
+                                      hx-target="#todo-list"
+                                      hx-swap="beforeend">
+                                  Add
+                              </button>
+                        </td>
+                    </tr>
+                </tfoot>
+                <tbody id="todo-list">
                     {% for todo in todo_list %}
-                        <tr>
-                            <td><input type="checkbox" value="{{ todo.pk }}" name=""></td>
-                            <td><label for="{{ todo.pk }}">{{ todo.description }} - {{ todo.added }}</label></td>
+                        <tr id="todo-item-{{ todo.pk }}">
+                            <td>
+                                <form
+                                        hx-target="#todo-item-{{ todo.pk }}"
+                                        hx-get="{{ todo.pk }}/delete"
+                                        hx-confirm="Are you sure?"
+                                        hx-swap="outerHTML"
+                                >
+                                    <button hx-trigger="click">
+                                        &#x274C;
+                                    </button>
+                                </form>
+                            </td>
+                            <td><label for="{{ todo.pk }}">{{ todo.description }}</label></td>
+                            <td>{{ todo.added }}</td>
                         </tr>
                     {% endfor %}
-                    {% if todo_list|length < 1 %}
-                        <tr>
-                            <td colspan="2">No todo items</td>
-                        </tr>
-                    {% endif %}
                 </tbody>
             </table>
-        </section>
-        <section id="todo_add">
         </section>
 {% endblock %}

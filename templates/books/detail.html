@@ -1,11 +1,6 @@
 {% extends "main.html" %}
 {% load static %}
 {% block title %}{{ book.title }}{% if book.subtitle %} - {{ book.subtitle }}){% endif %}{% endblock %}
-{% block breadcrumbs %}
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="/books/">Books</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ book.title }}</li>
-{% endblock %}
 {% block content %}
     <section id="item_details">
         <header>
