@@ -1,7 +1,8 @@
-from django.views import generic
-from django.shortcuts import render
-from todo.models import ToDo
 from django.http import HttpResponse
+from django.shortcuts import render
+from django.views import generic
+
+from todo.models import ToDo
 
 
 class TodoList(generic.ListView):
@@ -62,6 +63,6 @@ def todo_delete(request, pk: int):
         Empty response with a 204 code
     """
     todo_item = ToDo.objects.filter(pk=pk)
-    if len(todo_item) ==1:
+    if len(todo_item) == 1:
         todo_item[0].delete()
     return HttpResponse(status=200)
