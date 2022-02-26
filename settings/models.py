@@ -26,3 +26,6 @@ class Setting(models.Model):
             Yes if configured otherwise No
         """
         return 'Yes' if self.value else 'No'
+
+    class Meta:
+        ordering = ('name',)
