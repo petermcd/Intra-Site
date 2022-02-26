@@ -67,6 +67,9 @@ class Venue(models.Model):
         """
         return f'{self.name}\n{self.street_address}\n{self.city}\n{self.country}\n{self.postcode}'
 
+    class Meta:
+        ordering = ('name',)
+
 
 class Station(models.Model):
     """
@@ -86,6 +89,9 @@ class Station(models.Model):
             The name and cite of the Station
         """
         return f'{self.name} - {self.city}'
+
+    class Meta:
+        ordering = ('name',)
 
 
 class Event(models.Model):
@@ -142,6 +148,9 @@ class Event(models.Model):
             arranged = 'Partial'
         return arranged
 
+    class Meta:
+        ordering = ('name',)
+
 
 class TravelType(models.Model):
     name: models.CharField = models.CharField(max_length=255, verbose_name='Name')
@@ -154,6 +163,9 @@ class TravelType(models.Model):
             Travel type name as a string
         """
         return str(self.name)
+
+    class Meta:
+        ordering = ('name',)
 
 
 class Travel(models.Model):
@@ -201,6 +213,7 @@ class Travel(models.Model):
         """
         verbose_name = 'Travel'
         verbose_name_plural = 'Travel'
+        ordering = ('departure',)
 
 
 class Hotel(models.Model):
@@ -221,6 +234,9 @@ class Hotel(models.Model):
             The name and city of the venue
         """
         return f'{self.name} - {self.city}'
+
+    class Meta:
+        ordering = ('name',)
 
 
 class Accommodation(models.Model):
@@ -249,3 +265,6 @@ class Accommodation(models.Model):
             The name of the accommodation and event
         """
         return f'{self.for_event.name} - {self.hotel.name}'
+
+    class Meta:
+        ordering = ('hotel',)

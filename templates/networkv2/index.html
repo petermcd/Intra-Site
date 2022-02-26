@@ -6,9 +6,6 @@
             <h1>Network</h1>
         </header>
         <div class="row">
-            <p>View rack <a href="/networkv2/rack/">HERE</a></p>
-        </div>
-        <div class="row">
             <aside class="col-12 col-md-2" id="graph-item-details">
                 <h2>Details</h2>
                 Name: N/A<br />
@@ -16,8 +13,8 @@
             </aside>
             <div class="col-12 col-md-10" id="graph"></div>
         </div>
-        <script type="text/javascript" src="//unpkg.com/three"></script>
-        <script type="text/javascript" src="//unpkg.com/three-spritetext"></script>
-        <script type="text/javascript" src="//unpkg.com/3d-force-graph"></script>
-        <script type="text/javascript" src="{% static 'networkv2/js/graph.js' %}"></script>
+        <script src="//unpkg.com/three"></script>
+        <script src="//unpkg.com/three-spritetext"></script>
+        <script src="//unpkg.com/3d-force-graph"></script>
+        <script src="{% static 'networkv2/js/graph.js' %}"></script>
 {% endblock %}

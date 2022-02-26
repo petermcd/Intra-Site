@@ -20,7 +20,8 @@
                               <button hx-get="form"
                                       hx-trigger="click"
                                       hx-target="#todo-list"
-                                      hx-swap="beforeend">
+                                      hx-swap="beforeend"
+                                      type="submit">
                                   Add
                               </button>
                         </td>
@@ -36,7 +37,7 @@
                                         hx-confirm="Are you sure?"
                                         hx-swap="outerHTML"
                                 >
-                                    <button hx-trigger="click">
+                                    <button hx-trigger="click" type="submit">
                                         &#x274C;
                                     </button>
                                 </form>
