@@ -17,6 +17,7 @@ class PaidFrom(models.Model):
     class Meta:
         verbose_name = 'Paid From'
         verbose_name_plural = 'Paid From'
+        ordering = ('name',)
 
 
 class Lender(models.Model):
@@ -35,6 +36,9 @@ class Lender(models.Model):
         """
         return str(self.name)
 
+    class Meta:
+        ordering = ('name',)
+
 
 class Merchant(models.Model):
     name: models.CharField = models.CharField('Merchant', unique=True, max_length=100, null=False, blank=False)
@@ -48,6 +52,9 @@ class Merchant(models.Model):
             Merchant Name
         """
         return str(self.name)
+
+    class Meta:
+        ordering = ('name',)
 
 
 class Bill(models.Model):
@@ -96,6 +103,9 @@ class Bill(models.Model):
         """
         return 'bill'
 
+    class Meta:
+        ordering = ('company',)
+
 
 class BillAudit(models.Model):
     """
@@ -124,6 +134,9 @@ class BillAudit(models.Model):
             Formatted transaction value
         """
         return format_money(self.transaction_value)
+
+    class Meta:
+        ordering = ('when',)
 
 
 class Loan(models.Model):
@@ -185,6 +198,9 @@ class Loan(models.Model):
         """
         return 'loan'
 
+    class Meta:
+        ordering = ('lender',)
+
 
 class LoanAudit(models.Model):
     """
@@ -214,6 +230,9 @@ class LoanAudit(models.Model):
             Formatted transaction value
         """
         return format_money(self.transaction_value)
+
+    class Meta:
+        ordering = ('when',)
 
 
 def format_money(money: int, symbol_left: str = '£', symbol_right: str = '') -> str:
@@ -321,3 +340,6 @@ class Investment(models.Model):
             Monthly payment formatted
         """
         return format_money(money=self.value)
+
+    class Meta:
+        ordering = ('company',)

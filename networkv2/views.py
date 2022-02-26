@@ -25,6 +25,7 @@ def inventory(request) -> HttpResponse:
     """
     devices = Device.objects.all()
     groups: Dict[str, Set[Dict[str, Device]]] = {}
+
     for device in devices:
         if device.operating_system.name not in groups:
             groups[device.operating_system.name] = {

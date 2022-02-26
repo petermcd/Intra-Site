@@ -8,3 +8,6 @@ class ToDo(models.Model):
     """
     description: models.CharField = models.CharField('ToDo Item', max_length=1000, null=False, blank=False)
     added: models.DateTimeField = models.DateTimeField('Added', blank=False, null=False, default=timezone.now)
+
+    class Meta:
+        ordering = ('description',)

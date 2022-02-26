@@ -29,6 +29,9 @@ class Playbook(models.Model):
         """
         return str(self.name)
 
+    class Meta:
+        ordering = ('name',)
+
 
 class Application(models.Model):
     """
@@ -53,6 +56,9 @@ class Application(models.Model):
         """
         return str(self.name)
 
+    class Meta:
+        ordering = ('name',)
+
 
 class DeviceType(models.Model):
     """
@@ -70,6 +76,9 @@ class DeviceType(models.Model):
         """
         return str(self.name)
 
+    class Meta:
+        ordering = ('name',)
+
 
 class Manufacturer(models.Model):
     """
@@ -86,6 +95,9 @@ class Manufacturer(models.Model):
             string representation of the object.
         """
         return str(self.name)
+
+    class Meta:
+        ordering = ('name',)
 
 
 class Model(models.Model):
@@ -109,6 +121,9 @@ class Model(models.Model):
         """
         return f'{self.manufacturer.name} - {self.name}'
 
+    class Meta:
+        ordering = ('name',)
+
 
 class Vendor(models.Model):
     """
@@ -125,6 +140,9 @@ class Vendor(models.Model):
             string representation of the object.
         """
         return str(self.name)
+
+    class Meta:
+        ordering = ('name',)
 
 
 class OperatingSystem(models.Model):
@@ -146,6 +164,9 @@ class OperatingSystem(models.Model):
         """
         return f'{self.vendor.name} - {self.name} - {self.version}'
 
+    class Meta:
+        ordering = ('name',)
+
 
 class ConnectionType(models.Model):
     """
@@ -162,6 +183,9 @@ class ConnectionType(models.Model):
             string representation of the object.
         """
         return str(self.name)
+
+    class Meta:
+        ordering = ('name',)
 
 
 class Device(models.Model):
@@ -188,6 +212,7 @@ class Device(models.Model):
     port: models.IntegerField = models.IntegerField('Port', default=0, null=False, blank=False)
     rack_shelf: models.IntegerField = models.IntegerField('Rack Shelf', null=True, blank=True)
     rack_shelf_position: models.IntegerField = models.IntegerField('Rack Shelf Position', null=True, blank=True)
+    switch_capable: models.BooleanField = models.BooleanField('Switch Capable', default=False, null=False, blank=False)
     notes: models.CharField = models.CharField('Notes', max_length=1000, null=False, blank=False)
     installed_applications: models.ManyToManyField = models.ManyToManyField(Application, blank=True)
     __original_ip = None
@@ -233,6 +258,9 @@ class Device(models.Model):
         """
         return self.__original_ip != self.ip
 
+    class Meta:
+        ordering = ('hostname',)
+
 
 class Registrar(models.Model):
     """
@@ -250,6 +278,9 @@ class Registrar(models.Model):
         """
         return str(self.name)
 
+    class Meta:
+        ordering = ('name',)
+
 
 class Domain(models.Model):
     """
@@ -266,6 +297,9 @@ class Domain(models.Model):
             string representation of the object.
         """
         return str(self.name)
+
+    class Meta:
+        ordering = ('name',)
 
 
 class Subdomain(models.Model):
@@ -313,6 +347,9 @@ class Subdomain(models.Model):
         """
         return self.__originally_hosted_on != self.hosted_on
 
+    class Meta:
+        ordering = ('name',)
+
 
 class Website(models.Model):
     """
@@ -347,6 +384,9 @@ class Website(models.Model):
         if (self.secure and self.port == 443) or (not self.secure and port == 80):
             port = ''
         return f'{schema}{self.subdomain.full_domain}{port}{self.path}'
+
+    class Meta:
+        ordering = ('name',)
 
 
 @receiver(post_save, sender=Device)

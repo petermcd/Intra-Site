@@ -37,6 +37,9 @@ class Author(models.Model):
         """
         return str(self.name)
 
+    class Meta:
+        ordering = ('name',)
+
 
 class Book(models.Model):
     """
@@ -68,3 +71,6 @@ class Book(models.Model):
             String representation of the object
         """
         return str(self.title)
+
+    class Meta:
+        ordering = ('title',)

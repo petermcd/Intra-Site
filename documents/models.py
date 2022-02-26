@@ -17,6 +17,9 @@ def document_file_name(instance, filename) -> str:
 
 
 class Document(models.Model):
+    """
+    Model for Document.
+    """
     name: models.CharField = models.CharField(max_length=200)
     document: models.FileField = models.FileField(
         storage=OverwriteStorage,
@@ -24,3 +27,6 @@ class Document(models.Model):
         upload_to=document_file_name
     )
     description: models.CharField = models.CharField(max_length=1000, verbose_name='Description')
+
+    class Meta:
+        ordering = ('name',)
