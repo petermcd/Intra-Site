@@ -208,7 +208,13 @@ class Device(models.Model):
         null=False,
         blank=False
     )
-    connected_too: models.ForeignKey = models.ForeignKey('Device', on_delete=models.RESTRICT, null=True, blank=True)
+    connected_too: models.ForeignKey = models.ForeignKey(
+        'Device',
+        limit_choices_to={'switch_capable': True},
+        on_delete=models.RESTRICT,
+        null=True,
+        blank=True
+    )
     port: models.IntegerField = models.IntegerField('Port', default=0, null=False, blank=False)
     rack_shelf: models.IntegerField = models.IntegerField('Rack Shelf', null=True, blank=True)
     rack_shelf_position: models.IntegerField = models.IntegerField('Rack Shelf Position', null=True, blank=True)
@@ -336,7 +342,7 @@ class Subdomain(models.Model):
         Returns:
             string representation of the object.
         """
-        return self.name
+        return f'{self.name}.{self.domain.name}'
 
     def hosted_on_changed(self) -> bool:
         """
