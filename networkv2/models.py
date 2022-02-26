@@ -45,6 +45,7 @@ class Application(models.Model):
         blank=False,
         null=False
     )
+    parent: models.ForeignKey = models.ForeignKey('Application', on_delete=models.RESTRICT, null=True, blank=True)
     with_playbook: models.ForeignKey = models.ForeignKey(Playbook, on_delete=models.RESTRICT, null=True, blank=True)
 
     def __str__(self) -> str:
