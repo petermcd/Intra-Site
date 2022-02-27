@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Set
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
-from networkv2.models import Device, Website, OperatingSystem, Application
+from networkv2.models import Application, Device, OperatingSystem, Website
 
 
 def index(request) -> HttpResponse:
@@ -29,39 +29,39 @@ def inventory(request) -> HttpResponse:
     applications = Application.objects.all()
 
     for operating_system in operating_systems:
-        if operating_system.name not in groups:
-            groups[str(operating_system.name)] = {
+        if operating_system.name_clean not in groups:
+            groups[str(operating_system.name_clean)] = {
                 'devices': set(),
                 'children': set(),
             }
-        if operating_system.parent and operating_system.parent.name not in groups:
-            groups[operating_system.parent.name] = {
+        if operating_system.parent and operating_system.parent.name_clean not in groups:
+            groups[operating_system.parent.name_clean] = {
                 'devices': set(),
-                'children': set(operating_system.name),
+                'children': {operating_system.name},
             }
         elif operating_system.parent:
-            groups[operating_system.parent.name]['children'].add(operating_system.name)
+            groups[operating_system.parent.name_clean]['children'].add(operating_system.name_clean)
 
     for application in applications:
-        if application.name not in groups:
-            groups[str(application.name)] = {
+        if application.name_clean not in groups:
+            groups[str(application.name_clean)] = {
                 'devices': set(),
                 'children': set(),
             }
-        if application.parent and application.parent.name not in groups:
-            groups[application.parent.name] = {
+        if application.parent and application.parent.name_clean not in groups:
+            groups[application.parent.name_clean] = {
                 'devices': set(),
-                'children': set(application.name),
+                'children': {application.name_clean},
             }
         elif application.parent:
-            groups[application.parent.name]['children'].add(application.name)
+            groups[application.parent.name_clean]['children'].add(application.name_clean)
 
     devices = Device.objects.all()
 
     for device in devices:
-        groups[device.operating_system.name]['devices'].add(device)
+        groups[device.operating_system.name_clean]['devices'].add(device)
         for application in device.installed_applications.all():
-            groups[application.name]['devices'].add(device)
+            groups[application.name_clean]['devices'].add(device)
 
     output = ''
     for group, value in groups.items():
