@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Set
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
-from networkv2.models import Device, Website
+from networkv2.models import Device, Website, OperatingSystem, Application
 
 
 def index(request) -> HttpResponse:
@@ -23,50 +23,66 @@ def inventory(request) -> HttpResponse:
     Return:
         Inventory list in ini format
     """
+    groups: Dict[str, Dict[str, Set[str]]] = {}
+
+    operating_systems = OperatingSystem.objects.all()
+    applications = Application.objects.all()
+
+    for operating_system in operating_systems:
+        if operating_system.name not in groups:
+            groups[str(operating_system.name)] = {
+                'devices': set(),
+                'children': set(),
+            }
+        if operating_system.parent and operating_system.parent.name not in groups:
+            groups[operating_system.parent.name] = {
+                'devices': set(),
+                'children': set(operating_system.name),
+            }
+        elif operating_system.parent:
+            groups[operating_system.parent.name]['children'].add(operating_system.name)
+
+    for application in applications:
+        if application.name not in groups:
+            groups[str(application.name)] = {
+                'devices': set(),
+                'children': set(),
+            }
+        if application.parent and application.parent.name not in groups:
+            groups[application.parent.name] = {
+                'devices': set(),
+                'children': set(application.name),
+            }
+        elif application.parent:
+            groups[application.parent.name]['children'].add(application.name)
+
     devices = Device.objects.all()
-    groups: Dict[str, Set[Dict[str, Device]]] = {}
 
     for device in devices:
-        if device.operating_system.name not in groups:
-            groups[device.operating_system.name] = {
-                'children': set(),
-                'devices': set(),
-            }
         groups[device.operating_system.name]['devices'].add(device)
-        if device.operating_system.parent:
-            if (
-                device.operating_system.parent.with_playbook
-                and device.operating_system.parent.name not in groups
-            ):
-                groups[device.operating_system.parent.name] = {
-                    'children': set(),
-                    'devices': set(),
-                }
-                groups[device.operating_system.parent.name]['children'].add(device.operating_system.name)
-            elif device.operating_system.with_playbook:
-                groups[device.operating_system.parent.name]['children'].add(device.operating_system.name)
         for application in device.installed_applications.all():
-            if application.with_playbook:
-                if application.name not in groups:
-                    groups[application.name] = {
-                        'children': set(),
-                        'devices': set(),
-                    }
-                groups[application.name]['devices'].add(device)
+            groups[application.name]['devices'].add(device)
+
     output = ''
     for group, value in groups.items():
         output += f'[{group}]\n'
         for device in value['devices']:
-            output += f'{device.hostname}\tansible_host={device.ip}\n'
+            extra_output = ''
+            if device.operating_system.username:
+                extra_output += f'\tansible_username={device.operating_system.username}'
+            if device.operating_system.password:
+                extra_output += f'\tansible_password={device.operating_system.password}'
+            output += f'{device.hostname}\tansible_host={device.ip}{extra_output}\n'
         output += '\n'
 
     for group, value in groups.items():
-        if not value['children']:
-            continue
-        output += f'[{group}:children]\n'
-        for child in value['children']:
-            output += f'{child}'
+        if len(value['children']):
+            output += f'[{group}:children]\n'
+            for child in value['children']:
+                output += f'{child}\n'
         output += '\n'
+
+    output += '\n'
 
     return HttpResponse(content_type='text/plain', content=output)
 
