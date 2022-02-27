@@ -1,3 +1,5 @@
+import re
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import post_delete, post_save
@@ -56,6 +58,16 @@ class Application(models.Model):
             string representation of the object.
         """
         return str(self.name)
+
+    @property
+    def name_clean(self) -> str:
+        """
+        Property for the application name cleaned.
+
+        Returns:
+            Clean version of the application name
+        """
+        return re.sub('[^A-Za-z0-9_]', '_', str(self.name))
 
     class Meta:
         ordering = ('name',)
@@ -166,6 +178,16 @@ class OperatingSystem(models.Model):
             string representation of the object.
         """
         return f'{self.vendor.name} - {self.name} - {self.version}'
+
+    @property
+    def name_clean(self) -> str:
+        """
+        Property for the operating system name cleaned.
+
+        Returns:
+            Clean version of the operating system name
+        """
+        return re.sub('[^A-Za-z0-9_]', '_', str(self.name))
 
     class Meta:
         ordering = ('name',)
