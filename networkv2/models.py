@@ -155,6 +155,8 @@ class OperatingSystem(models.Model):
     vendor: models.ForeignKey = models.ForeignKey(Vendor, on_delete=models.RESTRICT, null=False, blank=False)
     parent: models.ForeignKey = models.ForeignKey('OperatingSystem', on_delete=models.RESTRICT, null=True, blank=True)
     with_playbook: models.ForeignKey = models.ForeignKey(Playbook, on_delete=models.RESTRICT, null=True, blank=True)
+    username: models.CharField = models.CharField('Username', max_length=100, null=True, blank=True)
+    password: models.CharField = models.CharField('Password', max_length=100, null=True, blank=True)
 
     def __str__(self) -> str:
         """
@@ -232,19 +234,20 @@ class Device(models.Model):
         self.__original_ip = self.ip
 
     def clean(self):
-        matching_devices = Device.objects.all().filter(
-            port__exact=self.port,
-            connected_too=self.connected_too
-        )
-        hostnames = {matching_device.hostname for matching_device in matching_devices}
         if self.connected_via.unique_port:
+            matching_devices = Device.objects.all().filter(
+                port__exact=self.port,
+                connected_too=self.connected_too
+            )
+            pks = {matching_device.pk for matching_device in matching_devices}
             if self.port == 0:
                 raise ValidationError({
                     'port': f'Post cannot be 0 for {self.connected_via.name}'
                 })
-            elif len(hostnames) > 0 and self.hostname not in hostnames:
+            elif len(pks) > 0 and self.pk not in pks:
+                device = Device.objects.get(id__exact=pks.pop())
                 raise ValidationError({
-                    'port': f'Port already in use by {hostnames.pop()}'
+                    'port': f'Port already in use by {device.hostname}.'
                 })
 
     def __str__(self) -> str:
