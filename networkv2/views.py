@@ -69,9 +69,9 @@ def inventory(request) -> HttpResponse:
         for device in value['devices']:
             extra_output = ''
             if device.operating_system.username:
-                extra_output += f'\tansible_username={device.operating_system.username}'
+                extra_output += f'\tansible_user={device.operating_system.username}'
             if device.operating_system.password:
-                extra_output += f'\tansible_password={device.operating_system.password}'
+                extra_output += f'\tansible_ssh_pass={device.operating_system.password}'
             output += f'{device.hostname}\tansible_host={device.ip}{extra_output}\n'
         output += '\n'
 
