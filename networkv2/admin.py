@@ -1,8 +1,7 @@
 from django.contrib import admin
 
-from networkv2.models import (Application, ConnectionType, Device, DeviceType,
-                              Domain, Manufacturer, Model, OperatingSystem,
-                              Playbook, Registrar, Subdomain, Vendor, Website)
+from networkv2.models import (Application, ConnectionType, Device, DeviceType, Domain, Manufacturer, Model,
+                              OperatingSystem, Playbook, Registrar, Subdomain, Vendor, Website)
 
 
 @admin.register(Application)

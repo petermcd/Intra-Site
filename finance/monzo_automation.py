@@ -20,8 +20,7 @@ from monzo.authentication import Authentication  # NOQA E402
 from monzo.endpoints.account import Account  # NOQA E402
 from monzo.endpoints.transaction import Transaction  # NOQA E402
 
-from finance.models import (Bill, BillAudit, Loan, LoanAudit,  # NOQA E402
-                            Merchant, Monzo)
+from finance.models import Bill, BillAudit, Loan, LoanAudit, Merchant, Monzo  # NOQA E402
 from finance.views import MonzoStorage  # NOQA E402
 
 

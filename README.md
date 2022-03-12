@@ -43,3 +43,13 @@ on top of this, pywatchman is required and can be installed using the dev requir
 ### Django Debug toolbar
 
 Installation instructions can be found [HERE](https://django-debug-toolbar.readthedocs.io/en/latest/installation.html)
+
+### Git Pre Commit
+
+Git pre commit runs tests prior to a commit occuring, this helps reduce CICD failures. To set this up
+the following commands can be carried out:
+
+```bash
+pip install pre-commit
+pre-commit install
+```

@@ -6,8 +6,7 @@ from monzo.authentication import Authentication
 from monzo.exceptions import MonzoAuthenticationError
 from monzo.handlers.storage import Storage
 
-from finance.models import (Bill, BillAudit, Investment, Loan, LoanAudit,
-                            Monzo, format_money)
+from finance.models import Bill, BillAudit, Investment, Loan, LoanAudit, Monzo, format_money
 
 
 def order_objects(bill_object) -> int:
