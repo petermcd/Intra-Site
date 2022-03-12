@@ -1,5 +1,7 @@
 from django.contrib import admin
+from django.templatetags.static import static
 from django.urls import include, path
+from django.views.generic.base import RedirectView
 
 from finance.views import MonzoAuthView
 from Intranet.views import IndexView
@@ -16,4 +18,6 @@ urlpatterns = [
     path('finance/', include('finance.urls')),
     path('networkv2/', include('networkv2.urls')),
     path('todo/', include('todo.urls')),
+    path('favicon.ico', RedirectView.as_view(url=static('img/favicon.ico'))),
+    path('__debug__/', include('debug_toolbar.urls')),
 ]

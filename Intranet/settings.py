@@ -1,3 +1,4 @@
+import mimetypes
 import os
 from pathlib import Path
 
@@ -22,6 +23,11 @@ BASE_LOCAL_PATH_FOR_EXTERNAL = str(os.getenv('BASE_LOCAL_PATH_FOR_EXTERNAL'))
 if int(os.getenv('DJANGO_DEBUG', 0)) == 1:
     DEBUG = True
     ALLOWED_HOSTS = ['*', ]
+    mimetypes.add_type("application/javascript", ".js", True)
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
 
 # Application definition
 
@@ -32,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'api.apps.ApiConfig',
     'books.apps.BooksConfig',
     'documents.apps.DocumentsConfig',
@@ -52,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'Intranet.urls'
