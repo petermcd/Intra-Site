@@ -1,4 +1,5 @@
-from typing import Any, Dict, List, Set, Union
+"""Views for Networkv2."""
+from typing import Any, Dict, List, Set
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render

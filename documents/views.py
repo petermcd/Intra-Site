@@ -1,9 +1,12 @@
+"""Views for Documents."""
 from django.views import generic
 
 from documents.models import Document
 
 
 class IndexView(generic.ListView):
+    """View implementation for document list."""
+
     paginate_by = 10
     template_name = "documents/index.html"
     context_object_name = "document_list"
@@ -23,7 +26,7 @@ class IndexView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         """
-        Retrieve context data ready for output
+        Retrieve context data ready for output.
 
         Return:
             Context data ready for output in a template

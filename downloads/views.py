@@ -1,9 +1,10 @@
+"""Views for Downloads."""
 from django.http import FileResponse
 
 
 def book_download(request, book="") -> FileResponse:
     """
-    Facilitate the book downloads
+    Facilitate the book downloads.
 
     Args:
         request: http request object
@@ -18,7 +19,7 @@ def book_download(request, book="") -> FileResponse:
 
 def document_download(request, document="") -> FileResponse:
     """
-    Facilitate the document downloads
+    Facilitate the document downloads.
 
     Args:
         request: http request object
@@ -33,7 +34,7 @@ def document_download(request, document="") -> FileResponse:
 
 def event_ticket_download(request, event_ticket="") -> FileResponse:
     """
-    Facilitate the event ticket downloads
+    Facilitate the event ticket downloads.
 
     Args:
         request: http request object
@@ -48,7 +49,7 @@ def event_ticket_download(request, event_ticket="") -> FileResponse:
 
 def travel_ticket_download(request, travel_ticket="") -> FileResponse:
     """
-    Facilitate the travel ticket downloads
+    Facilitate the travel ticket downloads.
 
     Args:
         request: http request object

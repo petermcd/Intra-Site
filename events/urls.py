@@ -1,3 +1,4 @@
+"""URLs for Events."""
 from django.urls import path
 
 from events import views

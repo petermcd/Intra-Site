@@ -1,8 +1,11 @@
+"""Models for Finance."""
 from django.db import models
 from monzo.authentication import Authentication
 
 
 class PaidFrom(models.Model):
+    """Model for paid from."""
+
     name: models.CharField = models.CharField(
         "Paid From", max_length=100, null=False, blank=False
     )
@@ -17,15 +20,15 @@ class PaidFrom(models.Model):
         return str(self.name)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel and the pluralisation of admin links."""
+
         verbose_name = "Paid From"
         verbose_name_plural = "Paid From"
         ordering = ("name",)
 
 
 class Lender(models.Model):
-    """
-    Model to host lender details.
-    """
+    """Model to host lender details."""
 
     name: models.CharField = models.CharField(
         "Lender", max_length=50, unique=True, null=False
@@ -42,10 +45,14 @@ class Lender(models.Model):
         return str(self.name)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Merchant(models.Model):
+    """Model for merchant."""
+
     name: models.CharField = models.CharField(
         "Merchant", unique=True, max_length=100, null=False, blank=False
     )
@@ -61,13 +68,13 @@ class Merchant(models.Model):
         return str(self.name)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Bill(models.Model):
-    """
-    Model to host bills.
-    """
+    """Model to host bills."""
 
     company: models.ForeignKey = models.ForeignKey(
         Lender, on_delete=models.RESTRICT, null=False
@@ -105,6 +112,12 @@ class Bill(models.Model):
 
     @property
     def merchant_configured(self) -> str:
+        """
+        Property to identify if the loan is matched to a merchant.
+
+        Returns:
+            No if not, otherwise an empty string
+        """
         return "" if bool(self.merchant) else "No"
 
     @property
@@ -128,13 +141,13 @@ class Bill(models.Model):
         return "bill"
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("company",)
 
 
 class BillAudit(models.Model):
-    """
-    Model to host bill audit.
-    """
+    """Model to host bill audit."""
 
     message: models.CharField = models.CharField(
         "Message", max_length=100, null=False, blank=False
@@ -167,13 +180,13 @@ class BillAudit(models.Model):
         return format_money(self.transaction_value)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("when",)
 
 
 class Loan(models.Model):
-    """
-    Model to host loans.
-    """
+    """Model to host loans."""
 
     lender: models.ForeignKey = models.ForeignKey(
         Lender, on_delete=models.RESTRICT, null=False
@@ -220,6 +233,12 @@ class Loan(models.Model):
 
     @property
     def merchant_configured(self) -> str:
+        """
+        Property to identify if the loan is matched to a merchant.
+
+        Returns:
+            No if not, otherwise an empty string
+        """
         return "" if bool(self.merchant) else "No"
 
     @property
@@ -253,13 +272,13 @@ class Loan(models.Model):
         return "loan"
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("lender",)
 
 
 class LoanAudit(models.Model):
-    """
-    Model to host loan audit.
-    """
+    """Model to host loan audit."""
 
     message: models.CharField = models.CharField(
         "Message", max_length=100, null=False, blank=False
@@ -295,6 +314,8 @@ class LoanAudit(models.Model):
         return format_money(self.transaction_value)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("when",)
 
 
@@ -314,6 +335,8 @@ def format_money(money: int, symbol_left: str = "£", symbol_right: str = "") ->
 
 
 class Monzo(models.Model):
+    """Model for Monzo settings."""
+
     site: models.CharField = models.CharField("Site", max_length=100)
     client_id: models.CharField = models.CharField("Client ID", max_length=300)
     client_secret: models.CharField = models.CharField("Client Secret", max_length=300)
@@ -344,9 +367,7 @@ class Monzo(models.Model):
         )
 
     def save(self, *args, **kwargs):
-        """
-        Override sae method to ensure we only have one record.
-        """
+        """Override sae method to ensure we only have one record."""
         if not self.pk and Monzo.objects.exists():
             raise ValueError("Monzo configuration already exists")
         super(Monzo, self).save(*args, **kwargs)
@@ -387,10 +408,14 @@ class Monzo(models.Model):
         return f"{self.site}/admin/finance/monzo.html"
 
     class Meta:
+        """Class to correct pluralisation of admin links."""
+
         verbose_name_plural = "Monzo"
 
 
 class Investment(models.Model):
+    """Model for investment."""
+
     company: models.ForeignKey = models.ForeignKey(
         Lender, on_delete=models.RESTRICT, null=False
     )
@@ -421,4 +446,6 @@ class Investment(models.Model):
         return format_money(money=self.value)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("company",)

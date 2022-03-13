@@ -1,3 +1,4 @@
+"""Admin configuration for Events."""
 from django.contrib import admin
 
 from events.models import (
@@ -13,9 +14,7 @@ from events.models import (
 
 @admin.register(Accommodation)
 class AccommodationAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "check_in",
@@ -27,9 +26,7 @@ class AccommodationAdmin(admin.ModelAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -42,9 +39,7 @@ class EventAdmin(admin.ModelAdmin):
 
 @admin.register(Hotel)
 class HotelAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -56,9 +51,7 @@ class HotelAdmin(admin.ModelAdmin):
 
 @admin.register(Station)
 class StationAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -70,9 +63,7 @@ class StationAdmin(admin.ModelAdmin):
 
 @admin.register(Travel)
 class TravelAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "departing_station",
@@ -85,9 +76,7 @@ class TravelAdmin(admin.ModelAdmin):
 
 @admin.register(TravelType)
 class TravelTypeAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = ("name",)
     ordering = ("name",)
@@ -95,9 +84,7 @@ class TravelTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Venue)
 class VenueAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",

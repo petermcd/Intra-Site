@@ -1,11 +1,10 @@
+"""Models for Todo."""
 from django.db import models
 from django.utils import timezone
 
 
 class ToDo(models.Model):
-    """
-    Model for todo item.
-    """
+    """Model for todo item."""
 
     description: models.CharField = models.CharField(
         "ToDo Item", max_length=1000, null=False, blank=False
@@ -15,4 +14,6 @@ class ToDo(models.Model):
     )
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("description",)

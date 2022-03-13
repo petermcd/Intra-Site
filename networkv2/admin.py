@@ -1,3 +1,4 @@
+"""Admin configuration for Networkv2."""
 from django.contrib import admin
 
 from networkv2.models import (
@@ -19,9 +20,7 @@ from networkv2.models import (
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -32,9 +31,7 @@ class ApplicationAdmin(admin.ModelAdmin):
 
 @admin.register(ConnectionType)
 class ConnectionTypesAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -45,9 +42,7 @@ class ConnectionTypesAdmin(admin.ModelAdmin):
 
 @admin.register(Device)
 class DeviceAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "hostname",
@@ -58,9 +53,7 @@ class DeviceAdmin(admin.ModelAdmin):
 
 @admin.register(DeviceType)
 class DeviceTypeAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -71,9 +64,7 @@ class DeviceTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Domain)
 class DomainAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -84,9 +75,7 @@ class DomainAdmin(admin.ModelAdmin):
 
 @admin.register(Manufacturer)
 class ManufacturerAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -97,9 +86,7 @@ class ManufacturerAdmin(admin.ModelAdmin):
 
 @admin.register(Model)
 class ModelAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -110,9 +97,7 @@ class ModelAdmin(admin.ModelAdmin):
 
 @admin.register(OperatingSystem)
 class OperatingSystemAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -128,9 +113,7 @@ class OperatingSystemAdmin(admin.ModelAdmin):
 
 @admin.register(Playbook)
 class PlaybookAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -141,9 +124,7 @@ class PlaybookAdmin(admin.ModelAdmin):
 
 @admin.register(Registrar)
 class RegistrarAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -154,9 +135,7 @@ class RegistrarAdmin(admin.ModelAdmin):
 
 @admin.register(Subdomain)
 class SubdomainAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -168,9 +147,7 @@ class SubdomainAdmin(admin.ModelAdmin):
 
 @admin.register(Vendor)
 class VendorAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -181,9 +158,7 @@ class VendorAdmin(admin.ModelAdmin):
 
 @admin.register(Website)
 class WebsiteAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",

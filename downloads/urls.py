@@ -1,3 +1,4 @@
+"""URLs for Downloads."""
 from django.urls import path
 
 from downloads import views

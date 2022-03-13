@@ -1,10 +1,13 @@
+"""Monitoring logic."""
 from pyzabbix import ZabbixAPI
 
 
-class Monitoring:
+class Monitoring(object):
+    """Class to handle monitoring automation."""
+
     def __init__(self, base_url: str, username: str, password: str):
         """
-        Standard init.
+        Initialize for Monitoring.
 
         Args:
             base_url: Zabbix APi URL
@@ -93,7 +96,7 @@ class Monitoring:
 
     def _fetch_device(self, device):
         """
-        Fetch device from the Zabbix monitoring platform
+        Fetch device from the Zabbix monitoring platform.
 
         Args:
             device: Device to fetch
@@ -109,7 +112,7 @@ class Monitoring:
 
     def _fetch_device_interfaces(self, device):
         """
-        Fetch device interfaces from the Zabbix monitoring platform
+        Fetch device interfaces from the Zabbix monitoring platform.
 
         Args:
             device: Device to fetch

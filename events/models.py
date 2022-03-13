@@ -1,3 +1,4 @@
+"""Models for Events."""
 from django.db import models
 
 from Intranet.misc import OverwriteStorage
@@ -39,9 +40,7 @@ def travel_file_name(instance, filename) -> str:
 
 
 class Venue(models.Model):
-    """
-    Model for Venue.
-    """
+    """Model for Venue."""
 
     name: models.CharField = models.CharField(max_length=255, verbose_name="Name")
     street_address: models.CharField = models.CharField(
@@ -73,13 +72,13 @@ class Venue(models.Model):
         return f"{self.name}\n{self.street_address}\n{self.city}\n{self.country}\n{self.postcode}"
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Station(models.Model):
-    """
-    Model for Station.
-    """
+    """Model for Station."""
 
     name: models.CharField = models.CharField(max_length=255, verbose_name="Name")
     street_address: models.CharField = models.CharField(
@@ -101,13 +100,13 @@ class Station(models.Model):
         return f"{self.name} - {self.city}"
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Event(models.Model):
-    """
-    Model for an event
-    """
+    """Model for an event."""
 
     name: models.CharField = models.CharField(max_length=255, verbose_name="Name")
     description: models.CharField = models.CharField(
@@ -159,10 +158,14 @@ class Event(models.Model):
         return arranged
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class TravelType(models.Model):
+    """Model for travel type."""
+
     name: models.CharField = models.CharField(max_length=255, verbose_name="Name")
 
     def __str__(self) -> str:
@@ -175,13 +178,13 @@ class TravelType(models.Model):
         return str(self.name)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Travel(models.Model):
-    """
-    Model for Travel
-    """
+    """Model for Travel."""
 
     travel_type: models.ForeignKey = models.ForeignKey(
         TravelType,
@@ -231,9 +234,7 @@ class Travel(models.Model):
         return f"{self.for_event.name}: {self.departing_station.name} -> {self.arrival_station.name}"
 
     class Meta:
-        """
-        Meta class to set the menu name for the object.
-        """
+        """Meta class to set the menu name for the object."""
 
         verbose_name = "Travel"
         verbose_name_plural = "Travel"
@@ -241,9 +242,7 @@ class Travel(models.Model):
 
 
 class Hotel(models.Model):
-    """
-    Model for Hotels.
-    """
+    """Model for Hotels."""
 
     name: models.CharField = models.CharField(max_length=255, verbose_name="Name")
     street_address: models.CharField = models.CharField(
@@ -265,10 +264,14 @@ class Hotel(models.Model):
         return f"{self.name} - {self.city}"
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Accommodation(models.Model):
+    """Model for accommodation."""
+
     hotel: models.ForeignKey = models.ForeignKey(
         Hotel,
         verbose_name="Hotel",
@@ -296,4 +299,6 @@ class Accommodation(models.Model):
         return f"{self.for_event.name} - {self.hotel.name}"
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("hotel",)

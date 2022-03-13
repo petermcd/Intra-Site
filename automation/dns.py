@@ -1,9 +1,12 @@
+"""DNS logic."""
 from typing import Any, Dict, Optional
 
 import CloudFlare
 
 
 class DNS:
+    """Class to handle DNS updates."""
+
     __slots__ = ["_cf", "_cf_zones", "_cf_domain"]
 
     def __init__(self, api_key: str) -> None:
@@ -19,7 +22,7 @@ class DNS:
 
     def get_zone(self, domain: str) -> Optional[str]:
         """
-        Retrieves the zones for the given domain.
+        Retrieve the zones for the given domain.
 
         Args:
             domain: Domain we need the zone for
@@ -74,7 +77,7 @@ class DNS:
 
     def add_record(self, hostname: str, ip: str, dns_provider: str) -> None:
         """
-        Creates a DNS record if it does not already exist.
+        Create a DNS record if it does not already exist.
 
         Args:
             hostname: DNS Record to create

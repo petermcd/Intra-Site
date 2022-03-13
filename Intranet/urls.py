@@ -1,3 +1,4 @@
+"""URLs for Intranet."""
 from django.contrib import admin
 from django.templatetags.static import static
 from django.urls import include, path

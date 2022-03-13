@@ -1,3 +1,4 @@
+"""Models for Documents."""
 from django.db import models
 
 from Intranet.misc import OverwriteStorage
@@ -17,9 +18,7 @@ def document_file_name(instance, filename) -> str:
 
 
 class Document(models.Model):
-    """
-    Model for Document.
-    """
+    """Model for Document."""
 
     name: models.CharField = models.CharField(max_length=200)
     document: models.FileField = models.FileField(
@@ -30,4 +29,6 @@ class Document(models.Model):
     )
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)

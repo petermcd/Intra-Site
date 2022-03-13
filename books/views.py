@@ -1,9 +1,12 @@
+"""Views for Books."""
 from django.views import generic
 
 from books.models import Book
 
 
 class IndexView(generic.ListView):
+    """View implementation for Book list."""
+
     paginate_by = 10
     template_name = "books/index.html"
     context_object_name = "book_list"
@@ -23,7 +26,7 @@ class IndexView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         """
-        Retrieve context data ready for output
+        Retrieve context data ready for output.
 
         Return:
             Context data ready for output in a template
@@ -37,6 +40,8 @@ class IndexView(generic.ListView):
 
 
 class DetailView(generic.DetailView):
+    """View implementation for Book details."""
+
     model = Book
     template_name = "books/detail.html"
 

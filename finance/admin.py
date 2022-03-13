@@ -1,3 +1,4 @@
+"""Admin configuration for Finance."""
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
@@ -6,9 +7,7 @@ from finance.models import Bill, Investment, Lender, Loan, Monzo, PaidFrom
 
 @admin.register(Bill)
 class BillAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "company",
@@ -23,9 +22,7 @@ class BillAdmin(admin.ModelAdmin):
 
 @admin.register(Lender)
 class LenderAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "name",
@@ -36,9 +33,7 @@ class LenderAdmin(admin.ModelAdmin):
 
 @admin.register(Loan)
 class LoanAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "lender",
@@ -54,23 +49,36 @@ class LoanAdmin(admin.ModelAdmin):
 
 @admin.register(Monzo)
 class MonzoAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     def has_add_permission(self, request):
+        """
+        Identify if the user has add permissions.
+
+        Args:
+            request: The http request details
+
+        Returns:
+            True
+        """
         return True
 
     def add_view(self, *args, **kwargs):
-        """
-        Create view for configuring items.
-        """
+        """Create view for configuring items."""
         self.exclude = ["access_token", "expiry", "last_fetch", "refresh_token"]
         return super(MonzoAdmin, self).add_view(*args, **kwargs)
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
         """
         Modify view so that some fields are hidden.
+
+        Args:
+            request: The http request details
+            object_id: Object ID
+            form_url: Form URL
+            extra_context: Extra content
+
+        Returns: Updated context
         """
         self.exclude = ["access_token", "expiry", "last_fetch", "refresh_token"]
         return super(MonzoAdmin, self).change_view(
@@ -79,7 +87,7 @@ class MonzoAdmin(admin.ModelAdmin):
 
     def output_link_url(self) -> str:
         """
-        Output the link URL
+        Output the link URL.
 
         Returns:
             Link as a string
@@ -94,9 +102,7 @@ class MonzoAdmin(admin.ModelAdmin):
 
 @admin.register(PaidFrom)
 class PaidFromAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = ("name",)
     ordering = ("name",)
@@ -104,9 +110,7 @@ class PaidFromAdmin(admin.ModelAdmin):
 
 @admin.register(Investment)
 class InvestmentAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
+    """Configure the admin page."""
 
     list_display = (
         "company",

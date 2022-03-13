@@ -1,3 +1,4 @@
+"""Models for Books."""
 from django.db import models
 
 from Intranet.misc import OverwriteStorage
@@ -5,7 +6,7 @@ from Intranet.misc import OverwriteStorage
 
 def content_file_name(instance, filename) -> str:
     """
-    Create the book filename and path
+    Create the book filename and path.
 
     Args:
         instance: Model instance
@@ -23,15 +24,13 @@ def content_file_name(instance, filename) -> str:
 
 
 class Author(models.Model):
-    """
-    Model for Author.
-    """
+    """Model for Author."""
 
     name: models.CharField = models.CharField(max_length=255)
 
     def __str__(self) -> str:
         """
-        Standard to string.
+        Convert object to a string.
 
         Return:
             String representation of the object
@@ -39,13 +38,13 @@ class Author(models.Model):
         return str(self.name)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Book(models.Model):
-    """
-    Model for Book.
-    """
+    """Model for Book."""
 
     title: models.CharField = models.CharField(max_length=200)
     subtitle: models.CharField = models.CharField(
@@ -68,7 +67,7 @@ class Book(models.Model):
 
     def __str__(self) -> str:
         """
-        Standard to string.
+        Convert object to a string.
 
         Return:
             String representation of the object
@@ -76,4 +75,6 @@ class Book(models.Model):
         return str(self.title)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("title",)

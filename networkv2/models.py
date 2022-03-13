@@ -1,3 +1,4 @@
+"""Models for Networkv2."""
 import re
 
 from django.core.exceptions import ValidationError
@@ -9,9 +10,7 @@ from automation.automation import Automation
 
 
 class Playbook(models.Model):
-    """
-    Model for playbook.
-    """
+    """Model for playbook."""
 
     name: models.CharField = models.CharField(
         "Playbook", max_length=50, unique=True, blank=False, null=False
@@ -33,13 +32,13 @@ class Playbook(models.Model):
         return str(self.name)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Application(models.Model):
-    """
-    Model for applications.
-    """
+    """Model for applications."""
 
     name: models.CharField = models.CharField(
         "Application", max_length=200, unique=True, blank=False, null=False
@@ -74,13 +73,13 @@ class Application(models.Model):
         return re.sub("[^A-Za-z0-9_]", "_", str(self.name))
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class DeviceType(models.Model):
-    """
-    Model for device type.
-    """
+    """Model for device type."""
 
     name: models.CharField = models.CharField(
         "Device Type", max_length=200, unique=True, blank=False, null=False
@@ -91,7 +90,7 @@ class DeviceType(models.Model):
 
     def __str__(self) -> str:
         """
-        To string method.
+        Convert object to a string.
 
         Returns:
             string representation of the object.
@@ -99,13 +98,13 @@ class DeviceType(models.Model):
         return str(self.name)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Manufacturer(models.Model):
-    """
-    Model for device manufacturer.
-    """
+    """Model for device manufacturer."""
 
     name: models.CharField = models.CharField(
         "Manufacturer", max_length=200, unique=True, null=False
@@ -124,13 +123,13 @@ class Manufacturer(models.Model):
         return str(self.name)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Model(models.Model):
-    """
-    Model for device model.
-    """
+    """Model for device model."""
 
     name: models.CharField = models.CharField(
         "Model", max_length=200, unique=True, null=False
@@ -149,13 +148,13 @@ class Model(models.Model):
         return f"{self.manufacturer.name} - {self.name}"
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Vendor(models.Model):
-    """
-    Model for operating system vendor.
-    """
+    """Model for operating system vendor."""
 
     name: models.CharField = models.CharField(
         "Vendor", max_length=200, unique=True, null=False
@@ -166,7 +165,7 @@ class Vendor(models.Model):
 
     def __str__(self) -> str:
         """
-        To string method.
+        Convert object to a string.
 
         Returns:
             string representation of the object.
@@ -174,13 +173,13 @@ class Vendor(models.Model):
         return str(self.name)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class OperatingSystem(models.Model):
-    """
-    Model for operating system.
-    """
+    """Model for operating system."""
 
     name: models.CharField = models.CharField(
         "Name", max_length=100, null=False, blank=False
@@ -224,13 +223,13 @@ class OperatingSystem(models.Model):
         return re.sub("[^A-Za-z0-9_]", "_", str(self.name))
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class ConnectionType(models.Model):
-    """
-    Model for connection types.
-    """
+    """Model for connection types."""
 
     name: models.CharField = models.CharField(
         "Connection Type", max_length=30, unique=True, null=False, blank=False
@@ -241,7 +240,7 @@ class ConnectionType(models.Model):
 
     def __str__(self) -> str:
         """
-        To string method.
+        Convert object to a string.
 
         Returns:
             string representation of the object.
@@ -249,13 +248,13 @@ class ConnectionType(models.Model):
         return str(self.name)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Device(models.Model):
-    """
-    Model for device.
-    """
+    """Model for device."""
 
     hostname: models.CharField = models.CharField(
         "Hostname", max_length=200, unique=True, null=False
@@ -306,13 +305,12 @@ class Device(models.Model):
     __original_ip = None
 
     def __init__(self, *args, **kwargs):
-        """
-        Overridden init.
-        """
+        """Initialize Device."""
         super(Device, self).__init__(*args, **kwargs)
         self.__original_ip = self.ip
 
     def clean(self):
+        """Device validation."""
         if self.connected_via.unique_port:
             matching_devices = Device.objects.all().filter(
                 port__exact=self.port, connected_too=self.connected_too
@@ -347,13 +345,13 @@ class Device(models.Model):
         return self.__original_ip != self.ip
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("hostname",)
 
 
 class Registrar(models.Model):
-    """
-    Model for registrar.
-    """
+    """Model for registrar."""
 
     name: models.CharField = models.CharField(
         "Registrar", max_length=30, unique=True, null=False, blank=False
@@ -372,13 +370,13 @@ class Registrar(models.Model):
         return str(self.name)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Domain(models.Model):
-    """
-    Model for domain.
-    """
+    """Model for domain."""
 
     name: models.CharField = models.CharField(
         "Domain", max_length=30, unique=True, null=False, blank=False
@@ -389,7 +387,7 @@ class Domain(models.Model):
 
     def __str__(self) -> str:
         """
-        To string method.
+        Convert object to a string.
 
         Returns:
             string representation of the object.
@@ -397,13 +395,13 @@ class Domain(models.Model):
         return str(self.name)
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Subdomain(models.Model):
-    """
-    Model for subdomain.
-    """
+    """Model for subdomain."""
 
     name: models.CharField = models.CharField(
         "Subdomain", max_length=30, unique=True, null=False, blank=False
@@ -417,9 +415,7 @@ class Subdomain(models.Model):
     __originally_hosted_on = None
 
     def __init__(self, *args, **kwargs):
-        """
-        Overridden init.
-        """
+        """Overridden init."""
         super(Subdomain, self).__init__(*args, **kwargs)
         if hasattr(self, "hosted_on"):
             self.__originally_hosted_on = self.hosted_on
@@ -427,7 +423,7 @@ class Subdomain(models.Model):
     @property
     def full_domain(self) -> str:
         """
-        Property for full domain
+        Property for full domain.
 
         Returns:
             Concatenation of the domain and subdomain
@@ -453,13 +449,13 @@ class Subdomain(models.Model):
         return self.__originally_hosted_on != self.hosted_on
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
 class Website(models.Model):
-    """
-    Model for subdomain.
-    """
+    """Model for subdomain."""
 
     name: models.CharField = models.CharField(
         "Website", max_length=30, unique=True, null=False, blank=False
@@ -504,6 +500,8 @@ class Website(models.Model):
         return f"{schema}{self.subdomain.full_domain}{port}{self.path}"
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)
 
 
@@ -546,6 +544,13 @@ def subdomain_delete_dns(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Subdomain)
 def subdomain_save_dns(sender, instance, **kwargs):
+    """
+    Receiver function to trigger DNS update.
+
+    Args:
+        sender: Object being saved
+        instance: Instance of the object being saved
+    """
     if instance.hosted_on_changed():
         auto = Automation()
         auto.update_dns(

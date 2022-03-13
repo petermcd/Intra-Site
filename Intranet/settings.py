@@ -1,3 +1,4 @@
+"""Django settings."""
 import mimetypes
 import os
 from pathlib import Path

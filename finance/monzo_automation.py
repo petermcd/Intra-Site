@@ -1,3 +1,4 @@
+"""Script to allow Monzo automation."""
 # Turn off bytecode generation
 import datetime
 import sys
@@ -33,7 +34,7 @@ from finance.views import MonzoStorage  # NOQA E402
 
 def transaction_sorted(transaction: Transaction) -> datetime.datetime:
     """
-    Sort method for transactions
+    Sort method for transactions.
 
     Args:
         transaction: Transaction
@@ -45,12 +46,12 @@ def transaction_sorted(transaction: Transaction) -> datetime.datetime:
 
 
 class MonzoAutomation:
+    """Class to handle Monzo automation."""
+
     __slots__ = ["_monzo_auth"]
 
     def __init__(self):
-        """
-        Standard init to initiate required objects.
-        """
+        """Initialize MonzoAutomoation."""
         monzo_config = Monzo.objects.all()[0]
         self._monzo_auth = Authentication(
             client_id=monzo_config.client_id,
@@ -65,7 +66,7 @@ class MonzoAutomation:
 
     def populate_merchants(self, days: int = 7):
         """
-        Populates merchants, intended to be ran when the upgrade occurs.
+        Populate merchants, intended to be ran when the upgrade occurs.
 
         Args:
             days: The number of days transactions to use to populate merchants
@@ -84,9 +85,7 @@ class MonzoAutomation:
             )
 
     def process_transactions(self):
-        """
-        Process transactions to update loans and bills.
-        """
+        """Process transactions to update loans and bills."""
         monzo = Monzo.objects.all()
 
         last_fetch = monzo[0].last_fetch
@@ -137,7 +136,7 @@ class MonzoAutomation:
         self, since: Optional[datetime.datetime] = None
     ) -> Dict[str, Dict[str, str]]:
         """
-        Fetches merchants from a transaction list.
+        Fetch merchants from a transaction list.
 
         Args:
             since: Datetime object for when records should be fetched from
@@ -178,7 +177,7 @@ class MonzoAutomation:
 
     def _process_bill_transaction(self, transaction: Transaction):
         """
-        Method to process a transaction to update items in the database.
+        Process a transaction to update items in the database.
 
         Args:
             transaction: Transaction
@@ -200,7 +199,7 @@ class MonzoAutomation:
 
     def _process_loan_transaction(self, transaction: Transaction):
         """
-        Method to process a transaction to update items in the database.
+        Process a transaction to update items in the database.
 
         Args:
             transaction: Transaction
@@ -247,9 +246,7 @@ class MonzoAutomation:
 
     @staticmethod
     def update_interest():
-        """
-        Add interest to existing loans.
-        """
+        """Add interest to existing loans."""
         loans = Loan.objects.filter(
             apr__gt=Decimal(0.0),
             current_balance__gt=0,

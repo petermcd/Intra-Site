@@ -1,3 +1,4 @@
+"""Script to handle automation."""
 from urllib.parse import urlparse
 
 from automation.dns import DNS
@@ -6,6 +7,8 @@ from settings.models import Setting
 
 
 class Automation:
+    """Class to handle automation."""
+
     instance = None
 
     __slots__ = (
@@ -14,16 +17,12 @@ class Automation:
     )
 
     def __init__(self):
-        """
-        Standard init.
-        """
+        """Initialise Automation."""
         self._dns = None
         self._monitoring = None
 
     def __new__(cls):
-        """
-        Creates a singleton Automation.
-        """
+        """Create a singleton Automation."""
         if not hasattr(cls, "instance") or not cls.instance:
             cls.instance = super(Automation, cls).__new__(cls)
         return cls.instance
@@ -79,7 +78,7 @@ class Automation:
     @staticmethod
     def get_hostname(url: str) -> str:
         """
-        Obtains the hostname from a URL.
+        Obtain the hostname from a URL.
 
         Args
             url: URL to be parsed
@@ -93,7 +92,7 @@ class Automation:
     @property
     def dns(self) -> DNS:
         """
-        Property to fetch DNS
+        Property to fetch DNS.
 
         Returns:
              Instantiated DNS object
@@ -106,7 +105,7 @@ class Automation:
     @property
     def monitoring(self) -> Monitoring:
         """
-        Property to fetch DNS
+        Property to fetch DNS.
 
         Returns:
              Instantiated Monitoring object

@@ -1,10 +1,9 @@
+"""Models for Settings."""
 from django.db import models
 
 
 class Setting(models.Model):
-    """
-    Model to house the settings for the application.
-    """
+    """Model to house the settings for the application."""
 
     name: models.CharField = models.CharField(max_length=100, unique=True)
     value: models.CharField = models.CharField(max_length=255, blank=True, null=True)
@@ -29,4 +28,6 @@ class Setting(models.Model):
         return "Yes" if self.value else "No"
 
     class Meta:
+        """Class to correct the order of the items in the admin panel."""
+
         ordering = ("name",)

@@ -1,3 +1,4 @@
+"""Views for API."""
 from json import dumps, loads
 from typing import Any, Dict
 

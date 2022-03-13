@@ -1,3 +1,4 @@
+"""Views for Events."""
 from django.utils.timezone import now
 from django.views import generic
 
@@ -6,6 +7,8 @@ from settings.models import Setting
 
 
 class IndexView(generic.ListView):
+    """View implementation for events list."""
+
     template_name = "events/index.html"
     context_object_name = "event_list"
 
@@ -29,6 +32,8 @@ class IndexView(generic.ListView):
 
 
 class DetailView(generic.DetailView):
+    """View implementation for event details."""
+
     model = Event
     template_name = "events/details.html"
 

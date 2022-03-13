@@ -1,3 +1,4 @@
+"""Views for Todo."""
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import generic
@@ -6,6 +7,8 @@ from todo.models import ToDo
 
 
 class TodoList(generic.ListView):
+    """View implementation for todo list."""
+
     template_name = "todo/index.html"
     context_object_name = "todo_list"
 
@@ -53,7 +56,7 @@ def todo_add(request):
 
 def todo_delete(request, pk: int):
     """
-    View to handle deleting a todo item
+    View to handle deleting a todo item.
 
     Args:
         request: Request object

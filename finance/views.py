@@ -1,3 +1,4 @@
+"""Views for Finance."""
 from typing import Any, Dict, Union
 
 from django.utils.timezone import now
@@ -18,10 +19,13 @@ from finance.models import (
 
 
 def order_objects(bill_object) -> int:
+    """Order a combined list of bills and loans."""
     return bill_object.due_day
 
 
 class BillDetailView(generic.DetailView):
+    """View implementation for bill details."""
+
     model = Bill
     template_name = "finance/bill_details.html"
 
@@ -49,6 +53,8 @@ class BillDetailView(generic.DetailView):
 
 
 class IndexView(generic.ListView):
+    """View implementation for bill and debt list."""
+
     template_name = "finance/index.html"
     context_object_name = "bills_list"
 
@@ -68,7 +74,7 @@ class IndexView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         """
-        Obtain context data ready for output
+        Obtain context data ready for output.
 
         Return:
             Context data ready for output in a template
@@ -96,6 +102,8 @@ class IndexView(generic.ListView):
 
 
 class LoanDetailView(generic.DetailView):
+    """View implementation for loan details."""
+
     model = Loan
     template_name = "finance/loan_details.html"
 
@@ -123,9 +131,7 @@ class LoanDetailView(generic.DetailView):
 
 
 class MonzoStorage(Storage):
-    """
-    Class to implement the Monzo API Storage handler
-    """
+    """Class to implement the Monzo API Storage handler."""
 
     def store(
         self,
@@ -155,9 +161,7 @@ class MonzoStorage(Storage):
 
 
 class MonzoAuthView(generic.TemplateView):
-    """
-    Class to handle the Monzo authentication callback view.
-    """
+    """Class to handle the Monzo authentication callback view."""
 
     template_name = "admin/monzo/monzo.html"
 
@@ -206,6 +210,8 @@ class MonzoAuthView(generic.TemplateView):
 
 
 class InvestmentView(generic.ListView):
+    """View implementation for investment list."""
+
     template_name = "finance/investment_list.html"
     context_object_name = "investment_list"
 
@@ -220,7 +226,7 @@ class InvestmentView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         """
-        Obtain context data ready for output
+        Obtain context data ready for output.
 
         Return:
             Context data ready for output in a template

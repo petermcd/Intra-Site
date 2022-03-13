@@ -1,3 +1,4 @@
+"""URLs for Networkv2."""
 from django.urls import path
 
 from networkv2 import views

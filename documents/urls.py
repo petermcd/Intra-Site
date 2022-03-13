@@ -1,3 +1,4 @@
+"""URLs for Documents."""
 from django.urls import path
 
 from documents import views

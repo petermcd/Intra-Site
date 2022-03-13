@@ -1,3 +1,4 @@
+"""URLs for Finance."""
 from django.urls import path
 
 from finance import views
