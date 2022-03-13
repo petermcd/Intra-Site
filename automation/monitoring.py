@@ -2,7 +2,7 @@
 from pyzabbix import ZabbixAPI
 
 
-class Monitoring(object):
+class Monitoring:
     """Class to handle monitoring automation."""
 
     def __init__(self, base_url: str, username: str, password: str):

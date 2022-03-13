@@ -24,7 +24,7 @@ class Automation:
     def __new__(cls):
         """Create a singleton Automation."""
         if not hasattr(cls, "instance") or not cls.instance:
-            cls.instance = super(Automation, cls).__new__(cls)
+            cls.instance = super().__new__(cls)
         return cls.instance
 
     def update_dns(self, hostname: str, ip: str, dns_provider: str):

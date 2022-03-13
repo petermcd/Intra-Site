@@ -1,17 +1,17 @@
-                        <tr id="todo-item-add">
-                            <form
-                                    hx-post="add"
-                                    hx-target="#todo-item-add"
-                                    hx-swap="outerHTML"
-                            >
-                            <td>
-                                {% csrf_token %}
-                                <button hx-trigger="click" type="submit">
-                                    Save
-                                </button>
-                            </td>
-                            <td colspan="2">
-                                <input name="todo-text" type="text" />
-                            </td>
-                            </form>
-                        </tr>
+<tr id="todo-item-add">
+  <form
+    hx-post="add"
+    hx-target="#todo-item-add"
+    hx-swap="outerHTML"
+  >
+    <td>
+      {% csrf_token %}
+      <button hx-trigger="click" type="submit">
+        Save
+      </button>
+    </td>
+    <td colspan="2">
+      <input name="todo-text" type="text" />
+    </td>
+  </form>
+</tr>

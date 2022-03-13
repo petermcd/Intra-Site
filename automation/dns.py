@@ -1,5 +1,5 @@
 """DNS logic."""
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import CloudFlare
 
@@ -16,8 +16,8 @@ class DNS:
         Args:
              api_key: Cloudflare API Key
         """
-        self._cf_zones: Dict[str, Any] = {}
-        self._cf_domain: Dict[str, Any] = {}
+        self._cf_zones: dict[str, Any] = {}
+        self._cf_domain: dict[str, Any] = {}
         self._cf = CloudFlare.CloudFlare(token=api_key)
 
     def get_zone(self, domain: str) -> Optional[str]:
@@ -37,7 +37,7 @@ class DNS:
             self._cf_zones[domain] = zones[0]["id"]
         return self._cf_zones.get(domain, None)
 
-    def get_record(self, domain: str, force: bool = False) -> Dict[str, Dict[str, Any]]:
+    def get_record(self, domain: str, force: bool = False) -> dict[str, dict[str, Any]]:
         """
         Retrieve the DNS records for a given domain name.
 
@@ -132,7 +132,7 @@ class DNS:
         self._cf.zones.dns_records.delete(zone_id, record_id)
 
     @staticmethod
-    def split_domain(domain) -> Dict[str, str]:
+    def split_domain(domain) -> dict[str, str]:
         """
         Split a domain into subdomain and domain components.
 

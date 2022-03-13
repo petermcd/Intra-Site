@@ -1,33 +1,33 @@
 {% extends "admin/base_site.html" %}
 {% block content %}
-          <div id="content-main">
-<form method="post" id="monzo_form" novalidate=""><input type="hidden" name="csrfmiddlewaretoken" value="KGkdfzdyEXS6fcWusKVqvYAGxZM2U5rF7Es2ZoIlaAFtc6b11qNAQjClpt4Panwx">
-<div>
-    <fieldset class="module aligned ">
-        <div class="form-row field-client_id">
+  <div id="content-main">
+    <form method="post" id="monzo_form" novalidate=""><input type="hidden" name="csrfmiddlewaretoken" value="KGkdfzdyEXS6fcWusKVqvYAGxZM2U5rF7Es2ZoIlaAFtc6b11qNAQjClpt4Panwx">
+      <div>
+        <fieldset class="module aligned ">
+          <div class="form-row field-client_id">
             <div>
-                <label class="required" for="id_client_id">Client ID:</label>
-                <input type="text" name="client_id" class="vTextField" maxlength="100" required="" id="id_client_id">
+              <label class="required" for="id_client_id">Client ID:</label>
+              <input type="text" name="client_id" class="vTextField" maxlength="100" required="" id="id_client_id">
             </div>
-        </div>
-        <div class="form-row field-client_secret">
+          </div>
+          <div class="form-row field-client_secret">
             <div>
-                <label class="required" for="id_client_secret">Client Secret:</label>
-                <input type="text" name="client_secret" class="vTextField" maxlength="100" required="" id="id_client_secret">
+              <label class="required" for="id_client_secret">Client Secret:</label>
+              <input type="text" name="client_secret" class="vTextField" maxlength="100" required="" id="id_client_secret">
             </div>
-        </div>
-        <div class="form-row field-owner_id">
+          </div>
+          <div class="form-row field-owner_id">
             <div>
-                <label class="required" for="id_owner_id">Owner ID:</label>
-                <input type="text" name="owner_id" class="vTextField" maxlength="100" required="" id="id_owner_id">
+              <label class="required" for="id_owner_id">Owner ID:</label>
+              <input type="text" name="owner_id" class="vTextField" maxlength="100" required="" id="id_owner_id">
             </div>
+          </div>
+        </fieldset>
+        <div class="submit-row">
+          <input type="submit" value="Save" class="default" name="_save">
+          <input type="submit" value="Save and add another" name="_addanother">
+          <input type="submit" value="Save and continue editing" name="_continue">
         </div>
-    </fieldset>
-<div class="submit-row">
-<input type="submit" value="Save" class="default" name="_save">
-<input type="submit" value="Save and add another" name="_addanother">
-<input type="submit" value="Save and continue editing" name="_continue">
-</div>
-</div>
-</form></div>
+      </div>
+    </form></div>
 {% endblock %}

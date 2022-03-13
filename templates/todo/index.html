@@ -2,51 +2,51 @@
 {% load static %}
 {% block title %}ToDo{% endblock %}
 {% block content %}
-        <header>
-            <h1>ToDo</h1>
-        </header>
-        <section id="table_list">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Item</th>
-                        <th>Added</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <td colspan="3">
-                              <button hx-get="form"
-                                      hx-trigger="click"
-                                      hx-target="#todo-list"
-                                      hx-swap="beforeend"
-                                      type="submit">
-                                  Add
-                              </button>
-                        </td>
-                    </tr>
-                </tfoot>
-                <tbody id="todo-list">
-                    {% for todo in todo_list %}
-                        <tr id="todo-item-{{ todo.pk }}">
-                            <td>
-                                <form
-                                        hx-target="#todo-item-{{ todo.pk }}"
-                                        hx-get="{{ todo.pk }}/delete"
-                                        hx-confirm="Are you sure?"
-                                        hx-swap="outerHTML"
-                                >
-                                    <button hx-trigger="click" type="submit">
-                                        &#x274C;
-                                    </button>
-                                </form>
-                            </td>
-                            <td><label for="{{ todo.pk }}">{{ todo.description }}</label></td>
-                            <td>{{ todo.added }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </section>
+  <header>
+    <h1>ToDo</h1>
+  </header>
+  <section id="table_list">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Item</th>
+          <th>Added</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <td colspan="3">
+            <button hx-get="form"
+              hx-trigger="click"
+              hx-target="#todo-list"
+              hx-swap="beforeend"
+              type="submit">
+              Add
+            </button>
+          </td>
+        </tr>
+      </tfoot>
+      <tbody id="todo-list">
+        {% for todo in todo_list %}
+          <tr id="todo-item-{{ todo.pk }}">
+            <td>
+              <form
+                hx-target="#todo-item-{{ todo.pk }}"
+                hx-get="{{ todo.pk }}/delete"
+                hx-confirm="Are you sure?"
+                hx-swap="outerHTML"
+              >
+                <button hx-trigger="click" type="submit">
+                  &#x274C;
+                </button>
+              </form>
+            </td>
+            <td><label for="{{ todo.pk }}">{{ todo.description }}</label></td>
+            <td>{{ todo.added }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
 {% endblock %}

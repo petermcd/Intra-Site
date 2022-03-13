@@ -2,38 +2,38 @@
 {% load static %}
 {% block title %}Investments{% endblock %}
 {% block content %}
-        <header>
-            <h1>Investments</h1>
-        </header>
-        <section id="table_list">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Company</th>
-                        <th>Notes</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for investment in investment_list %}
-                        <tr>
-                            <td>{{ investment.company }}</td>
-                            <td>{{ investment.notes }}</td>
-                            <td>{{ investment.formatted_value }}</td>
-                        </tr>
-                    {% endfor %}
-                    {% if investment_list|length < 1 %}
-                        <tr>
-                            <td colspan="3">No investments tracked</td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="2"></td>
-                    <td>{{ total_value }}</td>
-                </tr>
-            </tfoot>
-            </table>
-        </section>
+  <header>
+    <h1>Investments</h1>
+  </header>
+  <section id="table_list">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Notes</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for investment in investment_list %}
+          <tr>
+            <td>{{ investment.company }}</td>
+            <td>{{ investment.notes }}</td>
+            <td>{{ investment.formatted_value }}</td>
+          </tr>
+        {% endfor %}
+        {% if investment_list|length < 1 %}
+          <tr>
+            <td colspan="3">No investments tracked</td>
+          </tr>
+        {% endif %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2"></td>
+          <td>{{ total_value }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </section>
 {% endblock %}

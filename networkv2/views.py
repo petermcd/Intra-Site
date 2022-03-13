@@ -1,5 +1,5 @@
 """Views for Networkv2."""
-from typing import Any, Dict, List, Set
+from typing import Any
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -24,7 +24,7 @@ def inventory(request) -> HttpResponse:
     Return:
         Inventory list in ini format
     """
-    groups: Dict[str, Dict[str, Set[str]]] = {}
+    groups: dict[str, dict[str, set[str]]] = {}
 
     operating_systems = OperatingSystem.objects.all()
     applications = Application.objects.all()
@@ -99,7 +99,7 @@ def network(request) -> JsonResponse:
     Return:
         JsonResponse containing node map of the network
     """
-    data: Dict[str, List[Any]] = {
+    data: dict[str, list[Any]] = {
         "nodes": [],
         "links": [],
     }
@@ -156,7 +156,7 @@ def rack_json(request) -> JsonResponse:
     Return:
         JsonResponse for the rack json
     """
-    rack_json_res: Dict[str, Any] = {}
+    rack_json_res: dict[str, Any] = {}
     devices = (
         Device.objects.all()
         .filter(rack_shelf__isnull=False, rack_shelf_position__isnull=False)

@@ -1,5 +1,6 @@
 """Models for Finance."""
 from django.db import models
+from django.utils.safestring import mark_safe
 from monzo.authentication import Authentication
 
 
@@ -128,7 +129,7 @@ class Bill(models.Model):
         Returns:
             Monthly payment formatted
         """
-        return format_money(money=self.monthly_payments)
+        return format_money(money=int(self.monthly_payments))
 
     @property
     def bill_type(self) -> str:
@@ -177,7 +178,7 @@ class BillAudit(models.Model):
         Returns:
             Formatted transaction value
         """
-        return format_money(self.transaction_value)
+        return format_money(int(self.transaction_value))
 
     class Meta:
         """Class to correct the order of the items in the admin panel."""
@@ -229,7 +230,7 @@ class Loan(models.Model):
         Returns:
             Lender name and amount remaining
         """
-        return f"{self.lender.name} - {format_money(self.current_balance)}"
+        return f"{self.lender.name} - {format_money(int(self.current_balance))}"
 
     @property
     def merchant_configured(self) -> str:
@@ -249,7 +250,7 @@ class Loan(models.Model):
         Returns:
             Monthly payment formatted
         """
-        return format_money(money=self.monthly_payments)
+        return format_money(money=int(self.monthly_payments))
 
     @property
     def formatted_current_balance(self) -> str:
@@ -259,7 +260,7 @@ class Loan(models.Model):
         Returns:
             Current balance formatted
         """
-        return format_money(money=self.current_balance)
+        return format_money(money=int(self.current_balance))
 
     @property
     def bill_type(self) -> str:
@@ -311,7 +312,7 @@ class LoanAudit(models.Model):
         Returns:
             Formatted transaction value
         """
-        return format_money(self.transaction_value)
+        return format_money(int(self.transaction_value))
 
     class Meta:
         """Class to correct the order of the items in the admin panel."""
@@ -366,11 +367,20 @@ class Monzo(models.Model):
             "Yes" if all([self.access_token, self.expiry, self.refresh_token]) else "No"
         )
 
+    def output_link_url(self) -> str:
+        """
+        Output the link URL.
+
+        Returns:
+            Link as a string
+        """
+        return mark_safe(self.link_url())
+
     def save(self, *args, **kwargs):
         """Override sae method to ensure we only have one record."""
         if not self.pk and Monzo.objects.exists():
             raise ValueError("Monzo configuration already exists")
-        super(Monzo, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def link_url(self) -> str:
         """
@@ -381,10 +391,10 @@ class Monzo(models.Model):
         """
         if not self.refresh_token:
             monzo_auth = Authentication(
-                client_id=self.client_id,
-                client_secret=self.client_secret,
+                client_id=str(self.client_id),
+                client_secret=str(self.client_secret),
                 redirect_url=self.redirect_url,
-                access_token=self.access_token,
+                access_token=str(self.access_token),
             )
             return f'<a href="{monzo_auth.authentication_url}">LINK</a>'
         return "Linked"
@@ -443,7 +453,7 @@ class Investment(models.Model):
         Returns:
             Monthly payment formatted
         """
-        return format_money(money=self.value)
+        return format_money(money=int(self.value))
 
     class Meta:
         """Class to correct the order of the items in the admin panel."""

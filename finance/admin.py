@@ -1,6 +1,5 @@
 """Admin configuration for Finance."""
 from django.contrib import admin
-from django.utils.safestring import mark_safe
 
 from finance.models import Bill, Investment, Lender, Loan, Monzo, PaidFrom
 
@@ -66,7 +65,7 @@ class MonzoAdmin(admin.ModelAdmin):
     def add_view(self, *args, **kwargs):
         """Create view for configuring items."""
         self.exclude = ["access_token", "expiry", "last_fetch", "refresh_token"]
-        return super(MonzoAdmin, self).add_view(*args, **kwargs)
+        return super().add_view(*args, **kwargs)
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
         """
@@ -81,22 +80,11 @@ class MonzoAdmin(admin.ModelAdmin):
         Returns: Updated context
         """
         self.exclude = ["access_token", "expiry", "last_fetch", "refresh_token"]
-        return super(MonzoAdmin, self).change_view(
-            request, object_id, form_url, extra_context
-        )
-
-    def output_link_url(self) -> str:
-        """
-        Output the link URL.
-
-        Returns:
-            Link as a string
-        """
-        return mark_safe(self.link_url())
+        return super().change_view(request, object_id, form_url, extra_context)
 
     list_display = (
         "linked",
-        output_link_url,
+        "output_link_url",
     )
 
 
