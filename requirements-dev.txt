@@ -1,4 +1,3 @@
 pywatchman
-django-debug-toolbar
 ipython
 pre-commit

@@ -8,6 +8,7 @@ cloudflare
 Django
 django-apscheduler
 django-cleanup
+django-debug-toolbar
 django-stubs
 django-stubs-ext
 idna
