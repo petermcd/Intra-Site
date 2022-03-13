@@ -306,7 +306,7 @@ class Device(models.Model):
 
     def __init__(self, *args, **kwargs):
         """Initialize Device."""
-        super(Device, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.__original_ip = self.ip
 
     def clean(self):
@@ -416,7 +416,7 @@ class Subdomain(models.Model):
 
     def __init__(self, *args, **kwargs):
         """Overridden init."""
-        super(Subdomain, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if hasattr(self, "hosted_on"):
             self.__originally_hosted_on = self.hosted_on
 

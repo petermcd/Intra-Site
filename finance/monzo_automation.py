@@ -3,7 +3,7 @@
 import datetime
 import sys
 from decimal import Decimal
-from typing import Dict, List, Optional
+from typing import Optional
 
 import pytz
 
@@ -120,7 +120,7 @@ class MonzoAutomation:
             monzo.last_fetch = transaction.created
         monzo.save()
 
-    def _fetch_accounts(self, account_type: str = "uk_retail") -> List[Account]:
+    def _fetch_accounts(self, account_type: str = "uk_retail") -> list[Account]:
         """
         Fetch list of accounts from Monzo.
 
@@ -134,7 +134,7 @@ class MonzoAutomation:
 
     def _fetch_merchants(
         self, since: Optional[datetime.datetime] = None
-    ) -> Dict[str, Dict[str, str]]:
+    ) -> dict[str, dict[str, str]]:
         """
         Fetch merchants from a transaction list.
 
@@ -157,7 +157,7 @@ class MonzoAutomation:
 
     def _fetch_transactions(
         self, account: Account, since: Optional[datetime.datetime] = None
-    ) -> List[Transaction]:
+    ) -> list[Transaction]:
         """
         Fetch transactions from Monzo.
 

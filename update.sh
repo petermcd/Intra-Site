@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 git pull
 ./djenv/bin/pip install -r requirements.txt
 ./djenv/bin/python manage.py collectstatic --no-input

@@ -2,24 +2,24 @@
 {% load static %}
 {% block title %}{{ book.title }}{% if book.subtitle %} - {{ book.subtitle }}){% endif %}{% endblock %}
 {% block content %}
-    <section id="item_details">
-        <header>
-            <h1>{{ book.title }}</h1>
-            {% if book.subtitle %}<h2>{{ book.subtitle }}</h2>{% endif %}
-            By {% for author in book.authors.all %}{{ author.name }} {% if forloop.last %}{% else %}, {% endif %}{% endfor %}
-        </header>
-        <div class="row">
-            <div class="description col-8">{{ book.description }}</div>
-            <div class="col-sm-6 col-lg-4">
-                <aside class="col-sm-6 col-lg-12">
-                    {% if book.thumbnail %}<div class="thumbnail"><img src='{{ book.thumbnail }}' alt='{{ book.title }}'></div>{% endif %}
-                    <div class="published"><strong>Published By</strong>: {{ book.publisher }} {% if book.published %}({{ book.published|date:'d/m/y' }}){% endif %}</div>
-                    <div class="pages"><strong>Pages</strong>: {{ book.pages }}</div>
-                    <div class="isbn10"><strong>ISBN 10</strong>: {{ book.isbn10 }}</div>
-                    <div class="isbn13"><strong>ISBN 13</strong>: {{ book.isbn13 }}</div>
-                    {% if book.ebook %}<div class="ebook_url"><a href="{{ book.ebook.url }}" target="_blank">DOWNLOAD</a></div>{% endif %}
-                </aside>
-            </div>
-        </div>
-    </section>
+  <section id="item_details">
+    <header>
+      <h1>{{ book.title }}</h1>
+      {% if book.subtitle %}<h2>{{ book.subtitle }}</h2>{% endif %}
+      By {% for author in book.authors.all %}{{ author.name }} {% if forloop.last %}{% else %}, {% endif %}{% endfor %}
+    </header>
+    <div class="row">
+      <div class="description col-8">{{ book.description }}</div>
+      <div class="col-sm-6 col-lg-4">
+        <aside class="col-sm-6 col-lg-12">
+          {% if book.thumbnail %}<div class="thumbnail"><img src='{{ book.thumbnail }}' alt='{{ book.title }}'></div>{% endif %}
+          <div class="published"><strong>Published By</strong>: {{ book.publisher }} {% if book.published %}({{ book.published|date:'d/m/y' }}){% endif %}</div>
+          <div class="pages"><strong>Pages</strong>: {{ book.pages }}</div>
+          <div class="isbn10"><strong>ISBN 10</strong>: {{ book.isbn10 }}</div>
+          <div class="isbn13"><strong>ISBN 13</strong>: {{ book.isbn13 }}</div>
+          {% if book.ebook %}<div class="ebook_url"><a href="{{ book.ebook.url }}" target="_blank">DOWNLOAD</a></div>{% endif %}
+        </aside>
+      </div>
+    </div>
+  </section>
 {% endblock %}

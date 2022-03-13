@@ -2,42 +2,42 @@
 {% load static %}
 {% block title %}Documents{% endblock %}
 {% block content %}
-        <header>
-            <h1>Documents</h1>
-        </header>
-        <section id="table_list">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Download</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for document in document_list %}
-                        <tr>
-                            <td>{{ document.name }}</td>
-                            <td><a href="{{ document.document.url }}">DOWNLOAD</a></td>
-                            <td>{{ document.description }}</td>
-                        </tr>{% endfor %}
-                    {% if document_list|length < 1 %}
-                        <tr>
-                            <td colspan="3">No documents</td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="2">
-                            {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}{{ search_term }}">Previous</a>{% else %}Previous{% endif %}&nbsp;
-                            {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}{{ search_term }}">Next</a>{% else %}Next{% endif %}
-                        </td>
-                        <td>
-                            <form><label for="search">Name</label><input type="text" name="q" id="search" /><button>Search</button></form>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
-        </section>
+  <header>
+    <h1>Documents</h1>
+  </header>
+  <section id="table_list">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Download</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for document in document_list %}
+          <tr>
+            <td>{{ document.name }}</td>
+            <td><a href="{{ document.document.url }}">DOWNLOAD</a></td>
+            <td>{{ document.description }}</td>
+          </tr>{% endfor %}
+        {% if document_list|length < 1 %}
+          <tr>
+            <td colspan="3">No documents</td>
+          </tr>
+        {% endif %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2">
+            {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}{{ search_term }}">Previous</a>{% else %}Previous{% endif %}&nbsp;
+            {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}{{ search_term }}">Next</a>{% else %}Next{% endif %}
+          </td>
+          <td>
+            <form><label for="search">Name</label><input type="text" name="q" id="search" /><button>Search</button></form>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </section>
 {% endblock %}

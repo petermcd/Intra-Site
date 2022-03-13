@@ -1,6 +1,6 @@
 """Views for API."""
 from json import dumps, loads
-from typing import Any, Dict
+from typing import Any
 
 import requests
 from django.http import HttpResponse
@@ -26,7 +26,7 @@ def get_book_details(request, search_type: str, search: str):
     querystring = f"q={search_type}:{search}&key={api_key}"
     res = requests.get(f"{api_url}{querystring}")
     content_type = "application/json"
-    response: Dict[str, Any] = {
+    response: dict[str, Any] = {
         "success": False,
         "records": 0,
     }
