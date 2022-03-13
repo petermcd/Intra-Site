@@ -88,16 +88,7 @@ class MonzoAutomation:
         """Process transactions to update loans and bills."""
         monzo = Monzo.objects.all()
 
-        last_fetch = monzo[0].last_fetch
-        if not last_fetch:
-            today = datetime.date.today()
-            since_date = today - datetime.timedelta(hours=24)
-            since = datetime.datetime(
-                year=since_date.year,
-                month=since_date.month,
-                day=since_date.day,
-            )
-        else:
+        if last_fetch := monzo[0].last_fetch:
             # Need to add 1 second to the datetime to account for microsecond difference
             since_date = last_fetch + datetime.timedelta(seconds=1)
             since = datetime.datetime(
@@ -107,6 +98,14 @@ class MonzoAutomation:
                 hour=since_date.hour,
                 minute=since_date.minute,
                 second=since_date.second,
+            )
+        else:
+            today = datetime.date.today()
+            since_date = today - datetime.timedelta(hours=24)
+            since = datetime.datetime(
+                year=since_date.year,
+                month=since_date.month,
+                day=since_date.day,
             )
         account = self._fetch_accounts()
         transactions = self._fetch_transactions(account=account[0], since=since)

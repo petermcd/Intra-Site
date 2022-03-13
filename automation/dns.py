@@ -49,11 +49,10 @@ class DNS:
             Dictionary of DNS records for the given domain
         """
         if force or domain not in self._cf_domain.keys():
-            domain_details = {}
             zone = self.get_zone(domain)
             if not zone:
                 return {}
-            domain_details["zone_id"] = zone
+            domain_details = {"zone_id": zone}
             dns_records = self._cf.zones.dns_records.get(domain_details["zone_id"])
             for dns_record in dns_records:
                 domain_details[dns_record["name"]] = dns_record
