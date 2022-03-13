@@ -1,3 +1,4 @@
+"""Views for Networkv2."""
 from typing import Any, Dict, List, Set
 
 from django.http import HttpResponse, JsonResponse
@@ -13,7 +14,7 @@ def index(request) -> HttpResponse:
     Return:
         HttpResponse for the index page
     """
-    return render(request, 'networkv2/index.html', {})
+    return render(request, "networkv2/index.html", {})
 
 
 def inventory(request) -> HttpResponse:
@@ -31,60 +32,64 @@ def inventory(request) -> HttpResponse:
     for operating_system in operating_systems:
         if operating_system.name_clean not in groups:
             groups[str(operating_system.name_clean)] = {
-                'devices': set(),
-                'children': set(),
+                "devices": set(),
+                "children": set(),
             }
         if operating_system.parent and operating_system.parent.name_clean not in groups:
             groups[operating_system.parent.name_clean] = {
-                'devices': set(),
-                'children': {operating_system.name},
+                "devices": set(),
+                "children": {operating_system.name},
             }
         elif operating_system.parent:
-            groups[operating_system.parent.name_clean]['children'].add(operating_system.name_clean)
+            groups[operating_system.parent.name_clean]["children"].add(
+                operating_system.name_clean
+            )
 
     for application in applications:
         if application.name_clean not in groups:
             groups[str(application.name_clean)] = {
-                'devices': set(),
-                'children': set(),
+                "devices": set(),
+                "children": set(),
             }
         if application.parent and application.parent.name_clean not in groups:
             groups[application.parent.name_clean] = {
-                'devices': set(),
-                'children': {application.name_clean},
+                "devices": set(),
+                "children": {application.name_clean},
             }
         elif application.parent:
-            groups[application.parent.name_clean]['children'].add(application.name_clean)
+            groups[application.parent.name_clean]["children"].add(
+                application.name_clean
+            )
 
     devices = Device.objects.all()
 
     for device in devices:
-        groups[device.operating_system.name_clean]['devices'].add(device)
+        groups[device.operating_system.name_clean]["devices"].add(device)
         for application in device.installed_applications.all():
-            groups[application.name_clean]['devices'].add(device)
+            groups[application.name_clean]["devices"].add(device)
 
-    output = ''
+    output = ""
     for group, value in groups.items():
-        output += f'[{group}]\n'
-        for device in value['devices']:
-            extra_output = ''
+        output += f"[{group}]\n"
+        for device in value["devices"]:
+            extra_output = ""
             if device.operating_system.username:
-                extra_output += f'\tansible_user={device.operating_system.username}'
+                extra_output += f"\tansible_user={device.operating_system.username}"
             if device.operating_system.password:
-                extra_output += f'\tansible_ssh_pass={device.operating_system.password}'
-            output += f'{device.hostname}\tansible_host={device.ip}{extra_output}\n'
-        output += '\n'
+                extra_output += f"\tansible_ssh_pass={device.operating_system.password}"
+            output += f"{device.hostname}\tansible_host={device.ip}{extra_output}\n"
+        output += "\n"
 
     for group, value in groups.items():
-        if len(value['children']):
-            output += f'[{group}:children]\n'
-            for child in value['children']:
-                output += f'{child}\n'
-        output += '\n'
+        if len(value["children"]):
+            output += f"[{group}:children]\n"
+            for child in value["children"]:
+                output += f"{child}\n"
+        output += "\n"
 
-    output += '\n'
+    output += "\n"
 
-    return HttpResponse(content_type='text/plain', content=output)
+    return HttpResponse(content_type="text/plain", content=output)
 
 
 def network(request) -> JsonResponse:
@@ -95,8 +100,8 @@ def network(request) -> JsonResponse:
         JsonResponse containing node map of the network
     """
     data: Dict[str, List[Any]] = {
-        'nodes': [],
-        'links': [],
+        "nodes": [],
+        "links": [],
     }
     devices = Device.objects.all()
     for device in devices:
@@ -105,15 +110,12 @@ def network(request) -> JsonResponse:
             "name": device.hostname,
             "ip": str(device.ip),
             "description": device.notes,
-            "type": 'device'
+            "type": "device",
         }
-        data['nodes'].append(device_data)
+        data["nodes"].append(device_data)
         if device.connected_too:
-            link = {
-                "source": f"d{device.pk}",
-                "target": f"d{device.connected_too.pk}"
-            }
-            data['links'].append(link)
+            link = {"source": f"d{device.pk}", "target": f"d{device.connected_too.pk}"}
+            data["links"].append(link)
 
     websites = Website.objects.all()
     for website in websites:
@@ -123,15 +125,15 @@ def network(request) -> JsonResponse:
             "ip": str(website.subdomain.hosted_on.ip),
             "url": website.full_url,
             "description": website.description,
-            "type": 'site'
+            "type": "site",
         }
-        data['nodes'].append(website_data)
+        data["nodes"].append(website_data)
         try:
             link = {
                 "source": f"s{website.pk}",
-                "target": f"d{website.subdomain.hosted_on.pk}"
+                "target": f"d{website.subdomain.hosted_on.pk}",
             }
-            data['links'].append(link)
+            data["links"].append(link)
         except Device.DoesNotExist:
             pass
     return JsonResponse(data)
@@ -144,7 +146,7 @@ def rack(request) -> HttpResponse:
     Return:
         HttpResponse for the rack page
     """
-    return render(request, 'networkv2/rack.html', {})
+    return render(request, "networkv2/rack.html", {})
 
 
 def rack_json(request) -> JsonResponse:
@@ -154,26 +156,29 @@ def rack_json(request) -> JsonResponse:
     Return:
         JsonResponse for the rack json
     """
-    rack_json_res = {}
-    devices = Device.objects.all().filter(
-        rack_shelf__isnull=False,
-        rack_shelf_position__isnull=False
-    ).order_by('rack_shelf', 'rack_shelf_position')
+    rack_json_res: Dict[str, Any] = {}
+    devices = (
+        Device.objects.all()
+        .filter(rack_shelf__isnull=False, rack_shelf_position__isnull=False)
+        .order_by("rack_shelf", "rack_shelf_position")
+    )
     for device in devices:
         if device.rack_shelf not in rack_json_res:
             rack_json_res[device.rack_shelf] = {
-                'width': 1,
-                'devices': {},
+                "width": 1,
+                "devices": {},
             }
         device_details = {
-            'hostname': device.hostname,
-            'image': '/static/networkv2/img/unknown.png',
-            'ip': device.ip,
-            'description': device.notes,
+            "hostname": device.hostname,
+            "image": "/static/networkv2/img/unknown.png",
+            "ip": device.ip,
+            "description": device.notes,
         }
         if device.device_type:
-            device_details['image'] = device.device_type.image
-        rack_json_res[device.rack_shelf]['devices'][device.rack_shelf_position] = device_details
-        if device.rack_shelf_position > rack_json_res[device.rack_shelf]['width']:
-            rack_json_res[device.rack_shelf]['width'] = device.rack_shelf_position
+            device_details["image"] = device.device_type.image
+        rack_json_res[device.rack_shelf]["devices"][
+            device.rack_shelf_position
+        ] = device_details
+        if device.rack_shelf_position > rack_json_res[device.rack_shelf]["width"]:
+            rack_json_res[device.rack_shelf]["width"] = device.rack_shelf_position
     return JsonResponse(rack_json_res)

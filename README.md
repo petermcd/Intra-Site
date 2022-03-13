@@ -31,3 +31,25 @@ When a book is deleted the file should be deleted
 When clear is selected on a model it should delete the file
 If a file exists and the ISBN changes the filename should change
 If a file uses the title if the title changes it should change the filename
+
+## Development tools
+
+### Watcham
+
+Watchman is a manual install, instructions can be found [HERE](https://facebook.github.io/watchman/docs/install.html)
+
+on top of this, pywatchman is required and can be installed using the dev requirements
+
+### Django Debug toolbar
+
+Installation instructions can be found [HERE](https://django-debug-toolbar.readthedocs.io/en/latest/installation.html)
+
+### Git Pre Commit
+
+Git pre commit runs tests prior to a commit occuring, this helps reduce CICD failures. To set this up
+the following commands can be carried out:
+
+```bash
+pip install pre-commit
+pre-commit install
+```

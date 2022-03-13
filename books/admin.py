@@ -1,3 +1,4 @@
+"""Admin configuration for Books."""
 from django.contrib import admin
 
 from books.models import Author, Book
@@ -5,25 +6,25 @@ from books.models import Author, Book
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
-    list_display = ('name',)
-    ordering = ('name',)
+    """Configure the admin page."""
+
+    list_display = ("name",)
+    ordering = ("name",)
 
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    """
-    Configure the admin page.
-    """
-    list_display = ('title', 'subtitle', 'publisher', 'read',)
-    ordering = ('title',)
+    """Configure the admin page."""
+
+    list_display = (
+        "title",
+        "subtitle",
+        "publisher",
+        "read",
+    )
+    ordering = ("title",)
 
     class Media:
-        """
-        Class to add relevant javascript to the admin page.
-        """
-        js = (
-            'books/js/books.js',
-        )
+        """Class to add relevant javascript to the admin page."""
+
+        js = ("books/js/books.js",)

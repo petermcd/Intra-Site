@@ -1,9 +1,10 @@
+"""Views for Downloads."""
 from django.http import FileResponse
 
 
-def book_download(request, book='') -> FileResponse:
+def book_download(request, book="") -> FileResponse:
     """
-    Facilitate the book downloads
+    Facilitate the book downloads.
 
     Args:
         request: http request object
@@ -12,13 +13,13 @@ def book_download(request, book='') -> FileResponse:
     Returns:
         FileResponse object with content of the book
     """
-    file_path = f'downloads/books/{book}'
-    return FileResponse(open(file_path, 'rb'))
+    file_path = f"downloads/books/{book}"
+    return FileResponse(open(file_path, "rb"))
 
 
-def document_download(request, document='') -> FileResponse:
+def document_download(request, document="") -> FileResponse:
     """
-    Facilitate the document downloads
+    Facilitate the document downloads.
 
     Args:
         request: http request object
@@ -27,13 +28,13 @@ def document_download(request, document='') -> FileResponse:
     Returns:
         FileResponse object with content of the document
     """
-    file_path = f'downloads/documents/{document}'
-    return FileResponse(open(file_path, 'rb'))
+    file_path = f"downloads/documents/{document}"
+    return FileResponse(open(file_path, "rb"))
 
 
-def event_ticket_download(request, event_ticket='') -> FileResponse:
+def event_ticket_download(request, event_ticket="") -> FileResponse:
     """
-    Facilitate the event ticket downloads
+    Facilitate the event ticket downloads.
 
     Args:
         request: http request object
@@ -42,13 +43,13 @@ def event_ticket_download(request, event_ticket='') -> FileResponse:
     Returns:
         FileResponse object with content of the event ticket
     """
-    file_path = f'downloads/event-tickets/{event_ticket}'
-    return FileResponse(open(file_path, 'rb'))
+    file_path = f"downloads/event-tickets/{event_ticket}"
+    return FileResponse(open(file_path, "rb"))
 
 
-def travel_ticket_download(request, travel_ticket='') -> FileResponse:
+def travel_ticket_download(request, travel_ticket="") -> FileResponse:
     """
-    Facilitate the travel ticket downloads
+    Facilitate the travel ticket downloads.
 
     Args:
         request: http request object
@@ -57,5 +58,5 @@ def travel_ticket_download(request, travel_ticket='') -> FileResponse:
     Returns:
         FileResponse object with content of the travel ticket
     """
-    file_path = f'downloads/travel-tickets/{travel_ticket}'
-    return FileResponse(open(file_path, 'rb'))
+    file_path = f"downloads/travel-tickets/{travel_ticket}"
+    return FileResponse(open(file_path, "rb"))
