@@ -493,7 +493,7 @@ class Website(models.Model):
         Returns:
             Full URL
         """
-        schema = "http://" if not self.secure else "https://"
+        schema = "https://" if self.secure else "http://"
         port = f":{self.port}"
         if (self.secure and self.port == 443) or (not self.secure and port == 80):
             port = ""
