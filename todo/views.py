@@ -6,8 +6,8 @@ from todo.models import ToDo
 
 
 class TodoList(generic.ListView):
-    template_name = 'todo/index.html'
-    context_object_name = 'todo_list'
+    template_name = "todo/index.html"
+    context_object_name = "todo_list"
 
     def get_queryset(self):
         """
@@ -16,7 +16,7 @@ class TodoList(generic.ListView):
         Return:
             List of todo objects
         """
-        todos = ToDo.objects.all().order_by('added')
+        todos = ToDo.objects.all().order_by("added")
         return list(todos)
 
 
@@ -31,7 +31,7 @@ def todo_output_form(request):
         Rendered form
     """
     context = {}
-    return render(request, 'todo/partials/todo_add_form.html', context)
+    return render(request, "todo/partials/todo_add_form.html", context)
 
 
 def todo_add(request):
@@ -45,10 +45,10 @@ def todo_add(request):
         Rendered form
     """
     todo_item = ToDo()
-    todo_item.description = request.POST['todo-text']
+    todo_item.description = request.POST["todo-text"]
     todo_item.save()
-    context = {'todo': todo_item}
-    return render(request, 'todo/partials/todo_item.html', context)
+    context = {"todo": todo_item}
+    return render(request, "todo/partials/todo_item.html", context)
 
 
 def todo_delete(request, pk: int):

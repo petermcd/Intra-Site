@@ -9,8 +9,16 @@ class BillAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
-    list_display = ('company', 'due_day', 'merchant_configured',)
-    ordering = ('company', 'due_day',)
+
+    list_display = (
+        "company",
+        "due_day",
+        "merchant_configured",
+    )
+    ordering = (
+        "company",
+        "due_day",
+    )
 
 
 @admin.register(Lender)
@@ -18,8 +26,12 @@ class LenderAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
-    list_display = ('name', 'url',)
-    ordering = ('name',)
+
+    list_display = (
+        "name",
+        "url",
+    )
+    ordering = ("name",)
 
 
 @admin.register(Loan)
@@ -27,8 +39,17 @@ class LoanAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
-    list_display = ('lender', 'due_day', 'apr', 'merchant_configured',)
-    ordering = ('lender', 'due_day',)
+
+    list_display = (
+        "lender",
+        "due_day",
+        "apr",
+        "merchant_configured",
+    )
+    ordering = (
+        "lender",
+        "due_day",
+    )
 
 
 @admin.register(Monzo)
@@ -44,15 +65,17 @@ class MonzoAdmin(admin.ModelAdmin):
         """
         Create view for configuring items.
         """
-        self.exclude = ['access_token', 'expiry', 'last_fetch', 'refresh_token']
+        self.exclude = ["access_token", "expiry", "last_fetch", "refresh_token"]
         return super(MonzoAdmin, self).add_view(*args, **kwargs)
 
-    def change_view(self, request, object_id, form_url='', extra_context=None):
+    def change_view(self, request, object_id, form_url="", extra_context=None):
         """
         Modify view so that some fields are hidden.
         """
-        self.exclude = ['access_token', 'expiry', 'last_fetch', 'refresh_token']
-        return super(MonzoAdmin, self).change_view(request, object_id, form_url, extra_context)
+        self.exclude = ["access_token", "expiry", "last_fetch", "refresh_token"]
+        return super(MonzoAdmin, self).change_view(
+            request, object_id, form_url, extra_context
+        )
 
     def output_link_url(self) -> str:
         """
@@ -63,7 +86,10 @@ class MonzoAdmin(admin.ModelAdmin):
         """
         return mark_safe(self.link_url())
 
-    list_display = ('linked', output_link_url,)
+    list_display = (
+        "linked",
+        output_link_url,
+    )
 
 
 @admin.register(PaidFrom)
@@ -71,8 +97,9 @@ class PaidFromAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
-    list_display = ('name',)
-    ordering = ('name',)
+
+    list_display = ("name",)
+    ordering = ("name",)
 
 
 @admin.register(Investment)
@@ -80,5 +107,9 @@ class InvestmentAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
-    list_display = ('company', 'value',)
-    ordering = ('company',)
+
+    list_display = (
+        "company",
+        "value",
+    )
+    ordering = ("company",)

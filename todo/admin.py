@@ -8,5 +8,9 @@ class ToDoAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
-    list_display = ('description', 'added',)
-    ordering = ('description',)
+
+    list_display = (
+        "description",
+        "added",
+    )
+    ordering = ("description",)

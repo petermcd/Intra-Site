@@ -8,5 +8,10 @@ class SettingAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
-    list_display = ('name', 'description', 'configured',)
-    ordering = ('name',)
+
+    list_display = (
+        "name",
+        "description",
+        "configured",
+    )
+    ordering = ("name",)

@@ -1,8 +1,4 @@
 pywatchman
 django-debug-toolbar
-mypy
-mypy-extensions
-isort
-flake8
 ipython
 pre-commit

@@ -11,7 +11,7 @@ sys.dont_write_bytecode = True
 # Django specific settings
 import os  # NOQA E402
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Intranet.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Intranet.settings")
 import django  # NOQA E402
 
 django.setup()
@@ -20,7 +20,14 @@ from monzo.authentication import Authentication  # NOQA E402
 from monzo.endpoints.account import Account  # NOQA E402
 from monzo.endpoints.transaction import Transaction  # NOQA E402
 
-from finance.models import Bill, BillAudit, Loan, LoanAudit, Merchant, Monzo  # NOQA E402
+from finance.models import (  # NOQA E402
+    Bill,
+    BillAudit,
+    Loan,
+    LoanAudit,
+    Merchant,
+    Monzo,
+)
 from finance.views import MonzoStorage  # NOQA E402
 
 
@@ -38,9 +45,7 @@ def transaction_sorted(transaction: Transaction) -> datetime.datetime:
 
 
 class MonzoAutomation:
-    __slots__ = [
-        '_monzo_auth'
-    ]
+    __slots__ = ["_monzo_auth"]
 
     def __init__(self):
         """
@@ -74,7 +79,9 @@ class MonzoAutomation:
         )
         merchants = self._fetch_merchants(since=since)
         for merchant in merchants:
-            self._fetch_merchant_model(name=merchants[merchant]['name'], logo=merchants[merchant]['logo'])
+            self._fetch_merchant_model(
+                name=merchants[merchant]["name"], logo=merchants[merchant]["logo"]
+            )
 
     def process_transactions(self):
         """
@@ -114,7 +121,7 @@ class MonzoAutomation:
             monzo.last_fetch = transaction.created
         monzo.save()
 
-    def _fetch_accounts(self, account_type: str = 'uk_retail') -> List[Account]:
+    def _fetch_accounts(self, account_type: str = "uk_retail") -> List[Account]:
         """
         Fetch list of accounts from Monzo.
 
@@ -126,7 +133,9 @@ class MonzoAutomation:
         """
         return Account.fetch(auth=self._monzo_auth, account_type=account_type)
 
-    def _fetch_merchants(self, since: Optional[datetime.datetime] = None) -> Dict[str, Dict[str, str]]:
+    def _fetch_merchants(
+        self, since: Optional[datetime.datetime] = None
+    ) -> Dict[str, Dict[str, str]]:
         """
         Fetches merchants from a transaction list.
 
@@ -138,12 +147,18 @@ class MonzoAutomation:
         """
         account = self._fetch_accounts()
         transactions = self._fetch_transactions(account=account[0], since=since)
-        return {transaction.merchant['name']: {
-                    'name': transaction.merchant['name'],
-                    'logo': transaction.merchant['logo'],
-                } for transaction in transactions if transaction.merchant}
+        return {
+            transaction.merchant["name"]: {
+                "name": transaction.merchant["name"],
+                "logo": transaction.merchant["logo"],
+            }
+            for transaction in transactions
+            if transaction.merchant
+        }
 
-    def _fetch_transactions(self, account: Account, since: Optional[datetime.datetime] = None) -> List[Transaction]:
+    def _fetch_transactions(
+        self, account: Account, since: Optional[datetime.datetime] = None
+    ) -> List[Transaction]:
         """
         Fetch transactions from Monzo.
 
@@ -158,7 +173,7 @@ class MonzoAutomation:
             auth=self._monzo_auth,
             account_id=account.account_id,
             since=since,
-            expand=['merchant']
+            expand=["merchant"],
         )
 
     def _process_bill_transaction(self, transaction: Transaction):
@@ -168,7 +183,7 @@ class MonzoAutomation:
         Args:
             transaction: Transaction
         """
-        merchant = self._fetch_merchant_model(transaction.merchant['name'])
+        merchant = self._fetch_merchant_model(transaction.merchant["name"])
         bills = Bill.objects.filter(merchant=merchant)
         for bill in bills:
             amount = transaction.amount * -1
@@ -176,10 +191,10 @@ class MonzoAutomation:
             bill.save()
 
             audit = BillAudit(
-                message='Updating balance from Monzo payment',
+                message="Updating balance from Monzo payment",
                 for_bill=bill,
                 transaction_value=amount,
-                when=transaction.created
+                when=transaction.created,
             )
             audit.save()
 
@@ -190,27 +205,29 @@ class MonzoAutomation:
         Args:
             transaction: Transaction
         """
-        merchant = self._fetch_merchant_model(transaction.merchant['name'])
+        merchant = self._fetch_merchant_model(transaction.merchant["name"])
         loans = Loan.objects.filter(merchant=merchant)
         for loan in loans:
             amount = transaction.amount * -1
-            if (not loan.variable_payment and loan.monthly_payments == amount) or loan.variable_payment:
+            if (
+                not loan.variable_payment and loan.monthly_payments == amount
+            ) or loan.variable_payment:
                 previous_balance = loan.current_balance
                 loan.current_balance = previous_balance - transaction.amount
                 loan.last_payment = transaction.created
                 loan.save()
 
                 audit = LoanAudit(
-                    message='Updating balance from Monzo payment',
+                    message="Updating balance from Monzo payment",
                     for_loan=loan,
                     transaction_value=amount,
                     loan_balance=previous_balance,
-                    when=transaction.created
+                    when=transaction.created,
                 )
                 audit.save()
 
     @staticmethod
-    def _fetch_merchant_model(name: str, logo: str = '') -> Merchant:
+    def _fetch_merchant_model(name: str, logo: str = "") -> Merchant:
         """
         Fetch a merchant model from the database, if it does not exist create and return.
 
@@ -236,7 +253,7 @@ class MonzoAutomation:
         loans = Loan.objects.filter(
             apr__gt=Decimal(0.0),
             current_balance__gt=0,
-            start_date__lt=datetime.datetime.now(tz=pytz.UTC)
+            start_date__lt=datetime.datetime.now(tz=pytz.UTC),
         )
         for loan in loans:
             original_balance = loan.current_balance
@@ -248,10 +265,10 @@ class MonzoAutomation:
             loan.save()
 
             audit = LoanAudit(
-                message='Updated interest',
+                message="Updated interest",
                 for_loan=loan,
                 transaction_value=monthly_interest,
                 loan_balance=original_balance,
-                when=datetime.datetime.now(tz=pytz.UTC)
+                when=datetime.datetime.now(tz=pytz.UTC),
             )
             audit.save()

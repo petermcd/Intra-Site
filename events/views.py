@@ -6,8 +6,8 @@ from settings.models import Setting
 
 
 class IndexView(generic.ListView):
-    template_name = 'events/index.html'
-    context_object_name = 'event_list'
+    template_name = "events/index.html"
+    context_object_name = "event_list"
 
     def get_queryset(self):
         """
@@ -16,7 +16,7 @@ class IndexView(generic.ListView):
         Return:
             List of event objects
         """
-        return Event.objects.all().filter(ends__gte=now()).order_by('start')
+        return Event.objects.all().filter(ends__gte=now()).order_by("start")
 
     def get_context_data(self, **kwargs):
         """
@@ -30,7 +30,7 @@ class IndexView(generic.ListView):
 
 class DetailView(generic.DetailView):
     model = Event
-    template_name = 'events/details.html'
+    template_name = "events/details.html"
 
     def get_context_data(self, **kwargs):
         """
@@ -40,10 +40,18 @@ class DetailView(generic.DetailView):
             Context data ready for output in a template
         """
         context = super().get_context_data(**kwargs)
-        context['api_key'] = Setting.objects.filter(name__exact='GOOGLE_API_KEY')[0].value
-        context['accommodation'] = Accommodation.objects.filter(for_event__exact=context['event'])
-        context['to'] = Travel.objects.filter(for_event__exact=context['event'], direction__exact='To')
-        context['from'] = Travel.objects.filter(for_event__exact=context['event'], direction__exact='From')
+        context["api_key"] = Setting.objects.filter(name__exact="GOOGLE_API_KEY")[
+            0
+        ].value
+        context["accommodation"] = Accommodation.objects.filter(
+            for_event__exact=context["event"]
+        )
+        context["to"] = Travel.objects.filter(
+            for_event__exact=context["event"], direction__exact="To"
+        )
+        context["from"] = Travel.objects.filter(
+            for_event__exact=context["event"], direction__exact="From"
+        )
         return context
 
     def get_queryset(self):

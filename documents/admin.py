@@ -8,5 +8,6 @@ class DocumentAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
-    list_display = ('name',)
-    ordering = ('name',)
+
+    list_display = ("name",)
+    ordering = ("name",)

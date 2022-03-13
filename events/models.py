@@ -3,8 +3,8 @@ from django.db import models
 from Intranet.misc import OverwriteStorage
 
 TRAVEL_DIRECTION_CHOICES = [
-    ('To', 'To'),
-    ('From', 'From'),
+    ("To", "To"),
+    ("From", "From"),
 ]
 
 
@@ -18,9 +18,9 @@ def ticket_file_name(instance, filename: str) -> str:
 
     Returns: String containing the new filename
     """
-    path: str = 'downloads/event-tickets/'
-    ext: str = filename.split('.')[-1]
-    return f'{path}{instance.name}-{instance.venue.name}-{instance.start}.{ext}'
+    path: str = "downloads/event-tickets/"
+    ext: str = filename.split(".")[-1]
+    return f"{path}{instance.name}-{instance.venue.name}-{instance.start}.{ext}"
 
 
 def travel_file_name(instance, filename) -> str:
@@ -33,20 +33,25 @@ def travel_file_name(instance, filename) -> str:
 
     Returns: String containing the new filename
     """
-    path: str = 'downloads/travel-tickets/'
-    ext: str = filename.split('.')[-1]
-    return f'{path}{instance.departing_station.name}-{instance.departure}.{ext}'
+    path: str = "downloads/travel-tickets/"
+    ext: str = filename.split(".")[-1]
+    return f"{path}{instance.departing_station.name}-{instance.departure}.{ext}"
 
 
 class Venue(models.Model):
     """
     Model for Venue.
     """
-    name: models.CharField = models.CharField(max_length=255, verbose_name='Name')
-    street_address: models.CharField = models.CharField(max_length=255, verbose_name='Street Address')
-    city: models.CharField = models.CharField(max_length=255, verbose_name='City')
-    country: models.CharField = models.CharField(max_length=255, verbose_name='Country')
-    postcode: models.CharField = models.CharField(max_length=255, verbose_name='Postcode')
+
+    name: models.CharField = models.CharField(max_length=255, verbose_name="Name")
+    street_address: models.CharField = models.CharField(
+        max_length=255, verbose_name="Street Address"
+    )
+    city: models.CharField = models.CharField(max_length=255, verbose_name="City")
+    country: models.CharField = models.CharField(max_length=255, verbose_name="Country")
+    postcode: models.CharField = models.CharField(
+        max_length=255, verbose_name="Postcode"
+    )
 
     def __str__(self) -> str:
         """
@@ -55,7 +60,7 @@ class Venue(models.Model):
         Returns:
             The name and city of the venue
         """
-        return f'{self.name} - {self.city}'
+        return f"{self.name} - {self.city}"
 
     @property
     def printable(self) -> str:
@@ -65,21 +70,26 @@ class Venue(models.Model):
         Returns:
             Printable version of the venue as a string
         """
-        return f'{self.name}\n{self.street_address}\n{self.city}\n{self.country}\n{self.postcode}'
+        return f"{self.name}\n{self.street_address}\n{self.city}\n{self.country}\n{self.postcode}"
 
     class Meta:
-        ordering = ('name',)
+        ordering = ("name",)
 
 
 class Station(models.Model):
     """
     Model for Station.
     """
-    name: models.CharField = models.CharField(max_length=255, verbose_name='Name')
-    street_address: models.CharField = models.CharField(max_length=255, verbose_name='Street Address')
-    city: models.CharField = models.CharField(max_length=255, verbose_name='City')
-    country: models.CharField = models.CharField(max_length=255, verbose_name='Country')
-    postcode: models.CharField = models.CharField(max_length=255, verbose_name='Postcode')
+
+    name: models.CharField = models.CharField(max_length=255, verbose_name="Name")
+    street_address: models.CharField = models.CharField(
+        max_length=255, verbose_name="Street Address"
+    )
+    city: models.CharField = models.CharField(max_length=255, verbose_name="City")
+    country: models.CharField = models.CharField(max_length=255, verbose_name="Country")
+    postcode: models.CharField = models.CharField(
+        max_length=255, verbose_name="Postcode"
+    )
 
     def __str__(self) -> str:
         """
@@ -88,26 +98,26 @@ class Station(models.Model):
         Returns:
             The name and cite of the Station
         """
-        return f'{self.name} - {self.city}'
+        return f"{self.name} - {self.city}"
 
     class Meta:
-        ordering = ('name',)
+        ordering = ("name",)
 
 
 class Event(models.Model):
     """
     Model for an event
     """
-    name: models.CharField = models.CharField(max_length=255, verbose_name='Name')
-    description: models.CharField = models.CharField(max_length=1000, verbose_name='Description')
+
+    name: models.CharField = models.CharField(max_length=255, verbose_name="Name")
+    description: models.CharField = models.CharField(
+        max_length=1000, verbose_name="Description"
+    )
     venue: models.ForeignKey = models.ForeignKey(Venue, on_delete=models.RESTRICT)
-    start: models.DateTimeField = models.DateTimeField(verbose_name='Starts')
-    ends: models.DateTimeField = models.DateTimeField(verbose_name='Ends')
+    start: models.DateTimeField = models.DateTimeField(verbose_name="Starts")
+    ends: models.DateTimeField = models.DateTimeField(verbose_name="Ends")
     ticket_file: models.FileField = models.FileField(
-        storage=OverwriteStorage,
-        null=True,
-        blank=True,
-        upload_to=ticket_file_name
+        storage=OverwriteStorage, null=True, blank=True, upload_to=ticket_file_name
     )
     notes: models.TextField = models.TextField(max_length=500)
 
@@ -129,7 +139,7 @@ class Event(models.Model):
             Yes or no
         """
         accommodation = Accommodation.objects.filter(for_event__exact=self)
-        return 'Yes' if accommodation else 'No'
+        return "Yes" if accommodation else "No"
 
     @property
     def travel_arranged(self) -> str:
@@ -139,21 +149,21 @@ class Event(models.Model):
         Returns:
             Yes, partial or no
         """
-        arranged = 'No'
-        t_to = Travel.objects.filter(for_event__exact=self, direction__exact='To')
-        t_from = Travel.objects.filter(for_event__exact=self, direction__exact='From')
+        arranged = "No"
+        t_to = Travel.objects.filter(for_event__exact=self, direction__exact="To")
+        t_from = Travel.objects.filter(for_event__exact=self, direction__exact="From")
         if all([t_to, t_from]):
-            arranged = 'Yes'
+            arranged = "Yes"
         elif any([t_to, t_from]):
-            arranged = 'Partial'
+            arranged = "Partial"
         return arranged
 
     class Meta:
-        ordering = ('name',)
+        ordering = ("name",)
 
 
 class TravelType(models.Model):
-    name: models.CharField = models.CharField(max_length=255, verbose_name='Name')
+    name: models.CharField = models.CharField(max_length=255, verbose_name="Name")
 
     def __str__(self) -> str:
         """
@@ -165,37 +175,50 @@ class TravelType(models.Model):
         return str(self.name)
 
     class Meta:
-        ordering = ('name',)
+        ordering = ("name",)
 
 
 class Travel(models.Model):
     """
     Model for Travel
     """
+
     travel_type: models.ForeignKey = models.ForeignKey(
         TravelType,
-        verbose_name='Travel Type',
+        verbose_name="Travel Type",
         null=False,
         on_delete=models.RESTRICT,
-        related_name='travel_type'
+        related_name="travel_type",
     )
     departing_station: models.ForeignKey = models.ForeignKey(
         Station,
-        verbose_name='Departing Station',
+        verbose_name="Departing Station",
         null=False,
         on_delete=models.RESTRICT,
-        related_name='departing_station'
+        related_name="departing_station",
     )
-    departure: models.DateTimeField = models.DateTimeField(verbose_name='Departure')
+    departure: models.DateTimeField = models.DateTimeField(verbose_name="Departure")
     arrival_station: models.ForeignKey = models.ForeignKey(
-        Station, verbose_name='Arrival Station', null=False, on_delete=models.RESTRICT, related_name='arrival_station'
+        Station,
+        verbose_name="Arrival Station",
+        null=False,
+        on_delete=models.RESTRICT,
+        related_name="arrival_station",
     )
-    arrival: models.DateTimeField = models.DateTimeField(verbose_name='Arrival')
-    direction: models.CharField = models.CharField(max_length=4, choices=TRAVEL_DIRECTION_CHOICES)
+    arrival: models.DateTimeField = models.DateTimeField(verbose_name="Arrival")
+    direction: models.CharField = models.CharField(
+        max_length=4, choices=TRAVEL_DIRECTION_CHOICES
+    )
     for_event: models.ForeignKey = models.ForeignKey(
-        Event, verbose_name='For Event', null=False, on_delete=models.CASCADE, related_name='event'
+        Event,
+        verbose_name="For Event",
+        null=False,
+        on_delete=models.CASCADE,
+        related_name="event",
     )
-    ticket_file = models.FileField(storage=OverwriteStorage, null=True, blank=True, upload_to=travel_file_name)
+    ticket_file = models.FileField(
+        storage=OverwriteStorage, null=True, blank=True, upload_to=travel_file_name
+    )
     notes: models.TextField = models.TextField(max_length=500)
 
     def __str__(self) -> str:
@@ -205,26 +228,32 @@ class Travel(models.Model):
         Returns:
             The event name, departing station and arrival station for the Travel
         """
-        return f'{self.for_event.name}: {self.departing_station.name} -> {self.arrival_station.name}'
+        return f"{self.for_event.name}: {self.departing_station.name} -> {self.arrival_station.name}"
 
     class Meta:
         """
         Meta class to set the menu name for the object.
         """
-        verbose_name = 'Travel'
-        verbose_name_plural = 'Travel'
-        ordering = ('departure',)
+
+        verbose_name = "Travel"
+        verbose_name_plural = "Travel"
+        ordering = ("departure",)
 
 
 class Hotel(models.Model):
     """
     Model for Hotels.
     """
-    name: models.CharField = models.CharField(max_length=255, verbose_name='Name')
-    street_address: models.CharField = models.CharField(max_length=255, verbose_name='Street Address')
-    city: models.CharField = models.CharField(max_length=255, verbose_name='City')
-    country: models.CharField = models.CharField(max_length=255, verbose_name='Country')
-    postcode: models.CharField = models.CharField(max_length=255, verbose_name='Postcode')
+
+    name: models.CharField = models.CharField(max_length=255, verbose_name="Name")
+    street_address: models.CharField = models.CharField(
+        max_length=255, verbose_name="Street Address"
+    )
+    city: models.CharField = models.CharField(max_length=255, verbose_name="City")
+    country: models.CharField = models.CharField(max_length=255, verbose_name="Country")
+    postcode: models.CharField = models.CharField(
+        max_length=255, verbose_name="Postcode"
+    )
 
     def __str__(self) -> str:
         """
@@ -233,29 +262,29 @@ class Hotel(models.Model):
         Returns:
             The name and city of the venue
         """
-        return f'{self.name} - {self.city}'
+        return f"{self.name} - {self.city}"
 
     class Meta:
-        ordering = ('name',)
+        ordering = ("name",)
 
 
 class Accommodation(models.Model):
     hotel: models.ForeignKey = models.ForeignKey(
         Hotel,
-        verbose_name='Hotel',
+        verbose_name="Hotel",
         null=False,
         on_delete=models.RESTRICT,
-        related_name='event_hotel'
+        related_name="event_hotel",
     )
     for_event: models.ForeignKey = models.ForeignKey(
         Event,
-        verbose_name='Event',
+        verbose_name="Event",
         null=False,
         on_delete=models.CASCADE,
-        related_name='event_accommodation'
+        related_name="event_accommodation",
     )
-    check_in: models.DateTimeField = models.DateTimeField(verbose_name='Check In')
-    check_out: models.DateTimeField = models.DateTimeField(verbose_name='Check Out')
+    check_in: models.DateTimeField = models.DateTimeField(verbose_name="Check In")
+    check_out: models.DateTimeField = models.DateTimeField(verbose_name="Check Out")
 
     def __str__(self) -> str:
         """
@@ -264,7 +293,7 @@ class Accommodation(models.Model):
         Returns:
             The name of the accommodation and event
         """
-        return f'{self.for_event.name} - {self.hotel.name}'
+        return f"{self.for_event.name} - {self.hotel.name}"
 
     class Meta:
-        ordering = ('hotel',)
+        ordering = ("hotel",)

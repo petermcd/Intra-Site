@@ -5,6 +5,7 @@ class Setting(models.Model):
     """
     Model to house the settings for the application.
     """
+
     name: models.CharField = models.CharField(max_length=100, unique=True)
     value: models.CharField = models.CharField(max_length=255, blank=True, null=True)
     description: models.CharField = models.CharField(max_length=255)
@@ -25,7 +26,7 @@ class Setting(models.Model):
         Returns:
             Yes if configured otherwise No
         """
-        return 'Yes' if self.value else 'No'
+        return "Yes" if self.value else "No"
 
     class Meta:
-        ordering = ('name',)
+        ordering = ("name",)

@@ -9,8 +9,8 @@ class Automation:
     instance = None
 
     __slots__ = (
-        '_dns',
-        '_monitoring',
+        "_dns",
+        "_monitoring",
     )
 
     def __init__(self):
@@ -24,7 +24,7 @@ class Automation:
         """
         Creates a singleton Automation.
         """
-        if not hasattr(cls, 'instance') or not cls.instance:
+        if not hasattr(cls, "instance") or not cls.instance:
             cls.instance = super(Automation, cls).__new__(cls)
         return cls.instance
 
@@ -88,7 +88,7 @@ class Automation:
             Hostname part of a given URL
         """
         url_parts = urlparse(url)
-        return url_parts.hostname or ''
+        return url_parts.hostname or ""
 
     @property
     def dns(self) -> DNS:
@@ -99,7 +99,7 @@ class Automation:
              Instantiated DNS object
         """
         if not self._dns:
-            api_key = Setting.objects.filter(name__exact='CLOUDFLARE_API_KEY')[0].value
+            api_key = Setting.objects.filter(name__exact="CLOUDFLARE_API_KEY")[0].value
             self._dns = DNS(api_key)
         return self._dns
 
@@ -112,8 +112,10 @@ class Automation:
              Instantiated Monitoring object
         """
         if not self._monitoring:
-            url = Setting.objects.filter(name__exact='ZABBIX_URL')[0].value
-            username = Setting.objects.filter(name__exact='ZABBIX_USERNAME')[0].value
-            password = Setting.objects.filter(name__exact='ZABBIX_PASSWORD')[0].value
-            self._monitoring = Monitoring(base_url=url, username=username, password=password)
+            url = Setting.objects.filter(name__exact="ZABBIX_URL")[0].value
+            username = Setting.objects.filter(name__exact="ZABBIX_USERNAME")[0].value
+            password = Setting.objects.filter(name__exact="ZABBIX_PASSWORD")[0].value
+            self._monitoring = Monitoring(
+                base_url=url, username=username, password=password
+            )
         return self._monitoring

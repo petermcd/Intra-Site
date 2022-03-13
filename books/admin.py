@@ -8,8 +8,9 @@ class AuthorAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
-    list_display = ('name',)
-    ordering = ('name',)
+
+    list_display = ("name",)
+    ordering = ("name",)
 
 
 @admin.register(Book)
@@ -17,13 +18,18 @@ class BookAdmin(admin.ModelAdmin):
     """
     Configure the admin page.
     """
-    list_display = ('title', 'subtitle', 'publisher', 'read',)
-    ordering = ('title',)
+
+    list_display = (
+        "title",
+        "subtitle",
+        "publisher",
+        "read",
+    )
+    ordering = ("title",)
 
     class Media:
         """
         Class to add relevant javascript to the admin page.
         """
-        js = (
-            'books/js/books.js',
-        )
+
+        js = ("books/js/books.js",)

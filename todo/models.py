@@ -6,8 +6,13 @@ class ToDo(models.Model):
     """
     Model for todo item.
     """
-    description: models.CharField = models.CharField('ToDo Item', max_length=1000, null=False, blank=False)
-    added: models.DateTimeField = models.DateTimeField('Added', blank=False, null=False, default=timezone.now)
+
+    description: models.CharField = models.CharField(
+        "ToDo Item", max_length=1000, null=False, blank=False
+    )
+    added: models.DateTimeField = models.DateTimeField(
+        "Added", blank=False, null=False, default=timezone.now
+    )
 
     class Meta:
-        ordering = ('description',)
+        ordering = ("description",)
