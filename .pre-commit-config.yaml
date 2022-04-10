@@ -1,7 +1,7 @@
 default_language_version:
   python: python3.9
 
-exclude: '^static\/css\/bootstrap\.(.+)'
+exclude: '^(static\/css\/bootstrap\.(.+)|(.+)/migrations/(.+))'
 
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
