@@ -77,4 +77,4 @@ repos:
   hooks:
   - id: mypy
     name: mypy
-    additional_dependencies: [django-stubs, mypy-extensions, typing_extensions]
+    additional_dependencies: [django-stubs, mypy-extensions, types-requests, typing_extensions]

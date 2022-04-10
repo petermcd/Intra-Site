@@ -7,6 +7,7 @@ from intranet.views import IndexView
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
     path("admin/", admin.site.urls),
+    path("books/", include("books.urls")),
     path("documents/", include("documents.urls")),
     path("downloads/", include("downloads.urls")),
     path("finance/", include("finance.urls")),

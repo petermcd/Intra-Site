@@ -46,6 +46,11 @@
             <td>{{ task.due_by }}</td>
           </tr>
         {% endfor %}
+        {% if task_list|length < 1 %}
+          <tr>
+            <td colspan="3">No tasks</td>
+          </tr>
+        {% endif %}
       </tbody>
     </table>
   </section>

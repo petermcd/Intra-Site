@@ -35,6 +35,11 @@
             <td><a href="{{ document.document.url }}">DOWNLOAD</a></td>
           </tr>
         {% endfor %}
+        {% if document_list|length < 1 %}
+          <tr>
+            <td colspan="4">No documents</td>
+          </tr>
+        {% endif %}
       </tbody>
     </table>
   </section>

@@ -36,8 +36,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "books.apps.BooksConfig",
     "documents.apps.DocumentsConfig",
     "finance.apps.FinanceConfig",
+    "settings.apps.SettingsConfig",
     "tasks.apps.TasksConfig",
     "debug_toolbar",
     "django_cleanup.apps.CleanupConfig",  # Must be placed last

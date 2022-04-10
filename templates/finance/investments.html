@@ -52,6 +52,11 @@
             <td>{% if investment.document %}<a href="{{ investment.document.url }}">DOWNLOAD</a>{% else %}{% endif %}</td>
           </tr>
         {% endfor %}
+        {% if investment_list|length < 1 %}
+          <tr>
+            <td colspan="6">No investments</td>
+          </tr>
+        {% endif %}
       </tbody>
     </table>
   </section>
