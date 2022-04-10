@@ -16,6 +16,71 @@ class Organisation(models.Model):
         return str(self.name)
 
 
+class BillType(models.Model):
+    """Bill type model."""
+
+    name: models.CharField = models.CharField(max_length=100)
+    description: models.TextField = models.TextField()
+
+    def __str__(self) -> str:
+        """Return the name of the bill type."""
+        return str(self.name)
+
+
+class PaidFrom(models.Model):
+    """Paid from model."""
+
+    name: models.CharField = models.CharField(max_length=100)
+
+    def __str__(self) -> str:
+        """Return the name of the paid from."""
+        return str(self.name)
+
+
+class Bill(models.Model):
+    """Bill model."""
+
+    name: models.CharField = models.CharField(max_length=100)
+    description: models.TextField = models.TextField()
+    organisation: models.ForeignKey = models.ForeignKey(
+        Organisation, on_delete=models.RESTRICT
+    )
+    bill_type: models.ForeignKey = models.ForeignKey(BillType, on_delete=models.CASCADE)
+    due_day: models.SmallIntegerField = models.SmallIntegerField(default=1)
+    monthly_payments: models.DecimalField = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0
+    )
+    current_balance: models.DecimalField = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0
+    )
+    apr: models.DecimalField = models.DecimalField(
+        max_digits=5, decimal_places=3, default=0.0
+    )
+    variable_payment: models.BooleanField = models.BooleanField(default=False)
+    start_date: models.DateTimeField = models.DateTimeField(blank=True, null=True)
+    notes: models.CharField = models.CharField(max_length=300, null=False, blank=False)
+    paid_from: models.ForeignKey = models.ForeignKey(
+        PaidFrom, on_delete=models.RESTRICT, null=False
+    )
+
+    def __str__(self) -> str:
+        """Return the name of the bill."""
+        return str(self.name)
+
+
+class BillHistory(models.Model):
+    """Model for the BillHistory."""
+
+    message: models.CharField = models.CharField(max_length=300)
+    transaction_value: models.DecimalField = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0
+    )
+    for_bill: models.ForeignKey = models.ForeignKey(
+        Bill, on_delete=models.CASCADE, null=False
+    )
+    when: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+
+
 class Investments(models.Model):
     """Model for the Investments table."""
 
