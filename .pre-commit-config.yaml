@@ -5,7 +5,7 @@ exclude: '^(static\/css\/bootstrap\.(.+)|(.+)/migrations/(.+))'
 
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.1.0
+    rev: v4.2.0
     hooks:
     - id: trailing-whitespace
     #- id: end-of-file-fixer
@@ -15,13 +15,13 @@ repos:
     - id: check-case-conflict
 
 - repo: https://github.com/shellcheck-py/shellcheck-py
-  rev: v0.8.0.3
+  rev: v0.8.0.4
   hooks:
   - id: shellcheck
     name: shellcheck
 
 - repo: https://github.com/rtts/djhtml
-  rev: v1.4.11
+  rev: v1.5.0
   hooks:
   - id: djhtml
     name: djhtml
@@ -29,7 +29,7 @@ repos:
     - --tabwidth=2
 
 - repo: https://github.com/thibaudcolas/curlylint
-  rev: v0.13.0
+  rev: v0.13.1
   hooks:
   - id: curlylint
     name: curlylint
@@ -42,14 +42,14 @@ repos:
     args: [--target-version, "4.0"]
 
 - repo: https://github.com/asottile/pyupgrade
-  rev: v2.31.0
+  rev: v2.32.0
   hooks:
   - id: pyupgrade
     name: pyupgrade
     args: [--py39-plus]
 
 - repo: https://github.com/psf/black
-  rev: 22.1.0
+  rev: 22.3.0
   hooks:
   - id: black
     name: black
