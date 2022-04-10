@@ -1,7 +1,12 @@
 """Settings for the Django project."""
+import mimetypes
 import os
 import socket
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,17 +19,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-w6d881036p!78s)**g^=9b%h0ujlgg(0ldpkt6jwz&r#s=6y!6"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = str(os.getenv("DJANGO_SECRET_KEY"))
+DEBUG = False
 
-ALLOWED_HOSTS: list[str] = []
+ALLOWED_HOSTS: list[str] = [
+    "intra.devfaq.com",
+]
 
 INTERNAL_IPS: list[str] = []
 
-if DEBUG:
+if int(os.getenv("DJANGO_DEBUG", 0)) == 1:
+    DEBUG = True
+    ALLOWED_HOSTS = [
+        "*",
+    ]
+    mimetypes.add_type("application/javascript", ".js", True)
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + [
         "127.0.0.1",
-        "10.0.2.2",
     ]
 
 # Application definition
@@ -38,6 +50,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "books.apps.BooksConfig",
     "documents.apps.DocumentsConfig",
+    "events.apps.EventsConfig",
     "finance.apps.FinanceConfig",
     "settings.apps.SettingsConfig",
     "tasks.apps.TasksConfig",

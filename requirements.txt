@@ -1,4 +1,5 @@
 Django
 django_cleanup
 django-debug-toolbar
+python-dotenv
 requests
