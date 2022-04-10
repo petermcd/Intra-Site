@@ -20,7 +20,6 @@ class BillType(models.Model):
     """Bill type model."""
 
     name: models.CharField = models.CharField(max_length=100)
-    description: models.TextField = models.TextField()
 
     def __str__(self) -> str:
         """Return the name of the bill type."""
@@ -71,14 +70,13 @@ class Bill(models.Model):
 class BillHistory(models.Model):
     """Model for the BillHistory."""
 
-    message: models.CharField = models.CharField(max_length=300)
-    transaction_value: models.DecimalField = models.DecimalField(
-        max_digits=10, decimal_places=2, default=0
-    )
-    for_bill: models.ForeignKey = models.ForeignKey(
+    bill: models.ForeignKey = models.ForeignKey(
         Bill, on_delete=models.CASCADE, null=False
     )
-    when: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    current_balance: models.DecimalField = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0
+    )
+    date: models.DateField = models.DateField(auto_now_add=True)
 
 
 class Investments(models.Model):
@@ -123,10 +121,20 @@ class InvestmentValue(models.Model):
 # Signals
 
 
-@receiver(post_save, sender=Investments, dispatch_uid="update_stock_count")
+@receiver(post_save, sender=Investments, dispatch_uid="update_investment_value")
 def update_investment_value_log(sender, instance, **kwargs):
     """Update the investment value log."""
     new_value = InvestmentValue()
     new_value.investment = instance
     new_value.value = instance.current_value
     new_value.save()
+
+
+@receiver(post_save, sender=Bill, dispatch_uid="update_bill_history")
+def update_bill_history_log(sender, instance, **kwargs):
+    """Update the bill history value log."""
+    if instance.bill_type.name == "Loan":
+        new_value = BillHistory()
+        new_value.bill = instance
+        new_value.current_balance = instance.current_balance
+        new_value.save()

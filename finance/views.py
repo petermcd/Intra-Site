@@ -6,13 +6,13 @@ from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render
 from django.views import generic
 
-from finance.models import Investments, InvestmentValue, Organisation
+from finance.models import Bill, BillHistory, Investments, InvestmentValue, Organisation
 
 
 class FinanceView(generic.ListView):
     """View to see a list of Investments."""
 
-    template_name = "finance/finance_index.html"
+    template_name = "finance/bills.html"
     context_object_name = "investment_list"
 
     def get_queryset(self):
@@ -44,10 +44,24 @@ class InvestmentsView(generic.ListView):
 
 
 class PaymentsView(generic.ListView):
-    """View to see a list of Investments."""
+    """View to see a list of Bills."""
 
-    template_name = "finance/finance_index.html"
-    context_object_name = "investment_list"
+    template_name = "finance/bills.html"
+    context_object_name = "payment_list"
+
+    def get_context_data(self, **kwargs):
+        """
+        Obtain context data ready for output.
+
+        Return:
+            Context data ready for output in a template
+        """
+        context = super().get_context_data(**kwargs)
+        context["monthly_total"]: float = sum(
+            payment.monthly_payments for payment in context["payment_list"]
+        )
+
+        return context
 
     def get_queryset(self):
         """
@@ -56,8 +70,94 @@ class PaymentsView(generic.ListView):
         Return:
             List of Investment objects
         """
-        investments = Investments.objects.all().order_by("organisation__name")
-        return list(investments)
+        payments = Bill.objects.all().order_by("due_day")
+        return list(payments)
+
+
+def bill(request, pk: int):
+    """
+    View to handle fetching data for a bill.
+
+    Args:
+        request: Request object
+        pk: primary key for the bill to fetch data for
+
+    Returns:
+        HTTPResponse containing the required data
+    """
+    try:
+        bill_item = Bill.objects.get(pk=pk)
+    except Investments.DoesNotExist:
+        return HttpResponseNotFound("No such bill")
+    data = {
+        "pk": bill_item.pk,
+        "name": bill_item.name,
+        "value": bill_item.current_balance,
+    }
+    return render(request, "finance/bill.html", data)
+
+
+def bill_history(request, pk: int, period: str = "year"):
+    """
+    View to handle fetching bill history data.
+
+    Args:
+        request: Request object
+        pk: primary key for the bill to fetch data for
+        period: period to fetch data for
+
+    Returns:
+        Json containing data for the given investment and period
+    """
+    response_list: list[dict[str, Union[str]]] = []
+    days = 0
+    weeks = 0
+    if period == "day":
+        days = 1
+    elif period == "week":
+        weeks = 1
+    elif period == "month":
+        days = 30
+    elif period == "year":
+        days = 365
+    else:
+        days = 1826
+    time_delta = timedelta(days=days, weeks=weeks)
+    lookup_time = datetime.now() - time_delta
+    bill_values = BillHistory.objects.filter(date__gt=lookup_time, bill=pk).order_by(
+        "date"
+    )
+    if len(bill_values) > 0:
+        response_list.extend(
+            {
+                "date": bill_value.date.strftime("%Y-%m-%d"),
+                "value": bill_value.current_balance,
+            }
+            for bill_value in bill_values
+        )
+    response = {
+        "status": "success",
+        "record_count": len(response_list),
+        "data": response_list,
+    }
+    return JsonResponse(data=response, safe=False)
+
+
+def bill_delete(request, pk: int):
+    """
+    View to handle deleting a bill.
+
+    Args:
+        request: Request object
+        pk: primary key for the bill to delete
+
+    Returns:
+        Empty response with a 200 code
+    """
+    bill_item = Bill.objects.filter(pk=pk)
+    if len(bill_item) == 1:
+        bill_item.delete()
+    return HttpResponse(status=200)
 
 
 def investment(request, pk: int):
@@ -94,9 +194,9 @@ def investment_delete(request, pk: int):
     Returns:
         Empty response with a 200 code
     """
-    investment = Investments.objects.filter(pk=pk)
-    if len(investment) == 1:
-        investment.delete()
+    investment_item = Investments.objects.filter(pk=pk)
+    if len(investment_item) == 1:
+        investment_item.delete()
     return HttpResponse(status=200)
 
 

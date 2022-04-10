@@ -7,7 +7,7 @@ window.onload = function() {
 		animationEnabled: true,
 		theme: "light2",
 		title: {
-			text: "Investment Value"
+			text: "Trend"
 		},
 		axisX: {
 			valueFormatString: "DD MMM YYYY",
@@ -32,5 +32,5 @@ window.onload = function() {
 		}
 		$("#chartContainer").CanvasJSChart(options);
 	}
-	$.getJSON("2-year.json", addData);
+	$.getJSON("year.json", addData);
 }
