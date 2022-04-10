@@ -11,15 +11,12 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-w6d881036p!78s)**g^=9b%h0ujlgg(0ldpkt6jwz&r#s=6y!6"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-SECRET_KEY = str(os.getenv("DJANGO_SECRET_KEY"))
+SECRET_KEY = str(
+    os.getenv(
+        "DJANGO_SECRET_KEY",
+        "django-insecure-w6d881036p!78s)**g^=9b%h0ujlgg(0ldpkt6jwz&r#s=6y!6",
+    )
+)
 DEBUG = False
 
 ALLOWED_HOSTS: list[str] = [
@@ -38,6 +35,23 @@ if int(os.getenv("DJANGO_DEBUG", 0)) == 1:
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + [
         "127.0.0.1",
     ]
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "HOST": str(os.getenv("DJANGO_DATABASE_HOST")),
+            "PORT": str(os.getenv("DJANGO_DATABASE_PORT")),
+            "NAME": str(os.getenv("DJANGO_DATABASE")),
+            "USER": str(os.getenv("DJANGO_DATABASE_USER")),
+            "PASSWORD": str(os.getenv("DJANGO_DATABASE_PASSWORD")),
+        },
+    }
 
 # Application definition
 
@@ -92,13 +106,6 @@ WSGI_APPLICATION = "intranet.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
 
 
 # Password validation
