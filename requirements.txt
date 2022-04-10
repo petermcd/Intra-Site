@@ -1,0 +1,3 @@
+Django
+django_cleanup
+django-debug-toolbar

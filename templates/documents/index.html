@@ -1,0 +1,41 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Documents{% endblock %}
+{% block content %}
+  <header>
+    <h1>Documents</h1>
+  </header>
+  <section id="table_list">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Delete</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Download</th>
+        </tr>
+      </thead>
+      <tbody id="document-list">
+        {% for document in document_list %}
+          <tr id="document-item-{{ document.pk }}">
+            <td>
+              <form
+                hx-target="#document-item-{{ document.pk }}"
+                hx-get="{{ document.pk }}/delete"
+                hx-confirm="Are you sure?"
+                hx-swap="outerHTML"
+              >
+                <button hx-trigger="click" type="submit">
+                  &#x274C;
+                </button>
+              </form>
+            </td>
+            <td><label for="{{ document.pk }}">{{ document.title }}</label></td>
+            <td>{{ document.description }}</td>
+            <td><a href="{{ document.document.url }}">DOWNLOAD</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

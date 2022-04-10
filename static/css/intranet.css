@@ -1,0 +1,61 @@
+.container {
+  width: auto;
+  padding: 0 15px;
+}
+
+header{
+    padding: 0 20px;
+    text-align: center;
+}
+
+img{
+    border-radius: 25%;
+}
+
+#table_list{
+    margin-top: 20px;
+}
+
+#item_details{
+    margin-top: 20px;
+}
+
+#item_details header{
+    margin-top: 20px;
+}
+
+#graph{
+    height: calc(100vh - 250px);
+    background-color: black;
+}
+
+#rack{
+    width: 500px;
+}
+
+.rack_row{
+    border: 10px solid black;
+    height: 80px;
+}
+
+.rack_column{
+    border: 3px solid black;
+    text-align: center;
+}
+
+.device_image{
+    height: 50px;
+}
+
+.card-header
+{
+    text-align: center;
+}
+
+.card-container{
+    margin-top: 20px;
+}
+
+.footer{
+    text-align: center;
+}

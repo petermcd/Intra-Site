@@ -1,0 +1,12 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}{{ name }}{% endblock %}
+{% block content %}
+  <header>
+    <h1>{{ name }}</h1>
+  </header>
+  <section id="chartContainer">
+  </section>
+  <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+  <script src="{% static 'js/investment_chart.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Tasks{% endblock %}
+{% block content %}
+  <header>
+    <h1>Tasks</h1>
+  </header>
+  <section id="table_list">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Mark As Done</th>
+          <th>Item</th>
+          <th>Due By</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <td colspan="3">
+            <button hx-get="form"
+              hx-trigger="click"
+              hx-target="#task-list"
+              hx-swap="beforeend"
+              type="submit">
+              Add
+            </button>
+          </td>
+        </tr>
+      </tfoot>
+      <tbody id="task-list">
+        {% for task in task_list %}
+          <tr id="task-item-{{ task.pk }}">
+            <td>
+              <form
+                hx-target="#task-item-{{ task.pk }}"
+                hx-get="{{ task.pk }}/complete"
+                hx-confirm="Are you sure?"
+                hx-swap="outerHTML"
+              >
+                <button hx-trigger="click" type="submit">
+                  &#x274C;
+                </button>
+              </form>
+            </td>
+            <td><label for="{{ task.pk }}">{{ task.description }}</label></td>
+            <td>{{ task.due_by }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  <div id="dtBox"></div>
+  <script>
+    $(document).ready(function()
+      {
+        $("#dtBox").DateTimePicker();
+      });
+  </script>
+{% endblock %}
