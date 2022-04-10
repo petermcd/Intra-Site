@@ -3,6 +3,7 @@ window.onload = function() {
 	var dataPoints = [];
 
 	var options =  {
+		zoomEnabled: true,
 		animationEnabled: true,
 		theme: "light2",
 		title: {

@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render
 from django.views import generic
 
-from finance.models import Investments, InvestmentValue
+from finance.models import Investments, InvestmentValue, Organisation
 
 
 class FinanceView(generic.ListView):
@@ -144,3 +144,40 @@ def investment_history(request, pk: int, period: str = "year"):
         "data": response_list,
     }
     return JsonResponse(data=response, safe=False)
+
+
+def investment_add(request):
+    """
+    Handle adding a new investment.
+
+    Args:
+        request: Request object
+
+    Returns:
+        Rendered form
+    """
+    organisation = Organisation.objects.get(pk=request.POST["organisation"])
+    investment_item = Investments()
+    investment_item.organisation = organisation
+    investment_item.description = request.POST["description"]
+    investment_item.current_value = request.POST["value"]
+    investment_item.date_purchased = datetime.strptime(
+        request.POST["invested_on"], "%d-%m-%Y %H:%M"
+    )
+    investment_item.save()
+    context = {"investment": investment_item}
+    return render(request, "finance/partials/investment_item.html", context)
+
+
+def investment_output_form(request):
+    """
+    Handle outputting the form for adding a new task item.
+
+    Args:
+        request: Request object
+
+    Returns:
+        Rendered form
+    """
+    context = {"organisations": Organisation.objects.all().order_by("name")}
+    return render(request, "finance/partials/investment_add_form.html", context)
