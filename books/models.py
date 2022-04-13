@@ -15,7 +15,7 @@ def content_file_name(instance, filename) -> str:
     Returns:
         New path and filename as a string
     """
-    path: str = "documents/books/"
+    path: str = "SiteDocuments/books/"
     ext: str = filename.split(".")[-1]
     new_filename: str = f"{path}{instance.isbn10}.{ext}"
     if instance.isbn10.startswith("00000"):
