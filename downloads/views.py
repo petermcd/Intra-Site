@@ -14,5 +14,5 @@ def DownloadView(request, directory="", filename="") -> FileResponse:
     Returns:
         FileResponse object with content of the file
     """
-    file_path = f"downloads/{directory}/{filename}"
+    file_path = f"documents/{directory}/{filename}"
     return FileResponse(open(file_path, "rb"))

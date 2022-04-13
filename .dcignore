@@ -95,7 +95,7 @@ __pycache__/
 build/
 develop-eggs/
 dist/
-downloads/
+documents/
 eggs/
 lib/
 lib64/

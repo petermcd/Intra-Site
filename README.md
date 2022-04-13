@@ -9,9 +9,9 @@ the local path with the correct path)
 sudo apt update
 sudo apt install nfs-common
 
-mkdir /home/pi/Intra-Site/downloads/
+mkdir /home/pi/Intra-Site/documents/
 
-sudo mount 192.168.0.5:/volume1/SiteDocuments /home/pi/Intra-Site/downloads/
+sudo mount 192.168.0.5:/volume1/SiteDocuments /home/pi/Intra-Site/documents/
 ```
 
 ## TODO
