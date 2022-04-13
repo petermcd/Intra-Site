@@ -22,6 +22,7 @@ class AccommodationAdmin(admin.ModelAdmin):
         "hotel",
     )
     ordering = ("check_in",)
+    date_hierarchy = "check_in"
 
 
 @admin.register(Event)
@@ -35,6 +36,11 @@ class EventAdmin(admin.ModelAdmin):
         "start",
     )
     ordering = ("name",)
+    search_fields = (
+        "description",
+        "name",
+    )
+    date_hierarchy = "start"
 
 
 @admin.register(Hotel)
@@ -72,6 +78,7 @@ class TravelAdmin(admin.ModelAdmin):
         "arrival",
     )
     ordering = ("departure",)
+    date_hierarchy = "departure"
 
 
 @admin.register(TravelType)

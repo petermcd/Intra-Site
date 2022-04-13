@@ -15,6 +15,7 @@ urlpatterns = [
     path("downloads/", include("downloads.urls")),
     path("favicon.ico", RedirectView.as_view(url=static("img/favicon.ico"))),
     path("finance/", include("finance.urls")),
+    path("network/", include("network.urls")),
     path("tasks/", include("tasks.urls")),
     path("__debug__/", include("debug_toolbar.urls")),
 ]

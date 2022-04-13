@@ -68,6 +68,16 @@ class Venue(models.Model):
         """
         return f"{self.name}\n{self.street_address}\n{self.city}\n{self.country}\n{self.postcode}"
 
+    @property
+    def csv(self) -> str:
+        """
+        Printable representation of the model.
+
+        Returns:
+            Printable version of the venue as a string
+        """
+        return f"{self.name},{self.street_address},{self.city},{self.country},{self.postcode}"
+
 
 class Station(models.Model):
     """Model for Station."""

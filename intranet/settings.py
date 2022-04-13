@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = str(
     os.getenv(
-        "DJANGO_SECRET_KEY",
+        "SECURITY_KEY",
         "django-insecure-w6d881036p!78s)**g^=9b%h0ujlgg(0ldpkt6jwz&r#s=6y!6",
     )
 )
@@ -45,11 +45,11 @@ else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.mysql",
-            "HOST": str(os.getenv("DJANGO_DATABASE_HOST")),
-            "PORT": str(os.getenv("DJANGO_DATABASE_PORT")),
-            "NAME": str(os.getenv("DJANGO_DATABASE")),
-            "USER": str(os.getenv("DJANGO_DATABASE_USER")),
-            "PASSWORD": str(os.getenv("DJANGO_DATABASE_PASSWORD")),
+            "HOST": str(os.getenv("DATABASE_HOST")),
+            "PORT": str(os.getenv("DATABASE_PORT")),
+            "NAME": str(os.getenv("DATABASE_NAME")),
+            "USER": str(os.getenv("DATABASE_USERNAME")),
+            "PASSWORD": str(os.getenv("DATABASE_PASSWORD")),
         },
     }
 
@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "documents.apps.DocumentsConfig",
     "events.apps.EventsConfig",
     "finance.apps.FinanceConfig",
+    "network.apps.NetworkConfig",
     "settings.apps.SettingsConfig",
     "tasks.apps.TasksConfig",
     "debug_toolbar",
