@@ -25,11 +25,12 @@ ALLOWED_HOSTS: list[str] = [
 
 INTERNAL_IPS: list[str] = []
 
+ALLOWED_HOSTS = [
+    "*",
+]
+
 if int(os.getenv("DJANGO_DEBUG", 0)) == 1:
     DEBUG = True
-    ALLOWED_HOSTS = [
-        "*",
-    ]
     mimetypes.add_type("application/javascript", ".js", True)
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + [
