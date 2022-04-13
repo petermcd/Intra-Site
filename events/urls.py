@@ -1,10 +1,11 @@
 """URL configuration for the Events application."""
 from django.urls import path
 
-from events import views
+from events.views import DetailView, IndexView, event_delete
 
 app_name = "events"
 urlpatterns = [
-    path("", views.IndexView.as_view(), name="index"),
-    path("<int:pk>/", views.DetailView.as_view(), name="details"),
+    path("", IndexView.as_view(), name="index"),
+    path("<int:pk>/", DetailView.as_view(), name="details"),
+    path("<int:pk>/delete", event_delete, name="event_delete"),
 ]

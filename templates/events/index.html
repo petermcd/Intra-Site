@@ -9,6 +9,7 @@
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
+          <th>Delete</th>
           <th>Title</th>
           <th>When</th>
           <th>Where</th>
@@ -18,7 +19,19 @@
       </thead>
       <tbody>
         {% for event in event_list %}
-          <tr>
+          <tr id="event-item-{{ event.pk }}">
+            <td>
+              <form
+                hx-target="#event-item-{{ event.pk }}"
+                hx-get="{{ event.pk }}/delete"
+                hx-confirm="Are you sure?"
+                hx-swap="outerHTML"
+              >
+                <button hx-trigger="click" type="submit">
+                  &#x274C;
+                </button>
+              </form>
+            </td>
             <td><a href='/events/{{ event.id }}/'>{{ event.name }}</a></td>
             <td>{{ event.start| date:'d/m/y' }}</td>
             <td>{% if event.venue %}{{ event.venue }}{% endif %}</td>
@@ -28,7 +41,7 @@
         {% endfor %}
         {% if event_list|length < 1 %}
           <tr>
-            <td colspan="5">No events</td>
+            <td colspan="6">No events</td>
           </tr>
         {% endif %}
       </tbody>

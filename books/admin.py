@@ -23,6 +23,10 @@ class BookAdmin(admin.ModelAdmin):
         "read",
     )
     ordering = ("title",)
+    search_fields = (
+        "description",
+        "title",
+    )
 
     class Media:
         """Class to add relevant javascript to the admin page."""

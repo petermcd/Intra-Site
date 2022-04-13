@@ -43,8 +43,8 @@ class InvestmentsAdmin(admin.ModelAdmin):
         "description",
         "current_value",
     )
-    search_fields = ("description",)
     ordering = ("organisation",)
+    search_fields = ("description",)
     date_hierarchy = "date_purchased"
     list_per_page = 20
 

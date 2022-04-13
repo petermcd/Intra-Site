@@ -1,4 +1,5 @@
 """Views for the Finance application."""
+from django.http import HttpResponse
 from django.utils.timezone import now
 from django.views import generic
 
@@ -54,6 +55,9 @@ class DetailView(generic.DetailView):
         context["to"] = Travel.objects.filter(
             for_event__exact=context["event"], direction__exact="To"
         )
+        context["during"] = Travel.objects.filter(
+            for_event__exact=context["event"], direction__exact="During"
+        )
         context["from"] = Travel.objects.filter(
             for_event__exact=context["event"], direction__exact="From"
         )
@@ -67,3 +71,20 @@ class DetailView(generic.DetailView):
             List of event objects
         """
         return Event.objects.all()
+
+
+def event_delete(request, pk: int):
+    """
+    View to handle deleting and event a task item.
+
+    Args:
+        request: Request object
+        pk: primary key for the task item being marked as complete
+
+    Returns:
+        Empty response with a 200 code
+    """
+    event_item = Event.objects.filter(pk=pk)
+    if len(event_item) == 1:
+        event_item[0].delete()
+    return HttpResponse(status=200)
