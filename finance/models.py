@@ -91,7 +91,7 @@ class Investments(models.Model):
     )
     date_purchased: models.DateField = models.DateField(auto_now_add=True)
     investment_document: models.FileField = models.FileField(
-        upload_to="documents/investments/", blank=True, null=True
+        upload_to="SiteDocuments/investments/", blank=True, null=True
     )
 
     @property
