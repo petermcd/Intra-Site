@@ -17,7 +17,10 @@ SECRET_KEY = str(
         "django-insecure-w6d881036p!78s)**g^=9b%h0ujlgg(0ldpkt6jwz&r#s=6y!6",
     )
 )
-DEBUG = False
+
+mimetypes.add_type("application/javascript", ".js", True)
+
+DEBUG = True
 
 ALLOWED_HOSTS: list[str] = [
     "intra.devfaq.com",
@@ -25,13 +28,11 @@ ALLOWED_HOSTS: list[str] = [
 
 INTERNAL_IPS: list[str] = []
 
-ALLOWED_HOSTS = [
-    "*",
-]
-
 if int(os.getenv("DJANGO_DEBUG", 0)) == 1:
     DEBUG = True
-    mimetypes.add_type("application/javascript", ".js", True)
+    ALLOWED_HOSTS = [
+        "*",
+    ]
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + [
         "127.0.0.1",
@@ -141,10 +142,8 @@ USE_I18N = True
 USE_TZ = True
 
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-
-STATIC_ROOT = os.path.join(BASE_DIR, STATIC_URL)
+STATIC_FILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
