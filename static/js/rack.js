@@ -1,5 +1,5 @@
 // jshint esversion: 6
-$.getJSON( "/networkv2/rack.json", function( data ) {
+$.getJSON( "/network/rack.json", function( data ) {
   process_data(data);
 });
 function process_data(shelf_data) {

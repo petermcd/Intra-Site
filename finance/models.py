@@ -8,8 +8,13 @@ class Organisation(models.Model):
     """Organisation model."""
 
     name: models.CharField = models.CharField(max_length=100)
-    description: models.TextField = models.TextField()
     url: models.URLField = models.URLField(max_length=200)
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Organisation"
+        verbose_name_plural = "Organisations"
 
     def __str__(self) -> str:
         """Return the name of the organisation."""
@@ -21,6 +26,12 @@ class BillType(models.Model):
 
     name: models.CharField = models.CharField(max_length=100)
 
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Bill type"
+        verbose_name_plural = "Bill types"
+
     def __str__(self) -> str:
         """Return the name of the bill type."""
         return str(self.name)
@@ -30,6 +41,12 @@ class PaidFrom(models.Model):
     """Paid from model."""
 
     name: models.CharField = models.CharField(max_length=100)
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Paid from"
+        verbose_name_plural = "Paid from"
 
     def __str__(self) -> str:
         """Return the name of the paid from."""
@@ -57,10 +74,15 @@ class Bill(models.Model):
     )
     variable_payment: models.BooleanField = models.BooleanField(default=False)
     start_date: models.DateTimeField = models.DateTimeField(blank=True, null=True)
-    notes: models.CharField = models.CharField(max_length=300, null=False, blank=False)
     paid_from: models.ForeignKey = models.ForeignKey(
         PaidFrom, on_delete=models.RESTRICT, null=False
     )
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Bill"
+        verbose_name_plural = "Bills"
 
     def __str__(self) -> str:
         """Return the name of the bill."""
@@ -93,6 +115,12 @@ class Investments(models.Model):
     investment_document: models.FileField = models.FileField(
         upload_to="SiteDocuments/investments/", blank=True, null=True
     )
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Investment"
+        verbose_name_plural = "Investments"
 
     @property
     def organisation_name(self) -> str:
@@ -133,7 +161,7 @@ def update_investment_value_log(sender, instance, **kwargs):
 @receiver(post_save, sender=Bill, dispatch_uid="update_bill_history")
 def update_bill_history_log(sender, instance, **kwargs):
     """Update the bill history value log."""
-    if instance.bill_type.name == "Loan":
+    if instance.bill_type.name.lower() in ("loan", "credit card"):
         new_value = BillHistory()
         new_value.bill = instance
         new_value.current_balance = instance.current_balance

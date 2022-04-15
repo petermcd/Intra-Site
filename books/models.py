@@ -41,6 +41,8 @@ class Author(models.Model):
         """Class to correct the order of the items in the admin panel."""
 
         ordering = ("name",)
+        verbose_name = "Author"
+        verbose_name_plural = "Authors"
 
 
 class Book(models.Model):
@@ -65,6 +67,13 @@ class Book(models.Model):
     )
     read: models.BooleanField = models.BooleanField(default=False)
 
+    class Meta:
+        """Meta class."""
+
+        ordering = ("title",)
+        verbose_name = "Book"
+        verbose_name_plural = "Books"
+
     def __str__(self) -> str:
         """
         Convert object to a string.
@@ -73,8 +82,3 @@ class Book(models.Model):
             String representation of the object
         """
         return str(self.title)
-
-    class Meta:
-        """Class to correct the order of the items in the admin panel."""
-
-        ordering = ("title",)

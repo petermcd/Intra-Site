@@ -42,7 +42,7 @@
               </form>
             </td>
             <td>
-              <label for="{{ payment.pk }}">{% if payment.bill_type.name == "Loan" %}
+              <label for="{{ payment.pk }}">{% if payment.bill_type.name == 'Loan' or payment.bill_type.name == 'Credit Card' %}
                 <a href="{{ payment.pk }}">{{ payment.name }}</a>
               {% else %}
                 {{ payment.name }}
