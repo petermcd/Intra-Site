@@ -49,6 +49,12 @@ class Venue(models.Model):
     country: models.CharField = models.CharField(max_length=255)
     postcode: models.CharField = models.CharField(max_length=255)
 
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Venue"
+        verbose_name_plural = "Venues"
+
     def __str__(self) -> str:
         """
         To string for Venue.
@@ -88,6 +94,12 @@ class Station(models.Model):
     country: models.CharField = models.CharField(max_length=255)
     postcode: models.CharField = models.CharField(max_length=255)
 
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Station"
+        verbose_name_plural = "Stations"
+
     def __str__(self) -> str:
         """
         To string for Station.
@@ -102,7 +114,7 @@ class Event(models.Model):
     """Model for an event."""
 
     name: models.CharField = models.CharField(max_length=255)
-    description: models.CharField = models.CharField(max_length=1000)
+    description: models.TextField = models.TextField(max_length=1000)
     venue: models.ForeignKey = models.ForeignKey(
         Venue, on_delete=models.RESTRICT, null=True
     )
@@ -111,7 +123,12 @@ class Event(models.Model):
     ticket_file: models.FileField = models.FileField(
         storage=OverwriteStorageName, null=True, blank=True, upload_to=ticket_file_name
     )
-    notes: models.TextField = models.TextField(max_length=500)
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Event"
+        verbose_name_plural = "Events"
 
     def __str__(self) -> str:
         """
@@ -155,6 +172,12 @@ class TravelType(models.Model):
     """Model for travel type."""
 
     name: models.CharField = models.CharField(max_length=255)
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Travel type"
+        verbose_name_plural = "Travel types"
 
     def __str__(self) -> str:
         """
@@ -203,6 +226,12 @@ class Travel(models.Model):
     )
     notes: models.TextField = models.TextField(max_length=500)
 
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Travel"
+        verbose_name_plural = "Travel"
+
     def __str__(self) -> str:
         """
         To string for Travel.
@@ -221,6 +250,12 @@ class Hotel(models.Model):
     city: models.CharField = models.CharField(max_length=255)
     country: models.CharField = models.CharField(max_length=255)
     postcode: models.CharField = models.CharField(max_length=255)
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Hotel"
+        verbose_name_plural = "Hotels"
 
     def __str__(self) -> str:
         """
@@ -249,6 +284,12 @@ class Accommodation(models.Model):
     )
     check_in: models.DateTimeField = models.DateTimeField(verbose_name="Check In")
     check_out: models.DateTimeField = models.DateTimeField(verbose_name="Check Out")
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Accommodation"
+        verbose_name_plural = "Accommodation"
 
     def __str__(self) -> str:
         """

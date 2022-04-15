@@ -8,6 +8,12 @@ class Application(models.Model):
     name: models.CharField = models.CharField(max_length=255, unique=True)
     description: models.TextField = models.TextField()
 
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Application"
+        verbose_name_plural = "Applications"
+
     def __str__(self):
         """Return the application name."""
         return self.name
@@ -17,8 +23,13 @@ class ConnectionType(models.Model):
     """Model for the connection type."""
 
     name: models.CharField = models.CharField(max_length=255, unique=True)
-    description: models.TextField = models.TextField()
     unique_port: models.BooleanField = models.BooleanField(default=False)
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Connection type"
+        verbose_name_plural = "Connection types"
 
     def __str__(self):
         """Return the connection type name."""
@@ -30,6 +41,12 @@ class Registrar(models.Model):
 
     name: models.CharField = models.CharField(max_length=255, unique=True)
     url: models.URLField = models.URLField()
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Registrar"
+        verbose_name_plural = "Registrars"
 
     def __str__(self):
         """Return the registrar name."""
@@ -44,6 +61,12 @@ class DomainName(models.Model):
         Registrar, on_delete=models.RESTRICT
     )
 
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Domain name"
+        verbose_name_plural = "Domain names"
+
     def __str__(self):
         """Return the domain name."""
         return self.name
@@ -54,6 +77,12 @@ class Vendor(models.Model):
 
     name: models.CharField = models.CharField(max_length=255, unique=True)
     url: models.URLField = models.URLField()
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Vendor"
+        verbose_name_plural = "Vendors"
 
     def __str__(self):
         """Return the vendor name."""
@@ -66,6 +95,12 @@ class Model(models.Model):
     name: models.CharField = models.CharField(max_length=255, unique=True)
     vendor: models.ForeignKey = models.ForeignKey(Vendor, on_delete=models.RESTRICT)
 
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Model"
+        verbose_name_plural = "Models"
+
     def __str__(self):
         """Return the model name."""
         return self.name
@@ -76,7 +111,12 @@ class DeviceType(models.Model):
 
     name: models.CharField = models.CharField(max_length=255, unique=True)
     image: models.CharField = models.CharField(max_length=20)
-    description: models.TextField = models.TextField()
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Device type"
+        verbose_name_plural = "Device types"
 
     def __str__(self):
         """Return the device type name."""
@@ -97,6 +137,12 @@ class OperatingSystem(models.Model):
     default_password: models.CharField = models.CharField(
         max_length=255, null=True, blank=True
     )
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Operating system"
+        verbose_name_plural = "Operating systems"
 
     def __str__(self):
         """Return the operating system name."""
@@ -156,6 +202,8 @@ class Device(models.Model):
                 "port",
             ),
         ]
+        verbose_name = "Device"
+        verbose_name_plural = "Devices"
 
 
 class Subdomain(models.Model):
@@ -163,7 +211,7 @@ class Subdomain(models.Model):
 
     name: models.CharField = models.CharField(max_length=255)
     domain_name: models.ForeignKey = models.ForeignKey(
-        DomainName, on_delete=models.CASCADE
+        DomainName, on_delete=models.RESTRICT
     )
 
     def __str__(self):
@@ -179,6 +227,8 @@ class Subdomain(models.Model):
                 "domain_name",
             ),
         ]
+        verbose_name = "Subdomain"
+        verbose_name_plural = "Subdomains"
 
 
 class Website(models.Model):
@@ -193,6 +243,20 @@ class Website(models.Model):
     path: models.CharField = models.CharField(max_length=255, null=True, blank=True)
     description: models.TextField = models.TextField(null=True, blank=True)
 
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Website"
+        verbose_name_plural = "Websites"
+
     def __str__(self):
         """Return the website name."""
         return self.name
+
+    @property
+    def full_url(self):
+        """Return the full url."""
+        port = f":{self.port}" if self.port else ""
+        path = self.path or ""
+        protocol = "https" if self.secure else "http"
+        return f"{protocol}://{self.subdomain.name}.{self.subdomain.domain_name.name}{port}{path}"

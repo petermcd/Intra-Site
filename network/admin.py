@@ -31,10 +31,7 @@ class ApplicationAdmin(admin.ModelAdmin):
 class ConnectionTypeAdmin(admin.ModelAdmin):
     """Configure the admin page."""
 
-    list_display = (
-        "name",
-        "description",
-    )
+    list_display = ("name",)
     ordering = ("name",)
 
 

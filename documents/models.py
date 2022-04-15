@@ -9,3 +9,9 @@ class Document(models.Model):
     description: models.CharField = models.CharField(max_length=255, blank=True)
     document: models.FileField = models.FileField(upload_to="SiteDocuments/documents/")
     uploaded_at: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Document"
+        verbose_name_plural = "Documents"

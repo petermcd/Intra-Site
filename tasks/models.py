@@ -11,3 +11,9 @@ class Task(models.Model):
     updated_at: models.DateTimeField = models.DateTimeField(auto_now=True)
     due_by: models.DateTimeField = models.DateTimeField()
     completed: models.BooleanField = models.BooleanField(default=False)
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Task"
+        verbose_name_plural = "Tasks"

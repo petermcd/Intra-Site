@@ -3,8 +3,43 @@ from typing import Any
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from django.views import generic
 
 from network.models import Application, Device, OperatingSystem, Website
+
+
+class WebsitesView(generic.ListView):
+    """View to see a list of websites."""
+
+    template_name = "network/websites.html"
+    context_object_name = "website_list"
+
+    def get_queryset(self):
+        """
+        Get investment objects to display in index view.
+
+        Return:
+            List of Investment objects
+        """
+        websites = Website.objects.all().order_by("name")
+        return list(websites)
+
+
+def website_delete(request, pk: int):
+    """
+    View to handle deleting a website.
+
+    Args:
+        request: Request object
+        pk: primary key for the website to delete
+
+    Returns:
+        Empty response with a 200 code
+    """
+    website_item = Website.objects.filter(pk=pk)
+    if len(website_item) == 1:
+        website_item.delete()
+    return HttpResponse(status=200)
 
 
 def index(request) -> HttpResponse:
@@ -14,12 +49,15 @@ def index(request) -> HttpResponse:
     Return:
         HttpResponse for the index page
     """
-    return render(request, "networkv2/index.html", {})
+    return render(request, "network/index.html", {})
 
 
 def inventory(request) -> HttpResponse:
     """
     Create and output the inventory list for Ansible.
+
+    Args:
+        request: HttpRequest object
 
     Return:
         Inventory list in ini format
@@ -30,31 +68,29 @@ def inventory(request) -> HttpResponse:
     applications = Application.objects.all()
 
     for operating_system in operating_systems:
-        if operating_system.name_clean not in groups:
-            groups[str(operating_system.name_clean)] = {
+        if operating_system.name not in groups:
+            groups[str(operating_system.name)] = {
                 "devices": set(),
                 "children": set(),
             }
-        if operating_system.parent and operating_system.parent.name_clean not in groups:
-            groups[operating_system.parent.name_clean] = {
+        if operating_system.parent and operating_system.parent.name not in groups:
+            groups[operating_system.parent.name] = {
                 "devices": set(),
                 "children": {operating_system.name},
             }
         elif operating_system.parent:
-            groups[operating_system.parent.name_clean]["children"].add(
-                operating_system.name_clean
-            )
+            groups[operating_system.parent.name]["children"].add(operating_system.name)
 
     for application in applications:
         if application.name_clean not in groups:
-            groups[str(application.name_clean)] = {
+            groups[str(application.name)] = {
                 "devices": set(),
                 "children": set(),
             }
         if application.parent and application.parent.name_clean not in groups:
-            groups[application.parent.name_clean] = {
+            groups[application.parent.name] = {
                 "devices": set(),
-                "children": {application.name_clean},
+                "children": {application.name},
             }
         elif application.parent:
             groups[application.parent.name_clean]["children"].add(
@@ -64,20 +100,15 @@ def inventory(request) -> HttpResponse:
     devices = Device.objects.all()
 
     for device in devices:
-        groups[device.operating_system.name_clean]["devices"].add(device)
-        for application in device.installed_applications.all():
-            groups[application.name_clean]["devices"].add(device)
+        groups[device.operating_system.name]["devices"].add(device)
+        for application in device.applications.all():
+            groups[application.name]["devices"].add(device)
 
     output = ""
     for group, value in groups.items():
         output += f"[{group}]\n"
         for device in value["devices"]:
-            extra_output = ""
-            if device.operating_system.username:
-                extra_output += f"\tansible_user={device.operating_system.username}"
-            if device.operating_system.password:
-                extra_output += f"\tansible_ssh_pass={device.operating_system.password}"
-            output += f"{device.hostname}\tansible_host={device.ip}{extra_output}\n"
+            output += f"{device.hostname}\tansible_host={device.ip_address}\n"
         output += "\n"
 
     for group, value in groups.items():
@@ -96,6 +127,9 @@ def network(request) -> JsonResponse:
     """
     Create and output the node map as a JSON response.
 
+    Args:
+        request: HttpRequest object
+
     Return:
         JsonResponse containing node map of the network
     """
@@ -108,8 +142,8 @@ def network(request) -> JsonResponse:
         device_data = {
             "id": f"d{device.pk}",
             "name": device.hostname,
-            "ip": str(device.ip),
-            "description": device.notes,
+            "ip": str(device.ip_address),
+            "description": device.description,
             "type": "device",
         }
         data["nodes"].append(device_data)
@@ -143,15 +177,21 @@ def rack(request) -> HttpResponse:
     """
     Handle the Rack page.
 
+    Args:
+        request: HttpRequest object
+
     Return:
         HttpResponse for the rack page
     """
-    return render(request, "networkv2/rack.html", {})
+    return render(request, "network/rack.html", {})
 
 
 def rack_json(request) -> JsonResponse:
     """
     Handle the Rack json.
+
+    Args:
+        request: HttpRequest object
 
     Return:
         JsonResponse for the rack json
@@ -170,12 +210,12 @@ def rack_json(request) -> JsonResponse:
             }
         device_details = {
             "hostname": device.hostname,
-            "image": "/static/networkv2/img/unknown.png",
-            "ip": device.ip,
-            "description": device.notes,
+            "image": "/static/img/unknown.png",
+            "ip": device.ip_address,
+            "description": device.description,
         }
         if device.device_type:
-            device_details["image"] = device.device_type.image
+            device_details["image"] = f"/static/img/{device.device_type.image}"
         rack_json_res[device.rack_shelf]["devices"][
             device.rack_shelf_position
         ] = device_details

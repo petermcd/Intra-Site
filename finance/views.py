@@ -60,6 +60,16 @@ class PaymentsView(generic.ListView):
         context["monthly_total"]: float = sum(
             payment.monthly_payments for payment in context["payment_list"]
         )
+        context["pot_total"]: float = sum(
+            payment.monthly_payments
+            for payment in context["payment_list"]
+            if payment.paid_from.name == "Pot"
+        )
+        context["main_balance_total"]: float = sum(
+            payment.monthly_payments
+            for payment in context["payment_list"]
+            if payment.paid_from.name == "Main Balance"
+        )
 
         return context
 

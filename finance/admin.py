@@ -55,10 +55,9 @@ class OrganisationAdmin(admin.ModelAdmin):
 
     list_display = (
         "name",
-        "description",
         "url",
     )
-    search_fields = ("name", "description")
+    search_fields = ("name",)
     ordering = ("name",)
     list_per_page = 20
 

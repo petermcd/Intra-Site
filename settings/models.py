@@ -9,6 +9,13 @@ class Setting(models.Model):
     value: models.CharField = models.CharField(max_length=255, blank=True, null=True)
     description: models.CharField = models.CharField(max_length=255)
 
+    class Meta:
+        """Meta class."""
+
+        ordering = ("name",)
+        verbose_name = "Setting"
+        verbose_name_plural = "Settings"
+
     def __str__(self) -> str:
         """
         Return the name of the setting.
@@ -26,8 +33,3 @@ class Setting(models.Model):
             Yes if configured otherwise No
         """
         return "Yes" if self.value else "No"
-
-    class Meta:
-        """Class to correct the order of the items in the admin panel."""
-
-        ordering = ("name",)
