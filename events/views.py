@@ -51,16 +51,16 @@ class DetailView(generic.DetailView):
         ].value
         context["accommodation"] = Accommodation.objects.filter(
             for_event__exact=context["event"]
-        )
+        ).order_by("check_in")
         context["to"] = Travel.objects.filter(
             for_event__exact=context["event"], direction__exact="To"
-        )
+        ).order_by("departure")
         context["during"] = Travel.objects.filter(
             for_event__exact=context["event"], direction__exact="During"
-        )
+        ).order_by("departure")
         context["from"] = Travel.objects.filter(
             for_event__exact=context["event"], direction__exact="From"
-        )
+        ).order_by("departure")
         return context
 
     def get_queryset(self):
