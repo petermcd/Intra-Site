@@ -6,6 +6,7 @@ class Application(models.Model):
     """Model for the application."""
 
     name: models.CharField = models.CharField(max_length=255, unique=True)
+    alias: models.CharField = models.CharField(max_length=255, blank=True)
     description: models.TextField = models.TextField()
 
     class Meta:
@@ -184,6 +185,7 @@ class Device(models.Model):
         null=True, blank=True
     )
     description: models.TextField = models.TextField(null=True, blank=True)
+    ansible_managed: models.BooleanField = models.BooleanField(default=True)
 
     def __str__(self):
         """Return the device name."""
@@ -213,6 +215,7 @@ class Subdomain(models.Model):
     domain_name: models.ForeignKey = models.ForeignKey(
         DomainName, on_delete=models.RESTRICT
     )
+    hosted_on: models.ForeignKey = models.ForeignKey(Device, on_delete=models.RESTRICT)
 
     def __str__(self):
         """Return the subdomain name."""

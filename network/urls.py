@@ -6,7 +6,8 @@ from network import views
 app_name = "network"
 urlpatterns = [
     path("", views.index, name="index"),
-    path("inventory.ini", views.inventory, name="inventory"),
+    path("hosts.ini", views.hosts_ini, name="hosts.ini"),
+    path("hosts.zip", views.hosts_zip, name="hosts.zip"),
     path("network.json", views.network, name="network"),
     path("rack/", views.rack, name="rack"),
     path("rack.json", views.rack_json, name="rack.json"),
