@@ -5,7 +5,13 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views import generic
 
-from network.models import Application, Device, OperatingSystem, Website
+from network.models import (
+    AdditionalAnsibleGroup,
+    Application,
+    Device,
+    OperatingSystem,
+    Website,
+)
 
 
 class WebsitesView(generic.ListView):
@@ -64,28 +70,54 @@ def hosts_ini(request) -> HttpResponse:
     """
     groups: dict[str, dict[str, set[str]]] = {}
 
-    operating_systems = OperatingSystem.objects.all()
+    additional_groups = AdditionalAnsibleGroup.objects.all().order_by("name")
 
-    for operating_system in operating_systems:
-        if operating_system.name not in groups:
-            groups[str(operating_system.name)] = {
+    for additional_group in additional_groups:
+        if additional_group.alias not in groups:
+            groups[str(additional_group.alias)] = {
                 "devices": set(),
                 "children": set(),
             }
-        if operating_system.parent and operating_system.parent.name not in groups:
-            groups[operating_system.parent.name] = {
-                "devices": set(),
-                "children": {operating_system.name},
-            }
-        elif operating_system.parent:
-            groups[operating_system.parent.name]["children"].add(operating_system.name)
+        if additional_group.parent:
+            if additional_group.parent.alias not in groups:
+                groups[additional_group.parent.alias] = {
+                    "devices": set(),
+                    "children": set(additional_group.parent.alias),
+                }
+            else:
+                groups[additional_group.parent.alias]["children"].add(
+                    additional_group.alias
+                )
 
-    devices = Device.objects.all().filter(
-        ansible_managed=True, ip_address__isnull=False
+    operating_systems = OperatingSystem.objects.all().order_by("name")
+
+    for operating_system in operating_systems:
+        if operating_system.alias not in groups:
+            groups[str(operating_system.alias)] = {
+                "devices": set(),
+                "children": set(),
+            }
+        if operating_system.parent:
+            if operating_system.parent.alias not in groups:
+                groups[operating_system.parent.alias] = {
+                    "devices": set(),
+                    "children": {operating_system.alias},
+                }
+            else:
+                groups[operating_system.parent.alias]["children"].add(
+                    operating_system.alias
+                )
+
+    devices = (
+        Device.objects.all()
+        .filter(ansible_managed=True, ip_address__isnull=False)
+        .order_by("hostname")
     )
 
     for device in devices:
-        groups[device.operating_system.name]["devices"].add(device)
+        groups[device.operating_system.alias]["devices"].add(device)
+        for additional_group in device.additional_ansible_groups.all().order_by("name"):
+            groups[additional_group.alias]["devices"].add(device)
 
     output = ""
     for group, value in groups.items():

@@ -2,6 +2,21 @@
 from django.db import models
 
 
+class AdditionalAnsibleGroup(models.Model):
+    """Model for Ansible group."""
+
+    name: models.CharField = models.CharField(max_length=255, unique=True)
+    alias: models.CharField = models.CharField(max_length=255, blank=True)
+    parent: models.ForeignKey = models.ForeignKey(
+        "self", on_delete=models.RESTRICT, null=True, blank=True
+    )
+    description: models.TextField = models.TextField()
+
+    def __str__(self):
+        """Return the name of the group."""
+        return self.name
+
+
 class Application(models.Model):
     """Model for the application."""
 
@@ -128,6 +143,7 @@ class OperatingSystem(models.Model):
     """Model for the operating system."""
 
     name: models.CharField = models.CharField(max_length=255, unique=True)
+    alias: models.CharField = models.CharField(max_length=255, blank=True)
     vendor: models.ForeignKey = models.ForeignKey(Vendor, on_delete=models.RESTRICT)
     parent: models.ForeignKey = models.ForeignKey(
         "self", on_delete=models.RESTRICT, null=True, blank=True
@@ -162,6 +178,9 @@ class Device(models.Model):
     )
     operating_system: models.ForeignKey = models.ForeignKey(
         OperatingSystem, on_delete=models.RESTRICT
+    )
+    additional_ansible_groups: models.ManyToManyField = models.ManyToManyField(
+        AdditionalAnsibleGroup
     )
     hardware_vendor: models.ForeignKey = models.ForeignKey(
         Vendor, on_delete=models.RESTRICT

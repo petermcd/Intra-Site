@@ -2,6 +2,7 @@
 from django.contrib import admin
 
 from network.models import (
+    AdditionalAnsibleGroup,
     Application,
     ConnectionType,
     Device,
@@ -14,6 +15,18 @@ from network.models import (
     Vendor,
     Website,
 )
+
+
+@admin.register(AdditionalAnsibleGroup)
+class AdditionalAnsibleGroupAdmin(admin.ModelAdmin):
+    """Additional Ansible Group admin."""
+
+    list_display = (
+        "name",
+        "description",
+        "parent",
+    )
+    ordering = ("name",)
 
 
 @admin.register(Application)
