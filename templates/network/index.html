@@ -1,0 +1,20 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Network{% endblock %}
+{% block content %}
+  <header>
+    <h1>Network</h1>
+  </header>
+  <div class="row">
+    <aside class="col-12 col-md-2" id="graph-item-details">
+      <h2>Details</h2>
+      Name: N/A<br />
+      Description: N/A<br />
+    </aside>
+    <div class="col-12 col-md-10" id="graph"></div>
+  </div>
+  <script src="//unpkg.com/three"></script>
+  <script src="//unpkg.com/three-spritetext"></script>
+  <script src="//unpkg.com/3d-force-graph"></script>
+  <script src="{% static 'js/graph.js' %}"></script>
+{% endblock %}

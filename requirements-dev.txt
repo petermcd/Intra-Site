@@ -1,0 +1,3 @@
+pywatchman
+ipython
+pre-commit

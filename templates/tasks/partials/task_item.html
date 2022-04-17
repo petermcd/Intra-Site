@@ -1,0 +1,16 @@
+<tr id="task-item-{{ task.pk }}">
+  <td>
+    <form
+      hx-target="#task-item-{{ task.pk }}"
+      hx-get="{{ task.pk }}/complete"
+      hx-confirm="Are you sure?"
+      hx-swap="outerHTML"
+    >
+      <button hx-trigger="click" type="submit">
+        &#x274C;
+      </button>
+    </form>
+  </td>
+  <td><label for="{{ task.pk }}">{{ task.description }}</label></td>
+  <td>{{ task.due_by }}</td>
+</tr>

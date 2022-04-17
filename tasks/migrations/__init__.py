@@ -1,0 +1,1 @@
+"""Standard init for migrations."""

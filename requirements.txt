@@ -1,0 +1,6 @@
+Django
+django_cleanup
+django-debug-toolbar
+mysqlclient
+python-dotenv
+requests
