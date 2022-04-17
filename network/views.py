@@ -52,7 +52,61 @@ def index(request) -> HttpResponse:
     return render(request, "network/index.html", {})
 
 
-def inventory(request) -> HttpResponse:
+def hosts_ini(request) -> HttpResponse:
+    """
+    Create and output the inventory list for Ansible.
+
+    Args:
+        request: HttpRequest object
+
+    Return:
+        Inventory list in ini format
+    """
+    groups: dict[str, dict[str, set[str]]] = {}
+
+    operating_systems = OperatingSystem.objects.all()
+
+    for operating_system in operating_systems:
+        if operating_system.name not in groups:
+            groups[str(operating_system.name)] = {
+                "devices": set(),
+                "children": set(),
+            }
+        if operating_system.parent and operating_system.parent.name not in groups:
+            groups[operating_system.parent.name] = {
+                "devices": set(),
+                "children": {operating_system.name},
+            }
+        elif operating_system.parent:
+            groups[operating_system.parent.name]["children"].add(operating_system.name)
+
+    devices = Device.objects.all().filter(
+        ansible_managed=True, ip_address__isnull=False
+    )
+
+    for device in devices:
+        groups[device.operating_system.name]["devices"].add(device)
+
+    output = ""
+    for group, value in groups.items():
+        output += f"[{group}]\n"
+        for device in value["devices"]:
+            output += f"{device.hostname}\tansible_host={device.ip_address}\n"
+        output += "\n"
+
+    for group, value in groups.items():
+        if len(value["children"]):
+            output += f"[{group}:children]\n"
+            for child in value["children"]:
+                output += f"{child}\n"
+        output += "\n"
+
+    output += "\n"
+
+    return HttpResponse(content_type="text/plain", content=output)
+
+
+def hosts_zip(request) -> HttpResponse:
     """
     Create and output the inventory list for Ansible.
 
@@ -82,22 +136,20 @@ def inventory(request) -> HttpResponse:
             groups[operating_system.parent.name]["children"].add(operating_system.name)
 
     for application in applications:
-        if application.name_clean not in groups:
+        if application not in groups:
             groups[str(application.name)] = {
                 "devices": set(),
                 "children": set(),
             }
-        if application.parent and application.parent.name_clean not in groups:
+        if application.parent and application.parent not in groups:
             groups[application.parent.name] = {
                 "devices": set(),
                 "children": {application.name},
             }
         elif application.parent:
-            groups[application.parent.name_clean]["children"].add(
-                application.name_clean
-            )
+            groups[application.parent]["children"].add(application)
 
-    devices = Device.objects.all()
+    devices = Device.objects.all().filter(ansible_managed=True)
 
     for device in devices:
         groups[device.operating_system.name]["devices"].add(device)
@@ -156,7 +208,7 @@ def network(request) -> JsonResponse:
         website_data = {
             "id": f"s{website.pk}",
             "name": website.name,
-            "ip": str(website.subdomain.hosted_on.ip),
+            "ip": str(website.subdomain.hosted_on.ip_address),
             "url": website.full_url,
             "description": website.description,
             "type": "site",
