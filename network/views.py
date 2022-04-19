@@ -124,7 +124,9 @@ def hosts(request) -> HttpResponse:
     for group, value in groups.items():
         output += f"[{group}]\n"
         for device in value["devices"]:
-            ansible_config = AnsibleDeviceConfiguration.objects.all().filter(for_device=device)
+            ansible_config = AnsibleDeviceConfiguration.objects.all().filter(
+                for_device=device
+            )
             output += f"{device.hostname}\tansible_host={device.ip_address}"
             for config in ansible_config:
                 output += f"\t{config.name}={config.value}"
