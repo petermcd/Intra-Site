@@ -176,6 +176,7 @@ class Device(models.Model):
     mac_address: models.CharField = models.CharField(
         max_length=255, null=True, blank=True, unique=True
     )
+
     operating_system: models.ForeignKey = models.ForeignKey(
         OperatingSystem, on_delete=models.RESTRICT
     )
@@ -225,6 +226,31 @@ class Device(models.Model):
         ]
         verbose_name = "Device"
         verbose_name_plural = "Devices"
+
+
+class AnsibleDeviceConfiguration(models.Model):
+    """Model for the Ansible device configuration."""
+
+    for_device: models.ForeignKey = models.ForeignKey(Device, on_delete=models.CASCADE)
+    name: models.CharField = models.CharField(max_length=255)
+    value: models.CharField = models.CharField(max_length=255)
+
+    class Meta:
+        """Meta class."""
+
+        unique_together = [
+            (
+                "for_device",
+                "name",
+            ),
+        ]
+        verbose_name = "Ansible device configuration"
+        verbose_name_plural = "Ansible device configurations"
+
+    def __str__(self):
+        """Return the Ansible device configuration name."""
+        return f"{self.for_device.hostname} - {self.name}"
+
 
 
 class Subdomain(models.Model):
