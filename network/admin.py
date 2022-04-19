@@ -3,6 +3,7 @@ from django.contrib import admin
 
 from network.models import (
     AdditionalAnsibleGroup,
+    AnsibleDeviceConfiguration,
     Application,
     ConnectionType,
     Device,
@@ -27,6 +28,17 @@ class AdditionalAnsibleGroupAdmin(admin.ModelAdmin):
         "parent",
     )
     ordering = ("name",)
+
+
+@admin.register(AnsibleDeviceConfiguration)
+class AnsibleDeviceConfigurationAdmin(admin.ModelAdmin):
+    """Additional Ansible Device Configuration admin."""
+
+    list_display = (
+        "for_device",
+        "name",
+    )
+    ordering = ("for_device",)
 
 
 @admin.register(Application)

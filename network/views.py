@@ -7,6 +7,7 @@ from django.views import generic
 
 from network.models import (
     AdditionalAnsibleGroup,
+    AnsibleDeviceConfiguration,
     Application,
     Device,
     OperatingSystem,
@@ -123,7 +124,11 @@ def hosts(request) -> HttpResponse:
     for group, value in groups.items():
         output += f"[{group}]\n"
         for device in value["devices"]:
-            output += f"{device.hostname}\tansible_host={device.ip_address}\n"
+            ansible_config = AnsibleDeviceConfiguration.objects.all().filter(for_device=device)
+            output += f"{device.hostname}\tansible_host={device.ip_address}"
+            for config in ansible_config:
+                output += f"\t{config.name}={config.value}"
+            output += "\n"
         output += "\n"
 
     for group, value in groups.items():
