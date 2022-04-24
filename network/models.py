@@ -252,7 +252,6 @@ class AnsibleDeviceConfiguration(models.Model):
         return f"{self.for_device.hostname} - {self.name}"
 
 
-
 class Subdomain(models.Model):
     """Model for the subdomain."""
 
