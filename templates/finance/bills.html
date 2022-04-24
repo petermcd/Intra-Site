@@ -21,9 +21,19 @@
         <tr>
           <td colspan="4"></td>
           <td colspan="1">
-            Monthly Total:
+            From Balance:<br />
+            From Pots:<br />
+            ----------------<br />
+            Monthly Total:<br />
+            ----------------
           </td>
-          <td>£{{ monthly_total }}</td>
+          <td>
+            £{{ from_balance_total }}<br />
+            £{{ from_pot_total }}<br />
+            ---------<br />
+            £{{ monthly_total }}<br />
+            ---------
+          </td>
         </tr>
       </tfoot>
       <tbody id="payment-list">

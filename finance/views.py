@@ -13,7 +13,7 @@ class FinanceView(generic.ListView):
     """View to see a list of Investments."""
 
     template_name = "finance/bills.html"
-    context_object_name = "investment_list"
+    context_object_name = "bill_list"
 
     def get_queryset(self):
         """
@@ -31,6 +31,21 @@ class InvestmentsView(generic.ListView):
 
     template_name = "finance/investments.html"
     context_object_name = "investment_list"
+
+    def get_context_data(self, **kwargs):
+        """
+        Obtain context data ready for output.
+
+        Return:
+            Context data ready for output in a template
+        """
+        context = super().get_context_data(**kwargs)
+        context["total"]: float = sum(
+            investment_item.current_value
+            for investment_item in context["investment_list"]
+        )
+
+        return context
 
     def get_queryset(self):
         """
@@ -60,15 +75,15 @@ class PaymentsView(generic.ListView):
         context["monthly_total"]: float = sum(
             payment.monthly_payments for payment in context["payment_list"]
         )
-        context["pot_total"]: float = sum(
-            payment.monthly_payments
-            for payment in context["payment_list"]
-            if payment.paid_from.name == "Pot"
+        context["from_pot_total"]: float = sum(
+            bill_item.monthly_payments
+            for bill_item in context["payment_list"]
+            if bill_item.paid_from.name == "Pot"
         )
-        context["main_balance_total"]: float = sum(
-            payment.monthly_payments
-            for payment in context["payment_list"]
-            if payment.paid_from.name == "Main Balance"
+        context["from_balance_total"]: float = sum(
+            bill_item.monthly_payments
+            for bill_item in context["payment_list"]
+            if bill_item.paid_from.name == "Main Balance"
         )
 
         return context
