@@ -190,9 +190,7 @@ class Device(models.Model):
     device_type: models.ForeignKey = models.ForeignKey(
         DeviceType, on_delete=models.RESTRICT
     )
-    applications: models.ManyToManyField = models.ManyToManyField(
-        Application, null=True, blank=True
-    )
+    applications: models.ManyToManyField = models.ManyToManyField(Application)
     connected_too: models.ForeignKey = models.ForeignKey(
         "self", on_delete=models.RESTRICT, null=True, blank=True
     )

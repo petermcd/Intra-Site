@@ -74,6 +74,7 @@ class Bill(models.Model):
     )
     variable_payment: models.BooleanField = models.BooleanField(default=False)
     start_date: models.DateTimeField = models.DateTimeField(blank=True, null=True)
+    last_payment: models.DateTimeField = models.DateTimeField(blank=True, null=True)
     paid_from: models.ForeignKey = models.ForeignKey(
         PaidFrom, on_delete=models.RESTRICT, null=False
     )
