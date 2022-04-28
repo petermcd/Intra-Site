@@ -95,8 +95,30 @@ class PaymentsView(generic.ListView):
         Return:
             List of Investment objects
         """
+        current_payments = []
         payments = Bill.objects.all().order_by("due_day")
-        return list(payments)
+        current_year = datetime.now().year
+        current_month = datetime.now().month
+        for payment in payments:
+            payment_start_year = payment.start_date.year
+            payment_start_month = payment.start_date.month
+            if (
+                payment_start_year > current_year
+                or payment_start_year == current_year
+                and payment_start_month > current_month
+            ):
+                continue
+            if payment.last_payment:
+                payment_end_year = payment.last_payment.year
+                payment_end_month = payment.last_payment.month
+                if (
+                    current_year > payment_end_year
+                    or current_year == payment_end_year
+                    and current_month > payment_end_month
+                ):
+                    continue
+            current_payments.append(payment)
+        return current_payments
 
 
 def bill(request, pk: int):
