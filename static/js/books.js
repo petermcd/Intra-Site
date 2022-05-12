@@ -11,6 +11,16 @@ window.addEventListener("load", function() {
     })(django.jQuery);
 });
 
+window.addEventListener("load", function() {
+    (function ($) {
+        django.jQuery('#id_isbn13').after('<button id="isbn13_lookup">Fetch</button>');
+        django.jQuery('#isbn13_lookup').click(function (event) {
+            event.preventDefault();
+            isbn13_lookup();
+        });
+    })(django.jQuery);
+});
+
 function isbn10_lookup() {
     let url = '/books/isbn/' + django.jQuery('#id_isbn10').val();
     remove_lookup_message();
@@ -22,12 +32,33 @@ function isbn10_lookup() {
             if (data['success'] === true && data['records'] > 0) {
                 populate_form(data['data'][0]);
             } else {
-                report_lookup_failure('No book found');
+                report_lookup_failure('No book found', '#isbn10_lookup');
             }
         }
     ).fail(
         function () {
-            report_lookup_failure('No book found');
+            report_lookup_failure('No book found', '#isbn10_lookup');
+        }
+    );
+}
+
+function isbn13_lookup() {
+    let url = '/books/isbn/' + django.jQuery('#id_isbn13').val();
+    remove_lookup_message();
+    django.jQuery.ajax({
+        url: url,
+        context: document.body
+    }).done(
+        function (data) {
+            if (data['success'] === true && data['records'] > 0) {
+                populate_form(data['data'][0]);
+            } else {
+                report_lookup_failure('No book found', '#isbn13_lookup');
+            }
+        }
+    ).fail(
+        function () {
+            report_lookup_failure('No book found', '#isbn13_lookup');
         }
     );
 }
@@ -55,8 +86,8 @@ function option_exists($value) {
     return django.jQuery('#id_authors option[value=' + $value + ']').length > 0;
 }
 
-function report_lookup_failure($message) {
-    django.jQuery('#isbn10_lookup').after('<p style="color: red" id="lookup_failure">' + $message + '</p>');
+function report_lookup_failure($message, $element) {
+    django.jQuery($element).after('<p style="color: red" id="lookup_failure">' + $message + '</p>');
 }
 
 function remove_lookup_message() {
@@ -70,3 +101,16 @@ String.prototype.htmlEscape = function () {
     txt.data = this;
     return span.innerHTML;
 };
+
+window.addEventListener("load", function() {
+    (function ($) {
+        django.jQuery('#book_form').before('<div class="isbn-scan"><div id="qr-reader" style="width: 600px"></div></div>');
+        var html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
+        function onScanSuccess(decodedText, _decodedResult) {
+            django.jQuery('#id_isbn13').val(decodedText);
+            html5QrcodeScanner.clear();
+            isbn13_lookup();
+        }
+        html5QrcodeScanner.render(onScanSuccess);
+    })(django.jQuery);
+});
