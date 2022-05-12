@@ -31,4 +31,7 @@ class BookAdmin(admin.ModelAdmin):
     class Media:
         """Class to add relevant javascript to the admin page."""
 
-        js = ("/static/js/books.js",)
+        js = (
+            "/static/js/books.js",
+            "https://unpkg.com/html5-qrcode@2.0.9/dist/html5-qrcode.min.js",
+        )

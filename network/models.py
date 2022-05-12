@@ -176,12 +176,12 @@ class Device(models.Model):
     mac_address: models.CharField = models.CharField(
         max_length=255, null=True, blank=True, unique=True
     )
-
     operating_system: models.ForeignKey = models.ForeignKey(
         OperatingSystem, on_delete=models.RESTRICT
     )
     additional_ansible_groups: models.ManyToManyField = models.ManyToManyField(
-        AdditionalAnsibleGroup
+        AdditionalAnsibleGroup,
+        blank=True,
     )
     hardware_vendor: models.ForeignKey = models.ForeignKey(
         Vendor, on_delete=models.RESTRICT
@@ -190,7 +190,9 @@ class Device(models.Model):
     device_type: models.ForeignKey = models.ForeignKey(
         DeviceType, on_delete=models.RESTRICT
     )
-    applications: models.ManyToManyField = models.ManyToManyField(Application)
+    applications: models.ManyToManyField = models.ManyToManyField(
+        Application, blank=True
+    )
     connected_too: models.ForeignKey = models.ForeignKey(
         "self", on_delete=models.RESTRICT, null=True, blank=True
     )

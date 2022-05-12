@@ -93,27 +93,30 @@ def get_book_details(request, search_type: str, search: str):
                 "subtitle": item_details.get("subtitle", ""),
                 "authors": [],
                 "published": item_details["publishedDate"],
-                "description": item_details["description"],
-                "pages": item_details["pageCount"],
+                "description": item_details.get("description", ""),
+                "pages": item_details.get("pageCount", 0),
                 "publisher": item_details.get("publisher", ""),
             }
 
-            for author in item_details["authors"]:
-                author_res = Author.objects.filter(name__exact=author)
-                if len(author_res) == 0:
-                    new_author = Author(name=author)
-                    new_author.save()
+            try:
+                for author in item_details["authors"]:
+                    author_res = Author.objects.filter(name__exact=author)
+                    if len(author_res) == 0:
+                        new_author = Author(name=author)
+                        new_author.save()
+                        author_dict = {
+                            "id": new_author.pk,
+                            "name": author,
+                        }
+                        record["authors"].append(author_dict)
+                        break
                     author_dict = {
-                        "id": new_author.pk,
-                        "name": author,
+                        "id": author_res[0].pk,
+                        "name": author_res[0].name,
                     }
                     record["authors"].append(author_dict)
-                    break
-                author_dict = {
-                    "id": author_res[0].pk,
-                    "name": author_res[0].name,
-                }
-                record["authors"].append(author_dict)
+            except KeyError:
+                record["authors"] = []
             try:
                 record["thumbnail"] = item_details["imageLinks"]["thumbnail"]
             except KeyError:
