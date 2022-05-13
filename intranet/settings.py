@@ -26,6 +26,10 @@ ALLOWED_HOSTS: list[str] = [
     "intra.devfaq.com",
 ]
 
+CSRF_TRUSTED_ORIGINS: list[str] = [
+    "https://intra.devfaq.com",
+]
+
 INTERNAL_IPS: list[str] = []
 
 if int(os.getenv("DJANGO_DEBUG", 0)) == 1:
