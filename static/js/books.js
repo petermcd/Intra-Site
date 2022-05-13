@@ -69,7 +69,6 @@ function populate_form(form_data) {
     django.jQuery('#id_publisher').val(form_data['publisher']);
     django.jQuery('#id_published').val(form_data['published']);
     django.jQuery('#id_description').val(form_data['description']);
-    django.jQuery('#id_pages').val(form_data['pages']);
     django.jQuery('#id_thumbnail').val(form_data['thumbnail']);
     django.jQuery('#id_isbn10').val(form_data['isbn10']);
     django.jQuery('#id_isbn13').val(form_data['isbn13']);
