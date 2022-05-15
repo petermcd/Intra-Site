@@ -26,7 +26,7 @@ def content_file_name(instance, filename) -> str:
 class Author(models.Model):
     """Model for Author."""
 
-    name: models.CharField = models.CharField(max_length=255)
+    name: models.CharField = models.CharField(max_length=255, unique=True)
 
     def __str__(self) -> str:
         """
