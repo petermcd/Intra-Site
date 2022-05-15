@@ -25,7 +25,7 @@ class IndexView(generic.ListView):
             List of book objects
         """
         term = self.request.GET.get("q")
-        objects = Book.objects.all().order_by("title")
+        objects = Book.objects.all().order_by("title").filter(read=False)
         if term:
             objects = Book.objects.filter(title__icontains=term).order_by("title")
         return objects
