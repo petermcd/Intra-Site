@@ -58,7 +58,6 @@ class Book(models.Model):
     isbn10: models.CharField = models.CharField(max_length=10, unique=True)
     isbn13: models.CharField = models.CharField(max_length=13, unique=True)
     description: models.CharField = models.CharField(max_length=5000)
-    pages: models.IntegerField = models.IntegerField()
     thumbnail: models.URLField = models.URLField(
         max_length=255, default=None, blank=True
     )

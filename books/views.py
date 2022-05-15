@@ -47,7 +47,7 @@ class DetailView(generic.DetailView):
     """View implementation for Book details."""
 
     model = Book
-    template_name = "books/detailS.html"
+    template_name = "books/details.html"
 
     def get_queryset(self):
         """
