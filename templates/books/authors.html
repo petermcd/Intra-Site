@@ -1,0 +1,48 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Authors{% endblock %}
+{% block content %}
+  <header>
+    <h1>Authors</h1>
+  </header>
+  <section id="table_list">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Author</th>
+          <th>Books</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for author in author_list %}
+          <tr>
+            <td>{{ author.name }}</td>
+            <td><ul>{% for book in author.book_set.all %}
+              <li><a href='/books/{{ book.id }}/'>{{ book.title }}</a></li>
+            {% endfor %}</ul></td>
+          </tr>
+        {% endfor %}
+        {% if author_list|length < 1 %}
+          <tr>
+            <td colspan="3">No authors</td>
+          </tr>
+        {% endif %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2">
+            {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}{{ search_term }}">&lt;</a>&nbsp;
+              <a href="?page={{ page_obj.previous_page_number }}{{ search_term }}">{{ page_obj.previous_page_number }}</a>&nbsp;
+            {% endif %}
+            {{ page_obj.number }}&nbsp;
+            {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}{{ search_term }}">{{ page_obj.next_page_number }}</a>&nbsp;
+              <a href="?page={{ page_obj.next_page_number }}{{ search_term }}">&gt;</a>
+            {% endif %}
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </section>
+{% endblock %}

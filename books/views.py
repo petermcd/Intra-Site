@@ -10,6 +10,39 @@ from books.models import Author, Book
 from settings.models import Setting
 
 
+class AuthorIndexView(generic.ListView):
+    """View implementation for Author list."""
+
+    paginate_by = 10
+    template_name = "books/authors.html"
+    context_object_name = "author_list"
+
+    def get_queryset(self):
+        """
+        Get author objects to display in index view matching the optional get query.
+
+        Return:
+            List of author objects
+        """
+        term = self.request.GET.get("q")
+        objects = Author.objects.all().order_by("name")
+        if term:
+            objects = Author.objects.filter(title__icontains=term).order_by("title")
+        return objects
+
+    def get_context_data(self, **kwargs):
+        """
+        Retrieve context data ready for output.
+
+        Return:
+            Context data ready for output in a template
+        """
+        term = f'&q={self.request.GET["q"]}' if "q" in self.request.GET else ""
+        context = super().get_context_data(**kwargs)
+        context["search_term"] = term
+        return context
+
+
 class IndexView(generic.ListView):
     """View implementation for Book list."""
 
