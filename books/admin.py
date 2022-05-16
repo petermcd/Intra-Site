@@ -10,6 +10,7 @@ class AuthorAdmin(admin.ModelAdmin):
 
     list_display = ("name",)
     ordering = ("name",)
+    search_fields = ("name",)
 
 
 @admin.register(Book)

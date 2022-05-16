@@ -14,3 +14,7 @@ class SettingAdmin(admin.ModelAdmin):
         "configured",
     )
     ordering = ("name",)
+    search_fields = (
+        "name",
+        "description",
+    )
