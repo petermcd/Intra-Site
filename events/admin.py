@@ -53,6 +53,11 @@ class HotelAdmin(admin.ModelAdmin):
         "country",
     )
     ordering = ("name",)
+    search_fields = (
+        "name",
+        "city",
+        "country",
+    )
 
 
 @admin.register(Station)
@@ -65,6 +70,11 @@ class StationAdmin(admin.ModelAdmin):
         "country",
     )
     ordering = ("name",)
+    search_fields = (
+        "name",
+        "city",
+        "country",
+    )
 
 
 @admin.register(Travel)
@@ -87,6 +97,7 @@ class TravelTypeAdmin(admin.ModelAdmin):
 
     list_display = ("name",)
     ordering = ("name",)
+    search_fields = ("name",)
 
 
 @admin.register(Venue)
@@ -99,3 +110,8 @@ class VenueAdmin(admin.ModelAdmin):
         "country",
     )
     ordering = ("name",)
+    search_fields = (
+        "name",
+        "city",
+        "country",
+    )

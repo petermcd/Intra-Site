@@ -50,6 +50,10 @@ class ApplicationAdmin(admin.ModelAdmin):
         "description",
     )
     ordering = ("name",)
+    search_fields = (
+        "name",
+        "description",
+    )
 
 
 @admin.register(ConnectionType)
@@ -58,6 +62,7 @@ class ConnectionTypeAdmin(admin.ModelAdmin):
 
     list_display = ("name",)
     ordering = ("name",)
+    search_fields = ("name",)
 
 
 @admin.register(Registrar)
@@ -69,6 +74,7 @@ class RegistrarAdmin(admin.ModelAdmin):
         "url",
     )
     ordering = ("name",)
+    search_fields = ("name",)
 
 
 @admin.register(DomainName)
@@ -80,6 +86,7 @@ class DomainNameAdmin(admin.ModelAdmin):
         "registrar",
     )
     ordering = ("name",)
+    search_fields = ("name",)
 
 
 @admin.register(Vendor)
@@ -91,6 +98,7 @@ class VendorAdmin(admin.ModelAdmin):
         "url",
     )
     ordering = ("name",)
+    search_fields = ("name",)
 
 
 @admin.register(Model)
@@ -102,6 +110,7 @@ class ModelAdmin(admin.ModelAdmin):
         "vendor",
     )
     ordering = ("name",)
+    search_fields = ("name",)
 
 
 @admin.register(DeviceType)
@@ -110,6 +119,7 @@ class DeviceTypeAdmin(admin.ModelAdmin):
 
     list_display = ("name",)
     ordering = ("name",)
+    search_fields = ("name",)
 
 
 @admin.register(OperatingSystem)
@@ -118,6 +128,7 @@ class OperatingSystemAdmin(admin.ModelAdmin):
 
     list_display = ("name", "vendor")
     ordering = ("name",)
+    search_fields = ("name",)
 
 
 @admin.register(Device)
@@ -130,6 +141,7 @@ class DeviceAdmin(admin.ModelAdmin):
         "device_type",
     )
     ordering = ("hostname",)
+    search_fields = ("hostname",)
 
 
 @admin.register(Subdomain)
@@ -141,6 +153,7 @@ class SubdomainAdmin(admin.ModelAdmin):
         "domain_name",
     )
     ordering = ("name",)
+    search_fields = ("name",)
 
 
 @admin.register(Website)
@@ -152,3 +165,4 @@ class WebsiteAdmin(admin.ModelAdmin):
         "subdomain",
     )
     ordering = ("name",)
+    search_fields = ("name",)
