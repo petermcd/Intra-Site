@@ -104,7 +104,7 @@ String.prototype.htmlEscape = function () {
 window.addEventListener("load", function() {
     (function ($) {
         django.jQuery('#book_form').before('<div class="isbn-scan"><div id="qr-reader" style="width: 600px"></div></div>');
-        var html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
+        let html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
         function onScanSuccess(decodedText, _decodedResult) {
             django.jQuery('#id_isbn13').val(decodedText);
             html5QrcodeScanner.clear();

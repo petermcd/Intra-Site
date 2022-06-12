@@ -1,8 +1,8 @@
 window.onload = function() {
 
-	var dataPoints = [];
+	let dataPoints = [];
 
-	var options =  {
+	let options =  {
 		zoomEnabled: true,
 		animationEnabled: true,
 		theme: "light2",
@@ -24,9 +24,9 @@ window.onload = function() {
 	};
 
 	function addData(data) {
-		for (var i = 0; i < data['data'].length; i++) {
+		for (let i = 0; i < data['data'].length; i++) {
 			dataPoints.push({
-				x: new Date(data['data'][i].date),
+				x: new Date(data['data'][i].data),
 				y: Number(data['data'][i].value)
 			});
 		}

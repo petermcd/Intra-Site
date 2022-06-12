@@ -313,3 +313,28 @@ def rack_json(request) -> JsonResponse:
         if device.rack_shelf_position > rack_json_res[device.rack_shelf]["width"]:
             rack_json_res[device.rack_shelf]["width"] = device.rack_shelf_position
     return JsonResponse(rack_json_res)
+
+
+def websites_json(request) -> JsonResponse:
+    """
+    Handle the Websites json.
+
+    Args:
+        request: HttpRequest object
+
+    Return:
+        JsonResponse for the websites json
+    """
+    websites: dict[str, list[dict[str, str]]] = {"websites": []}
+
+    websites_all = Website.objects.all().order_by("name")
+
+    for website in websites_all:
+        website_details = {
+            "name": website.name,
+            "url": website.full_url,
+        }
+        websites["websites"].append(website_details)
+    response = JsonResponse(websites)
+    response["Access-Control-Allow-Origin"] = "*"
+    return response

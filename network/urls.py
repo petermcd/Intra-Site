@@ -12,5 +12,6 @@ urlpatterns = [
     path("rack/", views.rack, name="rack"),
     path("rack.json", views.rack_json, name="rack.json"),
     path("websites/", views.WebsitesView.as_view(), name="websites"),
+    path("websites/websites.json", views.websites_json, name="websites_json"),
     path("websites/<int:pk>/delete", views.website_delete, name="website_delete"),
 ]

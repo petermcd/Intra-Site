@@ -2,7 +2,7 @@
 from django.http import FileResponse
 
 
-def DownloadView(request, directory="", filename="") -> FileResponse:
+def download_view(request, directory="", filename="") -> FileResponse:
     """
     Facilitate downloads.
 
