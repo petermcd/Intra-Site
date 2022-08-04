@@ -11,10 +11,17 @@
       </button>
     </td>
     <td>
-      <input name="task-text" type="text" />
+      <input name="task-title" type="text" />
     </td>
     <td>
       <input name="task-due-by" type="text" data-field="datetime" readonly>
+    </td>
+    <td>
+      <select name="task-frequency">
+        {% for frequency in task_frequencies %}
+          <option value="{{ frequency.pk }}">{{ frequency.title }}</option>
+        {% endfor %}
+      </select>
     </td>
   </form>
 </tr>
