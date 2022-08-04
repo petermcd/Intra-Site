@@ -12,6 +12,7 @@
           <th>Mark As Done</th>
           <th>Item</th>
           <th>Due By</th>
+          <th>Task Frequency</th>
         </tr>
       </thead>
       <tfoot>
@@ -42,13 +43,14 @@
                 </button>
               </form>
             </td>
-            <td><label for="{{ task.pk }}">{{ task.description }}</label></td>
+            <td><label for="{{ task.pk }}">{{ task.title }}</label></td>
             <td>{{ task.due_by }}</td>
+            <td>{{ task.frequency }}</td>
           </tr>
         {% endfor %}
         {% if task_list|length < 1 %}
           <tr>
-            <td colspan="3">No tasks</td>
+            <td colspan="4">No tasks</td>
           </tr>
         {% endif %}
       </tbody>
