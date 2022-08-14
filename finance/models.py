@@ -147,6 +147,27 @@ class InvestmentValue(models.Model):
         return f"{self.investment.name} ({self.value})"
 
 
+class Monzo(models.Model):
+    """Model to store Monzo details."""
+
+    access_token: models.CharField = models.CharField(
+        max_length=250, blank=True, null=True
+    )
+    client_id: models.CharField = models.CharField(
+        max_length=50, blank=False, null=False
+    )
+    client_secret: models.CharField = models.CharField(
+        max_length=100, blank=False, null=False
+    )
+    expiry: models.IntegerField = models.IntegerField(blank=True, null=True)
+    last_fetched_datetime: models.DateTimeField = models.DateTimeField(
+        blank=True, null=True
+    )
+    refresh_token: models.CharField = models.CharField(
+        max_length=250, blank=True, null=True
+    )
+
+
 # Signals
 
 

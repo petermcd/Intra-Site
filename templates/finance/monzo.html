@@ -1,0 +1,37 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Index{% endblock %}
+{% block content %}
+  <header>
+    <h1>Monzo Configuration</h1>
+  </header>
+  {% if user.is_authenticated %}
+    <section id='monzo_configuration'>
+      {% if success_message %}
+        <p>{{ success_message }}</p>
+      {% else %}
+        <p id='warning'>WARNING: Any previous configuration will be lost.</p>
+        <p>Please remember to set the redirect URL to {{ redirect_url }}</p>
+        <form method="post">
+          {% if error %}
+            <p id='warning'>{{ error }}</p>
+          {% endif %}
+          {% csrf_token %}
+          <p>
+            <label for='client_id'>Client ID</label>:
+            <input type='text' name='client_id' id='client_id' autofocus autocapitalize='none' maxlength='50' required />
+          </p>
+          <p>
+            <label for='client_secret'>Client Secret</label>:
+            <input type='text' name='client_secret' id='client_secret' autocapitalize='none' maxlength='100' required />
+          </p>
+          <button type="submit">Configure</button>
+        </form>
+      {% endif %}
+    </section>
+  {% else %}
+    <section id='monzo_configuration'>
+      <p>To view this page please <a href='/accounts/login/'>Login</a></p>
+    </section>
+  {% endif %}
+{% endblock %}

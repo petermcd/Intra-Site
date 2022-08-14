@@ -6,45 +6,49 @@
     <h1>Events</h1>
   </header>
   <section id="table_list">
-    <table class="table table-striped table-bordered">
-      <thead>
-        <tr>
-          <th>Delete</th>
-          <th>Title</th>
-          <th>When</th>
-          <th>Where</th>
-          <th>Travel Arranged</th>
-          <th>Accommodation Arranged</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for event in event_list %}
-          <tr id="event-item-{{ event.pk }}">
-            <td>
-              <form
-                hx-target="#event-item-{{ event.pk }}"
-                hx-get="{{ event.pk }}/delete"
-                hx-confirm="Are you sure?"
-                hx-swap="outerHTML"
-              >
-                <button hx-trigger="click" type="submit">
-                  &#x274C;
-                </button>
-              </form>
-            </td>
-            <td><a href='/events/{{ event.id }}/'>{{ event.name }}</a></td>
-            <td>{{ event.start| date:'d/m/y' }}</td>
-            <td>{% if event.venue %}{{ event.venue }}{% endif %}</td>
-            <td>{{ event.travel_arranged }}</td>
-            <td>{{ event.accommodation_arranged }}</td>
-          </tr>
-        {% endfor %}
-        {% if event_list|length < 1 %}
+    {% if user.is_authenticated %}
+      <table class="table table-striped table-bordered">
+        <thead>
           <tr>
-            <td colspan="6">No events</td>
+            <th>Delete</th>
+            <th>Title</th>
+            <th>When</th>
+            <th>Where</th>
+            <th>Travel Arranged</th>
+            <th>Accommodation Arranged</th>
           </tr>
-        {% endif %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for event in event_list %}
+            <tr id="event-item-{{ event.pk }}">
+              <td>
+                <form
+                  hx-target="#event-item-{{ event.pk }}"
+                  hx-get="{{ event.pk }}/delete"
+                  hx-confirm="Are you sure?"
+                  hx-swap="outerHTML"
+                >
+                  <button hx-trigger="click" type="submit">
+                    &#x274C;
+                  </button>
+                </form>
+              </td>
+              <td><a href='/events/{{ event.id }}/'>{{ event.name }}</a></td>
+              <td>{{ event.start| date:'d/m/y' }}</td>
+              <td>{% if event.venue %}{{ event.venue }}{% endif %}</td>
+              <td>{{ event.travel_arranged }}</td>
+              <td>{{ event.accommodation_arranged }}</td>
+            </tr>
+          {% endfor %}
+          {% if event_list|length < 1 %}
+            <tr>
+              <td colspan="6">No events</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>To view this page please <a href='/accounts/login/'>Login</a></p>
+    {% endif %}
   </section>
 {% endblock %}

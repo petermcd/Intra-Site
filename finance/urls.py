@@ -4,6 +4,7 @@ from django.urls import path
 from finance.views import (
     FinanceView,
     InvestmentsView,
+    Monzo,
     PaymentsView,
     bill,
     bill_delete,
@@ -28,6 +29,7 @@ urlpatterns = [
         name="investments_json",
     ),
     path("investments/<int:pk>/delete", investment_delete, name="investments_delete"),
+    path("monzo/", Monzo.as_view(), name="configure_monzo"),
     path("payments/", PaymentsView.as_view(), name="payments"),
     path("payments/<int:pk>/", bill, name="bill"),
     path("payments/<int:pk>/<str:period>.json", bill_history, name="bill_json"),

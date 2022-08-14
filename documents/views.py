@@ -33,6 +33,8 @@ def document_delete(request, pk: int):
     Returns:
         Empty response with a 204 code
     """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     document_item = Document.objects.filter(pk=pk)
     if len(document_item) == 1:
         document_item.delete()

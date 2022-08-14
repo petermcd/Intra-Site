@@ -8,6 +8,7 @@ from intranet.views import IndexView
 
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
+    path("accounts/", include("django.contrib.auth.urls")),
     path("admin/", admin.site.urls),
     path("books/", include("books.urls")),
     path("documents/", include("documents.urls")),
