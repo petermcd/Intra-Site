@@ -8,6 +8,7 @@ from django.views import generic
 from monzo.authentication import Authentication
 from monzo.exceptions import MonzoAuthenticationError, MonzoServerError
 
+from finance.automation import MonzoAutomation
 from finance.models import Bill, BillHistory, Investments, InvestmentValue, Organisation
 from finance.utilities import DjangoHandler, create_redirect_url
 
@@ -124,6 +125,29 @@ class Monzo(generic.TemplateView):
         else:
             context["error"] = "please complete both Client ID and Client Secret"
 
+        return render(
+            request=request, template_name=self.template_name, context=context
+        )
+
+
+class MonzoAutomationView(generic.TemplateView):
+    """View to trigger Monzo automation."""
+
+    template_name = "finance/monzo_automation.html"
+
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        """
+        Handle standard get request for the Monzo automation.
+
+        Args:
+            request: Request object
+
+        Returns:
+            Rendered request
+        """
+        automation = MonzoAutomation()
+
+        context = {"message": automation.process()}
         return render(
             request=request, template_name=self.template_name, context=context
         )

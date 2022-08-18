@@ -168,6 +168,57 @@ class Monzo(models.Model):
     )
 
 
+class MonzoMerchant(models.Model):
+    """Model to store Monzo transaction merchants."""
+
+    merchant_id: models.CharField = models.CharField(
+        primary_key=True,
+        max_length=50,
+        blank=False,
+        null=False,
+    )
+    name: models.CharField = models.CharField(
+        max_length=150,
+        blank=False,
+        null=False,
+    )
+
+
+class MonzoTransaction(models.Model):
+    """Model to store Monzo transactions."""
+
+    transaction_id: models.CharField = models.CharField(
+        primary_key=True,
+        max_length=50,
+        blank=False,
+        null=False,
+    )
+    currency: models.CharField = models.CharField(max_length=5, blank=False, null=False)
+    value: models.IntegerField = models.IntegerField(blank=False, null=False)
+    created: models.DateTimeField = models.DateTimeField(
+        auto_created=False,
+        auto_now=False,
+        auto_now_add=False,
+        blank=False,
+        null=False,
+    )
+    description: models.CharField = models.CharField(
+        max_length=250, blank=False, null=False
+    )
+    merchant: models.ForeignKey = models.ForeignKey(
+        to=MonzoMerchant,
+        on_delete=models.RESTRICT,
+        blank=False,
+        null=False,
+    )
+    has_receipt: models.BooleanField = models.BooleanField(
+        default=False, blank=False, null=False
+    )
+    for_bill: models.ForeignKey = models.ForeignKey(
+        to=Bill, on_delete=models.CASCADE, blank=True, null=True
+    )
+
+
 # Signals
 
 

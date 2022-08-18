@@ -1,5 +1,6 @@
 """Collection of classes and functions tp help normal activities."""
-from typing import Union
+from datetime import datetime
+from typing import Optional, Union
 
 from monzo.handlers.storage import Storage
 
@@ -121,6 +122,19 @@ class DjangoHandler(Storage):
         if not self._credentials_record:
             return ""
         return str(self._credentials_record.client_secret) or ""
+
+    @property
+    def last_transaction_datetime(self) -> Optional[datetime]:
+        """
+        Property for the last transaction date/time.
+
+        Returns:
+            Last transaction date/time
+        """
+        self._fetch_monzo_credential_object()
+        if not self._credentials_record:
+            return None
+        return self._credentials_record.last_fetched_datetime
 
     def _fetch_monzo_credential_object(self):
         """Fetch the monzo credential object from the database."""
