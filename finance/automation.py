@@ -107,11 +107,11 @@ class FetchTransactions:
             if self._process_transactions:
                 self._process_transaction(transaction=monzo_transaction)
 
-            if not self._last_transaction:
+            if (
+                not self._last_transaction
+                or monzo_transaction.created > self._last_transaction
+            ):
                 self._last_transaction = monzo_transaction.created
-            elif monzo_transaction.created > self._last_transaction:
-                self._last_transaction = monzo_transaction.created
-
             self._transaction_count += 1
 
         self._handler.last_transaction_datetime = self._last_transaction
@@ -149,7 +149,7 @@ class ProcessInterest:
         """Process transactions."""
         bills = Bill.objects.all()
         for bill in bills:
-            if not (bill.current_balance > 0 and bill.apr > 0):
+            if bill.current_balance <= 0 or bill.apr <= 0:
                 continue
             self._add_interest(bill)
         return {}
