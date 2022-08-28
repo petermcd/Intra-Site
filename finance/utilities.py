@@ -27,6 +27,8 @@ class DjangoHandler(Storage):
             Dictionary containing access token, expiry and refresh token
         """
         self._fetch_monzo_credential_object()
+        if not self._credentials_record:
+            return {}
         return (
             {
                 "access_token": str(self._credentials_record.access_token),
