@@ -1,0 +1,61 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Transactions{% endblock %}
+{% block content %}
+  <header>
+    <h1>Transactions</h1>
+  </header>
+  <section id="table_list">
+    {% if user.is_authenticated %}
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Value</th>
+            <th>Merchant</th>
+            <th>Merchant ID</th>
+            <th>When</th>
+            <th>For Bill</th>
+          </tr>
+        </thead>
+        <tbody id="transaction-list">
+          {% for transaction in transaction_list %}
+            <tr id="investment-item-{{ transaction.pk }}">
+              <td>{{ transaction.value }}</td>
+              <td>{{ transaction.merchant.name }}</td>
+              <td>
+                <a href="/finance/monzo/transactions/{{ transaction.merchant.merchant_id }}/">
+                  {{ transaction.merchant.merchant_id }}
+                </a>
+              </td>
+              <td>{{ transaction.description }}</td>
+              <td>{{ transaction.created }}</td>
+              <td>
+                {% if transaction.merchant.for_bill %}
+                  <p>{{ transaction.merchant.for_bill.name }}</p>
+                {% else %}
+                  <form hx-post="/finance/monzo/transactions/" hx-trigger="change">
+                    {% csrf_token %}
+                    <input type="hidden" name="merchant" value="{{ transaction.merchant.pk }}" />
+                    <select name="bill">
+                      <option value="0" selected>Please Select</option>
+                      {% for bill in bills %}
+                        <option value="{{ bill.pk }}">{{ bill.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </form>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+          {% if transaction_list|length < 1 %}
+            <tr>
+              <td colspan="6">No transactions</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>To view this page please <a href='/accounts/login/'>Login</a></p>
+    {% endif %}
+  </section>
+{% endblock %}

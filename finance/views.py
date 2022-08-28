@@ -8,8 +8,16 @@ from django.views import generic
 from monzo.authentication import Authentication
 from monzo.exceptions import MonzoAuthenticationError, MonzoServerError
 
-from finance.automation import MonzoAutomation
-from finance.models import Bill, BillHistory, Investments, InvestmentValue, Organisation
+from finance.automation import FetchTransactions, ProcessInterest
+from finance.models import (
+    Bill,
+    BillHistory,
+    Investments,
+    InvestmentValue,
+    MonzoMerchant,
+    MonzoTransaction,
+    Organisation,
+)
 from finance.utilities import DjangoHandler, create_redirect_url
 
 
@@ -130,12 +138,12 @@ class Monzo(generic.TemplateView):
         )
 
 
-class MonzoAutomationView(generic.TemplateView):
-    """View to trigger Monzo automation."""
+class MonzoAutomationFetchTransactionsView(generic.TemplateView):
+    """View to trigger Monzo automation to fetch transactions."""
 
     template_name = "finance/monzo_automation.html"
 
-    def get(self, request, *args, **kwargs) -> HttpResponse:
+    def get(self, request, *args, **kwargs) -> JsonResponse:
         """
         Handle standard get request for the Monzo automation.
 
@@ -143,11 +151,99 @@ class MonzoAutomationView(generic.TemplateView):
             request: Request object
 
         Returns:
+            JSON Response
+        """
+        automation = FetchTransactions()
+
+        return JsonResponse(automation.process())
+
+
+class MonzoAutomationProcessInterestView(generic.TemplateView):
+    """View to trigger Monzo automation to process interest."""
+
+    template_name = "finance/monzo_automation.html"
+
+    def get(self, request, *args, **kwargs) -> JsonResponse:
+        """
+        Handle standard get request for the Monzo automation.
+
+        Args:
+            request: Request object
+
+        Returns:
+            JSON Response
+        """
+        automation = ProcessInterest()
+
+        return JsonResponse(automation.process())
+
+
+class MonzoTransactionsView(generic.TemplateView):
+    """View to trigger Monzo automation."""
+
+    template_name = "finance/monzo_transactions.html"
+
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        """
+        Handle standard get request for the Monzo transactions.
+
+        Args:
+            request: Request object
+
+        Returns:
             Rendered request
         """
-        automation = MonzoAutomation()
+        last_30_days = datetime.now() - timedelta(days=30)
+        transactions = (
+            MonzoTransaction.objects.all()
+            .filter(created__gt=last_30_days)
+            .order_by("-created")
+        )
+        bills = Bill.objects.all()
 
-        context = {"message": automation.process()}
+        context = {"transaction_list": transactions, "bills": bills}
+        return render(
+            request=request, template_name=self.template_name, context=context
+        )
+
+    def post(self, request, *args, **kwargs):
+        """
+        Process the post request.
+
+        Return:
+            Rendered view
+        """
+        linked_bill = Bill.objects.get(pk=request.POST["bill"])
+        merchant = MonzoMerchant.objects.get(pk=request.POST["merchant"])
+        merchant.for_bill = linked_bill
+        merchant.save()
+        context = {"output": linked_bill.name}
+        return render(
+            request=request, template_name="printed_output.html", context=context
+        )
+
+
+class MonzoTransactionView(generic.TemplateView):
+    """View to trigger Monzo automation."""
+
+    template_name = "finance/monzo_transaction.html"
+
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        """
+        Handle standard get request for a Monzo transaction.
+
+        Args:
+            request: Request object
+
+        Returns:
+            Rendered request
+        """
+        merchant_id = kwargs["merchant_id"]
+        transactions = MonzoTransaction.objects.filter(
+            merchant_id__exact=merchant_id
+        ).order_by("-created")
+
+        context = {"transaction_list": transactions, "merchant_id": merchant_id}
         return render(
             request=request, template_name=self.template_name, context=context
         )

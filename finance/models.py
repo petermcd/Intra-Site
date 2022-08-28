@@ -3,6 +3,8 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+DEBT_TYPES = ("loan", "credit card")
+
 
 class Organisation(models.Model):
     """Organisation model."""
@@ -182,6 +184,12 @@ class MonzoMerchant(models.Model):
         blank=False,
         null=False,
     )
+    for_bill: models.ForeignKey = models.ForeignKey(
+        Bill,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
 
 
 class MonzoTransaction(models.Model):
@@ -208,8 +216,8 @@ class MonzoTransaction(models.Model):
     merchant: models.ForeignKey = models.ForeignKey(
         to=MonzoMerchant,
         on_delete=models.RESTRICT,
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
     )
     has_receipt: models.BooleanField = models.BooleanField(
         default=False, blank=False, null=False
@@ -234,7 +242,7 @@ def update_investment_value_log(sender, instance, **kwargs):
 @receiver(post_save, sender=Bill, dispatch_uid="update_bill_history")
 def update_bill_history_log(sender, instance, **kwargs):
     """Update the bill history value log."""
-    if instance.bill_type.name.lower() in ("loan", "credit card"):
+    if instance.bill_type.name.lower() in DEBT_TYPES:
         new_value = BillHistory()
         new_value.bill = instance
         new_value.current_balance = instance.current_balance

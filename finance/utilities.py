@@ -1,5 +1,5 @@
 """Collection of classes and functions tp help normal activities."""
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional, Union
 
 from monzo.handlers.storage import Storage
@@ -135,6 +135,21 @@ class DjangoHandler(Storage):
         if not self._credentials_record:
             return None
         return self._credentials_record.last_fetched_datetime
+
+    @last_transaction_datetime.setter
+    def last_transaction_datetime(self, when: datetime) -> None:
+        """
+        Setter for last fetched date/time.
+
+        Args:
+            when: Date and time of the last fetched monzo transaction
+        """
+        # Increment when so we don't get the previous record again.
+        if not self._credentials_record:
+            self._credentials_record = Monzo()
+        when += timedelta(seconds=1)
+        self._credentials_record.last_fetched_datetime = when
+        self._credentials_record.save()
 
     def _fetch_monzo_credential_object(self):
         """Fetch the monzo credential object from the database."""
