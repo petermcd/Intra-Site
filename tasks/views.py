@@ -36,6 +36,8 @@ def task_add(request):
     Returns:
         Rendered form
     """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     task_item = Task()
     task_item.title = request.POST["task-title"]
     due_by = datetime.strptime(request.POST["task-due-by"], "%d-%m-%Y %H:%M")
@@ -62,6 +64,8 @@ def task_complete(request, pk: int):
     Returns:
         Empty response with a 200 code
     """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     task_item = Task.objects.filter(pk=pk)
     if len(task_item) == 1:
         task_frequency = task_item[0].frequency
@@ -92,6 +96,8 @@ def task_output_form(request):
     Returns:
         Rendered form
     """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     context = {"task_frequencies": list(TaskFrequency.objects.all())}
     print(context)
     return render(request, "tasks/partials/task_add_form.html", context)

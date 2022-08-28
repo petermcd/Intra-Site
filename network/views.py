@@ -43,6 +43,8 @@ def website_delete(request, pk: int):
     Returns:
         Empty response with a 200 code
     """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     website_item = Website.objects.filter(pk=pk)
     if len(website_item) == 1:
         website_item.delete()

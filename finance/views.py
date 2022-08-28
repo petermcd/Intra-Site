@@ -3,10 +3,22 @@ from datetime import datetime, timedelta
 from typing import Union
 
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views import generic
+from monzo.authentication import Authentication
+from monzo.exceptions import MonzoAuthenticationError, MonzoServerError
 
-from finance.models import Bill, BillHistory, Investments, InvestmentValue, Organisation
+from finance.automation import FetchTransactions, ProcessInterest
+from finance.models import (
+    Bill,
+    BillHistory,
+    Investments,
+    InvestmentValue,
+    MonzoMerchant,
+    MonzoTransaction,
+    Organisation,
+)
+from finance.utilities import DjangoHandler, create_redirect_url
 
 
 class FinanceView(generic.ListView):
@@ -56,6 +68,185 @@ class InvestmentsView(generic.ListView):
         """
         investments = Investments.objects.all().order_by("organisation__name")
         return list(investments)
+
+
+class Monzo(generic.TemplateView):
+    """Template view to handle Monzo setup."""
+
+    template_name = "finance/monzo.html"
+
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        """
+        Handle GET requests.
+
+        Args:
+            request: Request object
+
+        Returns:
+            Rendered request
+        """
+        context = {}
+        if all(["code" in request.GET, "state" in request.GET]):
+            code = request.GET["code"]
+            state = request.GET["state"]
+            handler = DjangoHandler()
+            auth = Authentication(
+                client_id=handler.client_id,
+                client_secret=handler.client_secret,
+                redirect_url=create_redirect_url(request=request),
+            )
+            auth.register_callback_handler(handler=handler)
+            try:
+                auth.authenticate(authorization_token=code, state_token=state)
+                context[
+                    "success_message"
+                ] = "Monzo is now configured, remember to authorise in the app."
+            except MonzoAuthenticationError:
+                context["error"] = "Monzo authentication error"
+            except MonzoServerError:
+                context["error"] = "Monzo server error"
+        else:
+            context = {"redirect_url": create_redirect_url(request=request)}
+        return render(
+            request=request, template_name=self.template_name, context=context
+        )
+
+    def post(self, request, *args, **kwargs):
+        """
+        Process the post request.
+
+        Return:
+            Rendered view
+        """
+        context = {"redirect_url": create_redirect_url(request=request)}
+        if all(["client_id" in request.POST, "client_secret" in request.POST]):
+            client_id = request.POST["client_id"]
+            client_secret = request.POST["client_secret"]
+            handler = DjangoHandler()
+            auth = Authentication(
+                client_id=client_id,
+                client_secret=client_secret,
+                redirect_url=create_redirect_url(request=request),
+            )
+            handler.set_client_details(client_id=client_id, client_secret=client_secret)
+            return redirect(auth.authentication_url, permanent=False)
+        else:
+            context["error"] = "please complete both Client ID and Client Secret"
+
+        return render(
+            request=request, template_name=self.template_name, context=context
+        )
+
+
+class MonzoAutomationFetchTransactionsView(generic.TemplateView):
+    """View to trigger Monzo automation to fetch transactions."""
+
+    template_name = "finance/monzo_automation.html"
+
+    def get(self, request, *args, **kwargs) -> JsonResponse:
+        """
+        Handle standard get request for the Monzo automation.
+
+        Args:
+            request: Request object
+
+        Returns:
+            JSON Response
+        """
+        automation = FetchTransactions()
+
+        return JsonResponse(automation.process())
+
+
+class MonzoAutomationProcessInterestView(generic.TemplateView):
+    """View to trigger Monzo automation to process interest."""
+
+    template_name = "finance/monzo_automation.html"
+
+    def get(self, request, *args, **kwargs) -> JsonResponse:
+        """
+        Handle standard get request for the Monzo automation.
+
+        Args:
+            request: Request object
+
+        Returns:
+            JSON Response
+        """
+        automation = ProcessInterest()
+
+        return JsonResponse(automation.process())
+
+
+class MonzoTransactionsView(generic.TemplateView):
+    """View to trigger Monzo automation."""
+
+    template_name = "finance/monzo_transactions.html"
+
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        """
+        Handle standard get request for the Monzo transactions.
+
+        Args:
+            request: Request object
+
+        Returns:
+            Rendered request
+        """
+        last_30_days = datetime.now() - timedelta(days=30)
+        transactions = (
+            MonzoTransaction.objects.all()
+            .filter(created__gt=last_30_days)
+            .order_by("-created")
+        )
+        bills = Bill.objects.all()
+
+        context = {"transaction_list": transactions, "bills": bills}
+        return render(
+            request=request, template_name=self.template_name, context=context
+        )
+
+    def post(self, request, *args, **kwargs):
+        """
+        Process the post request.
+
+        Return:
+            Rendered view
+        """
+        linked_bill = Bill.objects.get(pk=request.POST["bill"])
+        merchant = MonzoMerchant.objects.get(pk=request.POST["merchant"])
+        merchant.for_bill = linked_bill
+        merchant.save()
+        context = {"output": linked_bill.name}
+        return render(
+            request=request, template_name="printed_output.html", context=context
+        )
+
+
+class MonzoTransactionView(generic.TemplateView):
+    """View to trigger Monzo automation."""
+
+    template_name = "finance/monzo_transaction.html"
+
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        """
+        Handle standard get request for a Monzo transaction.
+
+        Args:
+            request: Request object
+
+        Returns:
+            Rendered request
+        """
+        merchant_id = kwargs["merchant_id"]
+        transactions = MonzoTransaction.objects.filter(
+            merchant_id__exact=merchant_id
+        ).order_by("-created")
+
+        context = {"transaction_list": transactions, "merchant_id": merchant_id}
+        return render(
+            request=request, template_name=self.template_name, context=context
+        )
 
 
 class PaymentsView(generic.ListView):
@@ -132,6 +323,8 @@ def bill(request, pk: int):
     Returns:
         HTTPResponse containing the required data
     """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     try:
         bill_item = Bill.objects.get(pk=pk)
     except Investments.DoesNotExist:
@@ -156,6 +349,8 @@ def bill_history(request, pk: int, period: str = "year"):
     Returns:
         Json containing data for the given investment and period
     """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     response_list: list[dict[str, Union[str]]] = []
     days = 0
     weeks = 0
@@ -201,6 +396,8 @@ def bill_delete(request, pk: int):
     Returns:
         Empty response with a 200 code
     """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     bill_item = Bill.objects.filter(pk=pk)
     if len(bill_item) == 1:
         bill_item.delete()
@@ -218,6 +415,8 @@ def investment(request, pk: int):
     Returns:
         HTTPResponse containing the required data
     """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     try:
         investment_item = Investments.objects.get(pk=pk)
     except Investments.DoesNotExist:
@@ -241,6 +440,8 @@ def investment_delete(request, pk: int):
     Returns:
         Empty response with a 200 code
     """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     investment_item = Investments.objects.filter(pk=pk)
     if len(investment_item) == 1:
         investment_item.delete()
@@ -259,6 +460,8 @@ def investment_history(request, pk: int, period: str = "year"):
     Returns:
         Json containing data for the given investment and period
     """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     response_list: list[dict[str, Union[str]]] = []
     days = 0
     weeks = 0
@@ -303,6 +506,8 @@ def investment_add(request):
     Returns:
         Rendered form
     """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     organisation = Organisation.objects.get(pk=request.POST["organisation"])
     investment_item = Investments()
     investment_item.organisation = organisation
@@ -326,5 +531,7 @@ def investment_output_form(request):
     Returns:
         Rendered form
     """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     context = {"organisations": Organisation.objects.all().order_by("name")}
     return render(request, "finance/partials/investment_add_form.html", context)

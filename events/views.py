@@ -84,6 +84,8 @@ def event_delete(request, pk: int):
     Returns:
         Empty response with a 200 code
     """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     event_item = Event.objects.filter(pk=pk)
     if len(event_item) == 1:
         event_item[0].delete()

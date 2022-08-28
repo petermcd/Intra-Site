@@ -6,66 +6,70 @@
     <h1>Payments</h1>
   </header>
   <section id="table_list">
-    <table class="table table-striped table-bordered">
-      <thead>
-        <tr>
-          <th>Delete</th>
-          <th>Name</th>
-          <th>Organisation</th>
-          <th>Type</th>
-          <th>Due Day</th>
-          <th>Monthly Payment</th>
-        </tr>
-      </thead>
-      <tfoot>
-        <tr>
-          <td colspan="4"></td>
-          <td colspan="1">
-            From Balance:<br />
-            From Pots:<br />
-            ----------------<br />
-            Monthly Total:<br />
-            ----------------
-          </td>
-          <td>
-            £{{ from_balance_total }}<br />
-            £{{ from_pot_total }}<br />
-            ---------<br />
-            £{{ monthly_total }}<br />
-            ---------
-          </td>
-        </tr>
-      </tfoot>
-      <tbody id="payment-list">
-        {% for payment in payment_list %}
-          <tr id="payment-item-{{ payment.pk }}">
-            <td>
-              <form
-                hx-target="#payment-item-{{ payment.pk }}"
-                hx-get="{{ payment.pk }}/delete"
-                hx-confirm="Are you sure?"
-                hx-swap="outerHTML"
-              >
-                <button hx-trigger="click" type="submit">
-                  &#x274C;
-                </button>
-              </form>
-            </td>
-            <td>
-              <label for="{{ payment.pk }}">{% if payment.bill_type.name == 'Loan' or payment.bill_type.name == 'Credit Card' %}
-                <a href="{{ payment.pk }}">{{ payment.name }}</a>
-              {% else %}
-                {{ payment.name }}
-              {% endif %}
-              </label>
-            </td>
-            <td>{{ payment.organisation.name }}</td>
-            <td>{{ payment.bill_type }}</td>
-            <td>{{ payment.due_day }}</td>
-            <td>£{{ payment.monthly_payments }}</td>
+    {% if user.is_authenticated %}
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Delete</th>
+            <th>Name</th>
+            <th>Organisation</th>
+            <th>Type</th>
+            <th>Due Day</th>
+            <th>Monthly Payment</th>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tfoot>
+          <tr>
+            <td colspan="4"></td>
+            <td colspan="1">
+              From Balance:<br />
+              From Pots:<br />
+              ----------------<br />
+              Monthly Total:<br />
+              ----------------
+            </td>
+            <td>
+              £{{ from_balance_total }}<br />
+              £{{ from_pot_total }}<br />
+              ---------<br />
+              £{{ monthly_total }}<br />
+              ---------
+            </td>
+          </tr>
+        </tfoot>
+        <tbody id="payment-list">
+          {% for payment in payment_list %}
+            <tr id="payment-item-{{ payment.pk }}">
+              <td>
+                <form
+                  hx-target="#payment-item-{{ payment.pk }}"
+                  hx-get="{{ payment.pk }}/delete"
+                  hx-confirm="Are you sure?"
+                  hx-swap="outerHTML"
+                >
+                  <button hx-trigger="click" type="submit">
+                    &#x274C;
+                  </button>
+                </form>
+              </td>
+              <td>
+                <label for="{{ payment.pk }}">{% if payment.bill_type.name == 'Loan' or payment.bill_type.name == 'Credit Card' %}
+                  <a href="{{ payment.pk }}">{{ payment.name }}</a>
+                {% else %}
+                  {{ payment.name }}
+                {% endif %}
+                </label>
+              </td>
+              <td>{{ payment.organisation.name }}</td>
+              <td>{{ payment.bill_type }}</td>
+              <td>{{ payment.due_day }}</td>
+              <td>£{{ payment.monthly_payments }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>To view this page please <a href='/accounts/login/'>Login</a></p>
+    {% endif %}
   </section>
 {% endblock %}

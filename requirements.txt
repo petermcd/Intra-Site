@@ -1,6 +1,7 @@
 Django
 django_cleanup
 django-debug-toolbar
+monzo-api
 mysqlclient
 python-dateutil
 python-dotenv
