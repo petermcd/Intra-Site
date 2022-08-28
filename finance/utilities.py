@@ -27,15 +27,17 @@ class DjangoHandler(Storage):
             Dictionary containing access token, expiry and refresh token
         """
         self._fetch_monzo_credential_object()
-        if not self._credentials_record:
-            return {}
-        return {
-            "access_token": str(self._credentials_record.access_token),
-            "client_id": str(self._credentials_record.client_id),
-            "client_secret": str(self._credentials_record.client_secret),
-            "expiry": self._credentials_record.expiry,
-            "refresh_token": str(self._credentials_record.access_token),
-        }
+        return (
+            {
+                "access_token": str(self._credentials_record.access_token),
+                "client_id": str(self._credentials_record.client_id),
+                "client_secret": str(self._credentials_record.client_secret),
+                "expiry": self._credentials_record.expiry,
+                "refresh_token": str(self._credentials_record.access_token),
+            }
+            if self._credentials_record
+            else {}
+        )
 
     def set_client_details(self, client_id: str, client_secret: str):
         """
@@ -93,9 +95,7 @@ class DjangoHandler(Storage):
             True if configured otherwise False
         """
         self._fetch_monzo_credential_object()
-        if self._credentials_record and self._credentials_record.expiry:
-            return True
-        return False
+        return bool(self._credentials_record and self._credentials_record.expiry)
 
     @property
     def client_id(self) -> str:
@@ -106,9 +106,11 @@ class DjangoHandler(Storage):
             Client ID
         """
         self._fetch_monzo_credential_object()
-        if not self._credentials_record:
-            return ""
-        return str(self._credentials_record.client_id) or ""
+        return (
+            str(self._credentials_record.client_id) or ""
+            if self._credentials_record
+            else ""
+        )
 
     @property
     def client_secret(self) -> str:
@@ -119,9 +121,11 @@ class DjangoHandler(Storage):
             Client Secret
         """
         self._fetch_monzo_credential_object()
-        if not self._credentials_record:
-            return ""
-        return str(self._credentials_record.client_secret) or ""
+        return (
+            str(self._credentials_record.client_secret) or ""
+            if self._credentials_record
+            else ""
+        )
 
     @property
     def last_transaction_datetime(self) -> Optional[datetime]:
@@ -132,9 +136,11 @@ class DjangoHandler(Storage):
             Last transaction date/time
         """
         self._fetch_monzo_credential_object()
-        if not self._credentials_record:
-            return None
-        return self._credentials_record.last_fetched_datetime
+        return (
+            self._credentials_record.last_fetched_datetime
+            if self._credentials_record
+            else None
+        )
 
     @last_transaction_datetime.setter
     def last_transaction_datetime(self, when: datetime) -> None:
