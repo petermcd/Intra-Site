@@ -1,5 +1,4 @@
 window.onload = function() {
-
 	let dataPoints = [];
 
 	let options =  {
@@ -24,6 +23,7 @@ window.onload = function() {
 	};
 
 	function addData(data) {
+		console.log(JSON.stringify(data))
 		for (let i = 0; i < data['data'].length; i++) {
 			dataPoints.push({
 				x: new Date(data['data'][i].data),

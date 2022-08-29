@@ -199,7 +199,7 @@ class MonzoTransactionsView(generic.TemplateView):
             .filter(created__gt=last_30_days)
             .order_by("-created")
         )
-        bills = Bill.objects.all()
+        bills = Bill.objects.all().order_by("name")
 
         context = {"transaction_list": transactions, "bills": bills}
         return render(
@@ -291,8 +291,11 @@ class PaymentsView(generic.ListView):
         current_year = datetime.now().year
         current_month = datetime.now().month
         for payment in payments:
-            payment_start_year = payment.start_date.year
-            payment_start_month = payment.start_date.month
+            payment_start_year = 1901
+            payment_start_month = 1
+            if payment.start_date:
+                payment_start_year = payment.start_date.year
+                payment_start_month = payment.start_date.month
             if (
                 payment_start_year > current_year
                 or payment_start_year == current_year
