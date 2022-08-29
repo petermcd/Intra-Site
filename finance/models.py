@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-DEBT_TYPES = ("loan", "credit card")
+DEBT_TYPES = ("Loan", "Credit Card")
 
 
 class Organisation(models.Model):
@@ -242,7 +242,7 @@ def update_investment_value_log(sender, instance, **kwargs):
 @receiver(post_save, sender=Bill, dispatch_uid="update_bill_history")
 def update_bill_history_log(sender, instance, **kwargs):
     """Update the bill history value log."""
-    if instance.bill_type.name.lower() in DEBT_TYPES:
+    if instance.bill_type.name in DEBT_TYPES:
         new_value = BillHistory()
         new_value.bill = instance
         new_value.current_balance = instance.current_balance
