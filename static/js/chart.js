@@ -19,11 +19,12 @@ function process_graph()
 	graph_data.addColumn('number', document.getElementById('company').innerText);
 	graph_data.addRows(data);
 	const options = {
+		height: 600,
 		hAxis: {
 			title: 'When'
         },
         vAxis: {
-          title: 'Balance'
+          title: 'Balance (£)'
         }
       };
 
