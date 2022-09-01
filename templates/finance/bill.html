@@ -3,10 +3,10 @@
 {% block title %}{{ name }}{% endblock %}
 {% block content %}
   <header>
-    <h1>{{ name }}</h1>
+    <h1 id="company">{{ name }}</h1>
   </header>
-  <section id="chartContainer">
+  <section hx-get="/finance/payments/{{ pk }}/year.json" hx-trigger="load" id="chartContainer">
   </section>
-  <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="{% static 'js/chart.js' %}"></script>
 {% endblock %}
