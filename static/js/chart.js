@@ -1,36 +1,33 @@
-window.onload = function() {
-	let dataPoints = [];
+google.charts.load('current', {packages: ['corechart', 'line']});
+let data = []
 
-	let options =  {
-		zoomEnabled: true,
-		animationEnabled: true,
-		theme: "light2",
-		title: {
-			text: "Trend"
-		},
-		axisX: {
-			valueFormatString: "DD MMM YYYY",
-		},
-		axisY: {
-			title: "GBP",
-			titleFontSize: 24
-		},
-		data: [{
-			type: "spline",
-			yValueFormatString: "£#,###.##",
-			dataPoints: dataPoints
-		}]
-	};
-
-	function addData(data) {
-		console.log(JSON.stringify(data))
-		for (let i = 0; i < data['data'].length; i++) {
-			dataPoints.push({
-				x: new Date(data['data'][i].data),
-				y: Number(data['data'][i].value)
-			});
+document.body.addEventListener('htmx:beforeSwap', function(evt) {
+	if (evt.detail.shouldSwap) {
+		const response = JSON.parse(evt.detail.xhr.response);
+		for (let i = 0; i < response['record_count']; i++){
+			data.push([new Date(response['data'][i]['date']), parseFloat(response['data'][i]['value'])]);
 		}
-		$("#chartContainer").CanvasJSChart(options);
+		google.charts.setOnLoadCallback(process_graph);
 	}
-	$.getJSON("year.json", addData);
+	evt.detail.shouldSwap = false;
+});
+
+function process_graph()
+{
+	let graph_data = new google.visualization.DataTable();
+	graph_data.addColumn('date', 'X');
+	graph_data.addColumn('number', document.getElementById('company').innerText);
+	graph_data.addRows(data);
+	const options = {
+		hAxis: {
+			title: 'When'
+        },
+        vAxis: {
+          title: 'Balance'
+        }
+      };
+
+      let chart = new google.visualization.LineChart(document.getElementById('chartContainer'));
+
+      chart.draw(graph_data, options);
 }
