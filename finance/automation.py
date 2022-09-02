@@ -136,6 +136,8 @@ class FetchTransactions:
             transaction: Monzo transaction to process
         """
         merchant: MonzoMerchant = MonzoMerchant(transaction.merchant)
+        if not merchant.for_bill:
+            return
         bill: Bill = Bill(merchant.for_bill)
         if bill.bill_type in DEBT_TYPES:
             self._processed_transaction_count += 1
