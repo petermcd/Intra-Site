@@ -39,6 +39,7 @@ class FetchTransactions:
             access_token_expiry=credentials["expiry"],
             refresh_token=credentials["refresh_token"],
         )
+        self._auth.register_callback_handler(self._handler)
 
     def process(self) -> dict[str, int]:
         """Process transactions."""
