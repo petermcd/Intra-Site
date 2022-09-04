@@ -114,7 +114,7 @@ class Investments(models.Model):
     current_value: models.DecimalField = models.DecimalField(
         max_digits=10, decimal_places=2
     )
-    date_purchased: models.DateField = models.DateField(auto_now_add=True)
+    date_purchased: models.DateField = models.DateField()
     investment_document: models.FileField = models.FileField(
         upload_to="SiteDocuments/investments/", blank=True, null=True
     )
