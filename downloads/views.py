@@ -1,4 +1,6 @@
 """Views for Downloads."""
+from os.path import join, normpath
+
 from django.http import FileResponse
 
 
@@ -14,5 +16,5 @@ def download_view(request, directory="", filename="") -> FileResponse:
     Returns:
         FileResponse object with content of the file
     """
-    file_path = f"SiteDocuments/{directory}/{filename}"
+    file_path = normpath(join("SiteDocuments", "directory", "filename"))
     return FileResponse(open(file_path, "rb"))
