@@ -509,6 +509,7 @@ def investment_add(request):
     Returns:
         Rendered form
     """
+    print(request.POST["invested_on"])
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
     organisation = Organisation.objects.get(pk=request.POST["organisation"])
@@ -517,7 +518,7 @@ def investment_add(request):
     investment_item.description = request.POST["description"]
     investment_item.current_value = request.POST["value"]
     investment_item.date_purchased = datetime.strptime(
-        request.POST["invested_on"], "%d-%m-%Y %H:%M"
+        request.POST["invested_on"], "%Y-%m-%d"
     )
     investment_item.save()
     context = {"investment": investment_item}

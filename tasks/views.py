@@ -40,7 +40,7 @@ def task_add(request):
         return HttpResponse(status=401)
     task_item = Task()
     task_item.title = request.POST["task-title"]
-    due_by = datetime.strptime(request.POST["task-due-by"], "%d-%m-%Y %H:%M")
+    due_by = datetime.strptime(request.POST["task-due-by"], "%Y-%m-%d")
     task_item.due_by = due_by
     if len(request.POST["task-frequency"]) == 1:
         task_frequency = TaskFrequency.objects.filter(
