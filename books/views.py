@@ -104,16 +104,21 @@ def get_book_details(request, search_type: str, search: str):
     Returns:
          List of dicts
     """
-    api_key = Setting.objects.filter(name__exact="GOOGLE_API_KEY")[0].value
-    api_url = Setting.objects.filter(name__exact="GOOGLE_BOOKS_API_URL")[0].value
-    querystring = f"?q={search_type}:{search}&key={api_key}"
-    res = requests.get(f"{api_url}{querystring}")
-    content_type = "application/json"
     response: dict[str, Any] = {
         "success": False,
         "records": 0,
     }
+    content_type = "application/json"
+    try:
+        api_key = Setting.objects.filter(name__exact="GOOGLE_API_KEY")[0].value
+        api_url = Setting.objects.filter(name__exact="GOOGLE_BOOKS_API_URL")[0].value
+    except IndexError:
+        response["msg"] = "The Google API does not appear to be configured."
+        return HttpResponse(dumps(response), content_type=content_type)
+    querystring = f"?q={search_type}:{search}&key={api_key}"
+    res = requests.get(f"{api_url}{querystring}")
     if res.status_code != 200:
+        response["msg"] = "Non OK response received from Google."
         return HttpResponse(dumps(response), content_type=content_type)
     response["success"] = True
     records = []
