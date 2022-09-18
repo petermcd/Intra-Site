@@ -8,6 +8,7 @@ window.addEventListener("load", function() {
             event.preventDefault();
             isbn10_lookup();
         });
+        django.jQuery('#id_isbn10').focus();
     })(django.jQuery);
 });
 
@@ -64,14 +65,30 @@ function isbn13_lookup() {
 }
 
 function populate_form(form_data) {
+    let published_year = form_data['published'];
+    if (published_year.length === 4) {
+        published_year += '-01-01';
+    }
+    let isbn10 = form_data['isbn10'];
+    let isbn13 = form_data['isbn13'];
+    if (isbn10.length > 0 && isbn13.length === 0) {
+        isbn13 = '978' + isbn10;
+    }
+    if (isbn13.length > 0 && isbn10.length === 0) {
+        isbn10 = isbn13.substring(3, 10);
+    }
+    if (isbn10.length > 0) {
+        django.jQuery('#id_isbn10').val(isbn10);
+    }
+    if (isbn13.length > 0) {
+        django.jQuery('#id_isbn13').val(isbn13);
+    }
     django.jQuery('#id_title').val(form_data['title']);
     django.jQuery('#id_subtitle').val(form_data['subtitle']);
     django.jQuery('#id_publisher').val(form_data['publisher']);
-    django.jQuery('#id_published').val(form_data['published']);
+    django.jQuery('#id_published').val(published_year);
     django.jQuery('#id_description').val(form_data['description']);
     django.jQuery('#id_thumbnail').val(form_data['thumbnail']);
-    django.jQuery('#id_isbn10').val(form_data['isbn10']);
-    django.jQuery('#id_isbn13').val(form_data['isbn13']);
     let $author_select = django.jQuery('#id_authors');
     for (let author of form_data['authors']) {
         if (!option_exists(author['id'])) {
