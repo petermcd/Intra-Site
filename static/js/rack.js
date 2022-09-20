@@ -4,12 +4,12 @@ $.getJSON( "/network/rack.json", function( data ) {
 });
 function process_data(shelf_data) {
     let container = $('#rack');
-    let row_iter = 0;
-    while (row_iter < 19) {
-        row_iter++;
-        let row_id = ' id="shelf' + row_iter + '"';
-        const row = '<div class="row rack_row"' + row_id + '></div>';
-        container.append(row);
+    let shelf_iter = 0;
+    while (shelf_iter < 19) {
+        shelf_iter++;
+        let shelf_id = ' id="shelf' + shelf_iter + '"';
+        const shelf = '<div class="row rack_row"' + shelf_id + '></div>';
+        container.append(shelf);
     }
     let tab_index = 1;
     for (let shelf in shelf_data) {
