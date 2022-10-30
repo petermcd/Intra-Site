@@ -16,5 +16,5 @@ def download_view(request, directory="", filename="") -> FileResponse:
     Returns:
         FileResponse object with content of the file
     """
-    file_path = normpath(join("SiteDocuments", "directory", "filename"))
+    file_path = normpath(join("SiteDocuments", directory, filename))
     return FileResponse(open(file_path, "rb"))
