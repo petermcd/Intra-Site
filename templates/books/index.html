@@ -17,7 +17,10 @@
       <tbody>
         {% for book in book_list %}
           <tr>
-            <td><a href='/books/{{ book.id }}/'>{{ book.title }}</a></td>
+            <td>
+              <a href='/books/{{ book.id }}/'>{{ book.title }}</a><br />
+              {% if book.thumbnail %}<a href='/books/{{ book.id }}/'><img src='{{ book.thumbnail }}' alt='{{ book.title }}'></a>{% endif %}
+            </td>
             <td><ul>{% for author in book.authors.all %}<li>{{ author.name }}</li>{% endfor %}</ul></td>
             <td>{{ book.published|date:'Y' }}</td>
           </tr>
