@@ -263,6 +263,7 @@ def network(request) -> JsonResponse:
             data["links"].append(link)
         except Device.DoesNotExist:
             pass
+
     return JsonResponse(data)
 
 

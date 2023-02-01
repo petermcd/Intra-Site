@@ -215,7 +215,7 @@ class MonzoTransaction(models.Model):
     )
     merchant: models.ForeignKey = models.ForeignKey(
         to=MonzoMerchant,
-        on_delete=models.RESTRICT,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
     )
