@@ -23,11 +23,11 @@ mimetypes.add_type("application/javascript", ".js", True)
 DEBUG = True
 
 ALLOWED_HOSTS: list[str] = [
-    "intra.devfaq.com",
+    "intra.petermcdonald.co.uk",
 ]
 
 CSRF_TRUSTED_ORIGINS: list[str] = [
-    "https://intra.devfaq.com",
+    "https://intra.petermcdonald.co.uk",
 ]
 
 INTERNAL_IPS: list[str] = []
