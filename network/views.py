@@ -71,7 +71,7 @@ def hosts(request) -> HttpResponse:
     Return:
         Inventory list in ini format
     """
-    groups: dict[str, dict[str, set[str]]] = {}
+    groups: dict[str, dict[str, set[Device]]] = {}
 
     additional_groups = AdditionalAnsibleGroup.objects.all().order_by("name")
 
@@ -157,7 +157,7 @@ def hosts_zip(request) -> HttpResponse:
     Return:
         Inventory list in ini format
     """
-    groups: dict[str, dict[str, set[str]]] = {}
+    groups: dict[str, dict[str, set[Device]]] = {}
 
     operating_systems = OperatingSystem.objects.all()
     applications = Application.objects.all()
@@ -182,13 +182,6 @@ def hosts_zip(request) -> HttpResponse:
                 "devices": set(),
                 "children": set(),
             }
-        if application.parent and application.parent not in groups:
-            groups[application.parent.name] = {
-                "devices": set(),
-                "children": {application.name},
-            }
-        elif application.parent:
-            groups[application.parent]["children"].add(application)
 
     devices = Device.objects.all().filter(ansible_managed=True)
 
