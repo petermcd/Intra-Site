@@ -6,3 +6,4 @@ mysqlclient
 python-dateutil
 python-dotenv
 requests
+wakeonlan
