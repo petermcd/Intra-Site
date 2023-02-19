@@ -206,6 +206,7 @@ class Device(models.Model):
     )
     description: models.TextField = models.TextField(null=True, blank=True)
     ansible_managed: models.BooleanField = models.BooleanField(default=True)
+    wol: models.BooleanField = models.BooleanField(default=False)
 
     def __str__(self):
         """Return the device name."""

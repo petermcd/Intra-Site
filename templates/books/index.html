@@ -12,6 +12,7 @@
           <th>Title</th>
           <th>Authors</th>
           <th>Published</th>
+          <th>Read</th>
         </tr>
       </thead>
       <tbody>
@@ -23,11 +24,12 @@
             </td>
             <td><ul>{% for author in book.authors.all %}<li>{{ author.name }}</li>{% endfor %}</ul></td>
             <td>{{ book.published|date:'Y' }}</td>
+            <td>{% if book.read %}&check;{% endif %}</td>
           </tr>
         {% endfor %}
         {% if book_list|length < 1 %}
           <tr>
-            <td colspan="3">No books</td>
+            <td colspan="4">No books</td>
           </tr>
         {% endif %}
       </tbody>
@@ -52,7 +54,7 @@
               <a href="?page={{ page_obj.next_page_number }}{{ search_term }}">&gt;</a>
             {% endif %}
           </td>
-          <td>
+          <td colspan="2">
             <form><label for="search">Name</label><input type="text" name="q" id="search" /><button>Search</button></form>
           </td>
         </tr>
