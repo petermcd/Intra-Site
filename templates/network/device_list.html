@@ -1,0 +1,42 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Devices{% endblock %}
+{% block content %}
+  <header>
+    <h1>Devices</h1>
+  </header>
+  <section id="table_list">
+    {% if user.is_authenticated %}
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Hostname</th>
+            <th>IP</th>
+            <th>Device Type</th>
+            <th>Wake On Lan</th>
+          </tr>
+        </thead>
+        <tbody id="payment-list">
+          {% for device in device_list %}
+            <tr>
+              <td>{{ device.hostname }}</td>
+              <td>{{ device.ip_address }}</td>
+              <td>{{ device.device_type.name }}</td>
+              <td>
+                {% if device.wol %}
+                  <form hx-get="/network/wake/{{ device.pk }}/">
+                    <button hx-trigger="click" type="submit">
+                      Wake Up
+                    </button>
+                  </form>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>To view this page please <a href='/accounts/login/'>Login</a></p>
+    {% endif %}
+  </section>
+{% endblock %}

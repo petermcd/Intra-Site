@@ -13,6 +13,24 @@ from network.models import (
     OperatingSystem,
     Website,
 )
+from network.wake import Wake
+
+
+class ListView(generic.ListView):
+    """View to see a list of devices."""
+
+    template_name = "network/device_list.html/"
+    context_object_name = "device_list"
+
+    def get_queryset(self):
+        """
+        Get device objects to display in list view.
+
+        Return:
+            List of Device objects
+        """
+        devices = Device.objects.all().order_by("hostname")
+        return list(devices)
 
 
 class WebsitesView(generic.ListView):
@@ -30,6 +48,29 @@ class WebsitesView(generic.ListView):
         """
         websites = Website.objects.all().order_by("name")
         return list(websites)
+
+
+def wake_device(request, pk: int):
+    """
+    View to handle deleting a website.
+
+    Args:
+        request: Request object
+        pk: primary key for the website to delete
+
+    Returns:
+        Empty response with a 200 code
+    """
+    device = Device.objects.filter(pk=pk)
+
+    if not device:
+        return HttpResponse(status=400)
+
+    res = Wake(device=device[0]).wake()
+    if res:
+        return HttpResponse(status=200)
+
+    return HttpResponse(status=400)
 
 
 def website_delete(request, pk: int):
