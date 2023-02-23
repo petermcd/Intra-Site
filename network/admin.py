@@ -12,7 +12,6 @@ from network.models import (
     Model,
     OperatingSystem,
     Registrar,
-    Subdomain,
     Vendor,
     Website,
 )
@@ -142,18 +141,6 @@ class DeviceAdmin(admin.ModelAdmin):
     )
     ordering = ("hostname",)
     search_fields = ("hostname",)
-
-
-@admin.register(Subdomain)
-class SubdomainAdmin(admin.ModelAdmin):
-    """Configure the admin page."""
-
-    list_display = (
-        "name",
-        "domain_name",
-    )
-    ordering = ("name",)
-    search_fields = ("name",)
 
 
 @admin.register(Website)

@@ -20,6 +20,17 @@ class Task(models.Model):
         verbose_name = "Task"
         verbose_name_plural = "Tasks"
 
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(updated_at__gte=models.F("created_at")),
+                name="task_updated_after_created",
+            ),
+            models.CheckConstraint(
+                check=models.Q(due_by__gte=models.F("created_at")),
+                name="task_due_by_after_created",
+            ),
+        ]
+
     def __str__(self):
         """Return the task name."""
         return self.title
