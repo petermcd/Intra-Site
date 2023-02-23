@@ -253,14 +253,31 @@ class AnsibleDeviceConfiguration(models.Model):
         return f"{self.for_device.hostname} - {self.name}"
 
 
-class Subdomain(models.Model):
-    """Model for the subdomain."""
+class Website(models.Model):
+    """Model for the website."""
 
-    name: models.CharField = models.CharField(max_length=255)
+    name: models.CharField = models.CharField(max_length=255, unique=True)
+    subdomain: models.CharField = models.CharField(
+        max_length=255, blank=True, null=True
+    )
     domain_name: models.ForeignKey = models.ForeignKey(
-        DomainName, on_delete=models.RESTRICT
+        DomainName, on_delete=models.RESTRICT, null=True, blank=True
     )
     hosted_on: models.ForeignKey = models.ForeignKey(Device, on_delete=models.RESTRICT)
+    secure: models.BooleanField = models.BooleanField(default=True)
+    port: models.IntegerField = models.IntegerField(null=True, blank=True)
+    path: models.CharField = models.CharField(max_length=255, null=True, blank=True)
+    description: models.TextField = models.TextField(null=True, blank=True)
+
+    @property
+    def full_url(self):
+        """Return the full url."""
+        port = f":{self.port}" if self.port else ""
+        path = self.path or ""
+        protocol = "https" if self.secure else "http"
+        if not any([self.subdomain, self.domain_name]):
+            return f"{protocol}://{self.hosted_on.ip_address}{port}{path}"
+        return f"{protocol}://{self.subdomain.name}.{self.domain_name.name}{port}{path}"
 
     def __str__(self):
         """Return the subdomain name."""
@@ -275,36 +292,23 @@ class Subdomain(models.Model):
                 "domain_name",
             ),
         ]
-        verbose_name = "Subdomain"
-        verbose_name_plural = "Subdomains"
-
-
-class Website(models.Model):
-    """Model for the website."""
-
-    name: models.CharField = models.CharField(max_length=255, unique=True)
-    subdomain: models.ForeignKey = models.ForeignKey(
-        Subdomain, on_delete=models.RESTRICT
-    )
-    secure: models.BooleanField = models.BooleanField(default=True)
-    port: models.IntegerField = models.IntegerField(null=True, blank=True)
-    path: models.CharField = models.CharField(max_length=255, null=True, blank=True)
-    description: models.TextField = models.TextField(null=True, blank=True)
-
-    class Meta:
-        """Meta class."""
-
+        constraints = [
+            models.UniqueConstraint(
+                fields=("domain_name", "port", "subdomain"),
+                name="website_unique_subdomain_port",
+            ),
+            models.UniqueConstraint(
+                fields=("hosted_on", "port"), name="website_unique_port_hosted_on"
+            ),
+            models.CheckConstraint(
+                check=(
+                    models.Q(subdomain__isnull=True)
+                    & models.Q(domain_name__isnull=True)
+                    | models.Q(subdomain__isnull=False)
+                    & models.Q(domain_name__isnull=False)
+                ),
+                name="website_subdomain_or_ip",
+            ),
+        ]
         verbose_name = "Website"
         verbose_name_plural = "Websites"
-
-    def __str__(self):
-        """Return the website name."""
-        return self.name
-
-    @property
-    def full_url(self):
-        """Return the full url."""
-        port = f":{self.port}" if self.port else ""
-        path = self.path or ""
-        protocol = "https" if self.secure else "http"
-        return f"{protocol}://{self.subdomain.name}.{self.subdomain.domain_name.name}{port}{path}"

@@ -130,6 +130,13 @@ class Event(models.Model):
         verbose_name = "Event"
         verbose_name_plural = "Events"
 
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(models.Q(ends__gte=models.F("start"))),
+                name="event_ends_after_start",
+            ),
+        ]
+
     def __str__(self) -> str:
         """
         To string for Event.
@@ -290,6 +297,13 @@ class Accommodation(models.Model):
 
         verbose_name = "Accommodation"
         verbose_name_plural = "Accommodation"
+
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(check_out__gt=models.F("check_in")),
+                name="accommodation_check_in_before_checkout",
+            ),
+        ]
 
     def __str__(self) -> str:
         """
