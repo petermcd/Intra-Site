@@ -275,9 +275,11 @@ class Website(models.Model):
         port = f":{self.port}" if self.port else ""
         path = self.path or ""
         protocol = "https" if self.secure else "http"
-        if not any([self.subdomain, self.domain_name]):
-            return f"{protocol}://{self.hosted_on.ip_address}{port}{path}"
-        return f"{protocol}://{self.subdomain.name}.{self.domain_name.name}{port}{path}"
+        return (
+            f"{protocol}://{self.subdomain.name}.{self.domain_name.name}{port}{path}"
+            if any([self.subdomain, self.domain_name])
+            else f"{protocol}://{self.hosted_on.ip_address}{port}{path}"
+        )
 
     def __str__(self):
         """Return the subdomain name."""
