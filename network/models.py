@@ -276,7 +276,7 @@ class Website(models.Model):
         path = self.path or ""
         protocol = "https" if self.secure else "http"
         return (
-            f"{protocol}://{self.subdomain.name}.{self.domain_name.name}{port}{path}"
+            f"{protocol}://{self.subdomain}.{self.domain_name.name}{port}{path}"
             if any([self.subdomain, self.domain_name])
             else f"{protocol}://{self.hosted_on.ip_address}{port}{path}"
         )

@@ -150,6 +150,7 @@ class WebsiteAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "subdomain",
+        "full_url",
     )
     ordering = ("name",)
     search_fields = ("name",)
