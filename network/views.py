@@ -283,7 +283,7 @@ def network(request) -> JsonResponse:
         website_data = {
             "id": f"s{website.pk}",
             "name": website.name,
-            "ip": str(website.subdomain.hosted_on.ip_address),
+            "ip": str(website.hosted_on.ip_address),
             "url": website.full_url,
             "description": website.description,
             "type": "site",
@@ -292,7 +292,7 @@ def network(request) -> JsonResponse:
         try:
             link = {
                 "source": f"s{website.pk}",
-                "target": f"d{website.subdomain.hosted_on.pk}",
+                "target": f"d{website.hosted_on.pk}",
             }
             data["links"].append(link)
         except Device.DoesNotExist:
