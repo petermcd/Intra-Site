@@ -22,12 +22,17 @@ mimetypes.add_type("application/javascript", ".js", True)
 
 DEBUG = True
 
-ALLOWED_HOSTS: list[str] = [
+allowed_host_env = os.getenv(
+    "DJANGO_ALLOWED_HOST",
     "intra.petermcdonald.co.uk",
+)
+
+ALLOWED_HOSTS: list[str] = [
+    allowed_host_env,
 ]
 
 CSRF_TRUSTED_ORIGINS: list[str] = [
-    "https://intra.petermcdonald.co.uk",
+    f"https://{allowed_host_env}",
 ]
 
 INTERNAL_IPS: list[str] = []
