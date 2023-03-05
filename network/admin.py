@@ -4,6 +4,7 @@ from django.contrib import admin
 from network.models import (
     AdditionalAnsibleGroup,
     AnsibleDeviceConfiguration,
+    AnsibleVariables,
     Application,
     ConnectionType,
     Device,
@@ -38,6 +39,14 @@ class AnsibleDeviceConfigurationAdmin(admin.ModelAdmin):
         "name",
     )
     ordering = ("for_device",)
+
+
+@admin.register(AnsibleVariables)
+class AnsibleVariablesAdmin(admin.ModelAdmin):
+    """Additional Ansible Variables."""
+
+    list_display = ("name",)
+    ordering = ("name",)
 
 
 @admin.register(Application)
