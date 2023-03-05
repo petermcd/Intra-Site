@@ -229,11 +229,29 @@ class Device(models.Model):
         verbose_name_plural = "Devices"
 
 
+class AnsibleVariables(models.Model):
+    """Model for the Ansible variable configuration."""
+
+    name: models.CharField = models.CharField(max_length=255)
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Ansible variable"
+        verbose_name_plural = "Ansible variables"
+
+    def __str__(self):
+        """Return the Ansible variable name."""
+        return self.name
+
+
 class AnsibleDeviceConfiguration(models.Model):
     """Model for the Ansible device configuration."""
 
     for_device: models.ForeignKey = models.ForeignKey(Device, on_delete=models.CASCADE)
-    name: models.CharField = models.CharField(max_length=255)
+    name: models.ForeignKey = models.ForeignKey(
+        AnsibleVariables, on_delete=models.CASCADE
+    )
     value: models.CharField = models.CharField(max_length=255)
 
     class Meta:
