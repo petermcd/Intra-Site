@@ -72,12 +72,14 @@ class Amazon(ShopInterface):
         product_image_matches = re.search(r'"hiRes":"([a-zA-Z0-9:\/.+_-]+)"', req.text)
         if product_image_matches:
             product_image = product_image_matches.group(1)
-        description = parsed.find("div", {"id": "feature-bullets"}).text
-        price = self._normalise_price(
-            parsed.find("span", {"class": "a-price"}).contents[0].text
-        )
-        if not price:
-            price = 0
+        description = "UNKNOWN"
+        description_search = parsed.find("div", {"id": "feature-bullets"})
+        if description_search:
+            description = description_search.text
+        price = 0
+        price_search = parsed.find("span", {"class": "a-price"}).contents[0]
+        if price_search:
+            price = self._normalise_price(price_search.text)
         in_stock = False
         for stock in parsed.find_all("span", {"class": "a-color-attainable"}):
             if "in stock" in stock.text.lower():
