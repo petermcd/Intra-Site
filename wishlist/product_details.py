@@ -74,8 +74,10 @@ class Amazon(ShopInterface):
             product_image = product_image_matches.group(1)
         description = parsed.find("div", {"id": "feature-bullets"}).text
         price = self._normalise_price(
-            parsed.find("span", {"id": "a-offscreen"}).contents[0].text
+            parsed.find("span", {"class": "a-price"}).contents[0].text
         )
+        if not price:
+            price = 0
         in_stock = False
         for stock in parsed.find_all("span", {"class": "a-color-attainable"}):
             if "in stock" in stock.text.lower():
