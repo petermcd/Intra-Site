@@ -69,21 +69,21 @@ class Amazon(ShopInterface):
         parsed = BeautifulSoup(req.text, "html.parser")
         name = parsed.title.string
         product_image = ""
-        product_image_matches = re.search(r'"hiRes":"([a-zA-Z0-9:\/.+_-]+)"', req.text)
-        if product_image_matches:
-            product_image = product_image_matches.group(1)
+        if product_image_matches := re.search(
+            r'"hiRes":"([a-zA-Z0-9:\/.+_-]+)"', req.text
+        ):
+            product_image = product_image_matches[1]
         description = parsed.find("div", {"id": "feature-bullets"}).text
         price = self._normalise_price(
             parsed.find("span", {"class": "a-price"}).contents[0].text
         )
         if not price:
             price = 0
-        in_stock = False
-        for stock in parsed.find_all("span", {"class": "a-color-attainable"}):
-            if "in stock" in stock.text.lower():
-                in_stock = True
-                break
-        product_details = ProductDetails(
+        in_stock = any(
+            "in stock" in stock.text.lower()
+            for stock in parsed.find_all("span", {"class": "a-color-attainable"})
+        )
+        return ProductDetails(
             name=name or "",
             product_image=product_image,
             description=description,
@@ -92,7 +92,6 @@ class Amazon(ShopInterface):
             info_url=url,
             in_stock=in_stock,
         )
-        return product_details
 
     def _normalise_price(self, price: str) -> int:
         """
@@ -133,7 +132,7 @@ class PiHut(ShopInterface):
         if req.status_code != 200:
             raise ProductNotFoundException("Unable to locate product.")
         data = req.json()
-        product_details = ProductDetails(
+        return ProductDetails(
             name=data["title"],
             product_image=data["media"][0]["src"],
             description=data["description"],
@@ -142,7 +141,6 @@ class PiHut(ShopInterface):
             info_url=info_url,
             in_stock=data["available"],
         )
-        return product_details
 
 
 class Ikea(ShopInterface):
@@ -176,7 +174,7 @@ class Ikea(ShopInterface):
             parsed.find("span", {"class": "pip-temp-price__integer"}).text
         )
         in_stock = False
-        product_details = ProductDetails(
+        return ProductDetails(
             name=name or "",
             product_image=product_image,
             description=description,
@@ -185,7 +183,6 @@ class Ikea(ShopInterface):
             info_url=url,
             in_stock=in_stock,
         )
-        return product_details
 
     def _normalise_price(self, price: str) -> int:
         """
@@ -229,16 +226,15 @@ class Unknown(ShopInterface):
         description = "UNKNOWN"
         price = 0
         in_stock = False
-        product_details = ProductDetails(
+        return ProductDetails(
             name=name or "",
             product_image="",
             description=description,
-            price=int(price),
+            price=price,
             product_url=url,
             info_url=url,
             in_stock=in_stock,
         )
-        return product_details
 
 
 SHOP_MAP = {
@@ -266,6 +262,5 @@ class ProductDetailsFactory:
         """
         for store_url in SHOP_MAP.keys():
             if url.lower().startswith(store_url):
-                shop_obj = SHOP_MAP[store_url]()  # type: ignore
-                return shop_obj
+                return SHOP_MAP[store_url]()
         return Unknown()
