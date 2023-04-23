@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "mathfilters",
     "books.apps.BooksConfig",
     "documents.apps.DocumentsConfig",
     "events.apps.EventsConfig",
@@ -80,6 +81,7 @@ INSTALLED_APPS = [
     "network.apps.NetworkConfig",
     "settings.apps.SettingsConfig",
     "tasks.apps.TasksConfig",
+    "wishlist.apps.WishlistConfig",
     "debug_toolbar",
     "django_cleanup.apps.CleanupConfig",  # Must be placed last
 ]

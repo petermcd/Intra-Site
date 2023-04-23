@@ -1,8 +1,11 @@
+beautifulsoup4
 Django
 django_cleanup
 django-debug-toolbar
+django-mathfilters
 monzo-api
 mysqlclient
+pillow
 python-dateutil
 python-dotenv
 requests

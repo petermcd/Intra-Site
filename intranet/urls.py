@@ -18,5 +18,6 @@ urlpatterns = [
     path("finance/", include("finance.urls")),
     path("network/", include("network.urls")),
     path("tasks/", include("tasks.urls")),
+    path("wishlist/", include("wishlist.urls")),
     path("__debug__/", include("debug_toolbar.urls")),
 ]
