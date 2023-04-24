@@ -27,7 +27,7 @@ class ProductNotFoundException(Exception):
     pass
 
 
-class Shop:
+class Shop(metaclass=abc.ABCMeta):
     """Interface for shops."""
 
     __slots__ = ("_response", "_url")
@@ -140,9 +140,7 @@ class Amazon(Shop):
         return (
             description_search.text
             if (
-                description_search := parsed_data.find(
-                    "div", {"id": "feature-bullets"}
-                )
+                description_search := parsed_data.find("div", {"id": "feature-bullets"})
             )
             else description
         )
@@ -160,9 +158,9 @@ class Amazon(Shop):
         return (
             self.normalise_price(price_search.text)
             if (
-                price_search := parsed_data.find(
-                    "span", {"class": "a-price"}
-                ).contents[0]
+                price_search := parsed_data.find("span", {"class": "a-price"}).contents[
+                    0
+                ]
             )
             else 0
         )
@@ -347,5 +345,5 @@ class ProductDetailsFactory:
         """
         for store_url in SHOP_MAP.keys():
             if url.lower().startswith(store_url):
-                return SHOP_MAP[store_url](url=url)
+                return SHOP_MAP[store_url](url=url)  # type: ignore
         return Unknown(url=url)

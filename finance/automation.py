@@ -80,9 +80,7 @@ class FetchTransactions:
             monzo_transaction.created = tran.created
             monzo_transaction.description = tran.description
             monzo_transaction.has_receipt = False
-            merchant = MonzoMerchant.objects.filter(
-                merchant_id__exact=tran.description
-            )
+            merchant = MonzoMerchant.objects.filter(merchant_id__exact=tran.description)
             if len(merchant):
                 monzo_transaction.merchant = merchant[0]
             else:
