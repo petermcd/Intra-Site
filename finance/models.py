@@ -12,15 +12,15 @@ class Organisation(models.Model):
     name: models.CharField = models.CharField(max_length=100)
     url: models.URLField = models.URLField(max_length=200)
 
+    def __str__(self) -> str:
+        """Return the name of the organisation."""
+        return str(self.name)
+
     class Meta:
         """Meta class."""
 
         verbose_name = "Organisation"
         verbose_name_plural = "Organisations"
-
-    def __str__(self) -> str:
-        """Return the name of the organisation."""
-        return str(self.name)
 
 
 class BillType(models.Model):
@@ -28,15 +28,15 @@ class BillType(models.Model):
 
     name: models.CharField = models.CharField(max_length=100)
 
+    def __str__(self) -> str:
+        """Return the name of the bill type."""
+        return str(self.name)
+
     class Meta:
         """Meta class."""
 
         verbose_name = "Bill type"
         verbose_name_plural = "Bill types"
-
-    def __str__(self) -> str:
-        """Return the name of the bill type."""
-        return str(self.name)
 
 
 class PaidFrom(models.Model):
@@ -44,15 +44,15 @@ class PaidFrom(models.Model):
 
     name: models.CharField = models.CharField(max_length=100)
 
+    def __str__(self) -> str:
+        """Return the name of the paid from."""
+        return str(self.name)
+
     class Meta:
         """Meta class."""
 
         verbose_name = "Paid from"
         verbose_name_plural = "Paid from"
-
-    def __str__(self) -> str:
-        """Return the name of the paid from."""
-        return str(self.name)
 
 
 class Bill(models.Model):
@@ -81,15 +81,15 @@ class Bill(models.Model):
         PaidFrom, on_delete=models.RESTRICT, null=False
     )
 
+    def __str__(self) -> str:
+        """Return the name of the bill."""
+        return str(self.name)
+
     class Meta:
         """Meta class."""
 
         verbose_name = "Bill"
         verbose_name_plural = "Bills"
-
-    def __str__(self) -> str:
-        """Return the name of the bill."""
-        return str(self.name)
 
 
 class BillHistory(models.Model):
@@ -119,20 +119,20 @@ class Investments(models.Model):
         upload_to="SiteDocuments/investments/", blank=True, null=True
     )
 
-    class Meta:
-        """Meta class."""
-
-        verbose_name = "Investment"
-        verbose_name_plural = "Investments"
+    def __str__(self) -> str:
+        """Return a string representation of the model."""
+        return f"{self.organisation.name} ({self.current_value})"
 
     @property
     def organisation_name(self) -> str:
         """Return the name of the organisation."""
         return "test"
 
-    def __str__(self) -> str:
-        """Return a string representation of the model."""
-        return f"{self.organisation.name} ({self.current_value})"
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Investment"
+        verbose_name_plural = "Investments"
 
 
 class InvestmentValue(models.Model):
@@ -231,7 +231,7 @@ class MonzoTransaction(models.Model):
 
 
 @receiver(post_save, sender=Investments, dispatch_uid="update_investment_value")
-def update_investment_value_log(sender, instance, **kwargs):
+def update_investment_value_log(sender, instance, **kwargs) -> None:
     """Update the investment value log."""
     new_value = InvestmentValue()
     new_value.investment = instance
@@ -240,7 +240,7 @@ def update_investment_value_log(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=Bill, dispatch_uid="update_bill_history")
-def update_bill_history_log(sender, instance, **kwargs):
+def update_bill_history_log(sender, instance, **kwargs) -> None:
     """Update the bill history value log."""
     if instance.bill_type.name in DEBT_TYPES:
         new_value = BillHistory()

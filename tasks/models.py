@@ -14,6 +14,10 @@ class Task(models.Model):
         to="TaskFrequency", on_delete=models.RESTRICT, blank=True, null=True
     )
 
+    def __str__(self):
+        """Return the task name."""
+        return self.title
+
     class Meta:
         """Meta class."""
 
@@ -31,10 +35,6 @@ class Task(models.Model):
             ),
         ]
 
-    def __str__(self):
-        """Return the task name."""
-        return self.title
-
 
 class TaskFrequency(models.Model):
     """Model for Tasks."""
@@ -44,12 +44,12 @@ class TaskFrequency(models.Model):
     months_to_add: models.IntegerField = models.IntegerField(default=0)
     years_to_add: models.IntegerField = models.IntegerField(default=0)
 
+    def __str__(self):
+        """Return the task frequency name."""
+        return self.title
+
     class Meta:
         """Meta class."""
 
         verbose_name = "Task Frequency"
         verbose_name_plural = "Task Frequencies"
-
-    def __str__(self):
-        """Return the task frequency name."""
-        return self.title

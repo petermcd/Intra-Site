@@ -26,7 +26,7 @@ class TaskView(generic.ListView):
         return list(tasks)
 
 
-def task_add(request):
+def task_add(request) -> HttpResponse:
     """
     Handle adding a new task item.
 
@@ -53,7 +53,7 @@ def task_add(request):
     return render(request, "tasks/partials/task_item.html", context)
 
 
-def task_complete(request, pk: int):
+def task_complete(request, pk: int) -> HttpResponse:
     """
     View to handle completing a task item.
 
@@ -86,7 +86,7 @@ def task_complete(request, pk: int):
     return HttpResponse(status=200)
 
 
-def task_output_form(request):
+def task_output_form(request) -> HttpResponse:
     """
     Handle outputting the form for adding a new task item.
 

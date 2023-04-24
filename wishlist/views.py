@@ -1,5 +1,7 @@
 """Views for the Wishlist application."""
-from django.http import Http404, HttpResponse
+from datetime import datetime
+
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views import generic
 
@@ -8,7 +10,7 @@ from wishlist.product_details import ProductDetailsFactory, ProductNotFoundExcep
 
 
 class Wishlist(generic.ListView):
-    """View to see a list of qishlist items."""
+    """View to see a list of wishlist items."""
 
     template_name = "wishlist/index.html"
     context_object_name = "wishlist_list"
@@ -20,8 +22,7 @@ class Wishlist(generic.ListView):
         Return:
             List of Wishlist objects
         """
-        wishlist = WishlistItem.objects.all().order_by("name")
-        return list(wishlist)
+        return list(WishlistItem.objects.all().order_by("name"))
 
 
 class WishlistAdd(generic.ListView):
@@ -30,19 +31,25 @@ class WishlistAdd(generic.ListView):
     template_name = "wishlist/partials/wishlist_item.html"
     context_object_name = "wishlist_item"
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs) -> HttpResponse:
         """
         Post event to add a wishlist item.
 
         Args:
             request: HTTP request object.
+
+        Raises:
+            Http404: On inability to locate the product on the shop.
+
+        Returns:
+            HttpResponse: Rendered template containing the product details
         """
         product_url = request.POST["product_url"]
         shop = ProductDetailsFactory().shop(url=product_url)
         try:
-            product_details = shop.get_product_details(url=product_url)
+            product_details = shop.get_product_details()
         except ProductNotFoundException:
-            return Http404()
+            raise Http404()
         item = WishlistItem()
         item.name = product_details.name
         item.image = product_details.product_image
@@ -64,13 +71,19 @@ class WishlistIncrease(generic.TemplateView):
     template_name = "wishlist/partials/wishlist_item.html"
     context_object_name = "wishlist_item"
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) -> HttpResponse:
         """
         Get request to action an increase in number of items required.
 
         Args:
             request: HTTP request.
             kwargs: Will contain PK of the item to increase.
+
+        Raises:
+            Http404: On inability to locate the product.
+
+        Returns:
+            HttpResponse: Rendered template containing the product details.
         """
         try:
             product = WishlistItem.objects.get(pk=kwargs["pk"])
@@ -90,13 +103,19 @@ class WishlistDecrease(generic.ListView):
     template_name = "wishlist/partials/wishlist_item.html"
     context_object_name = "wishlist_item"
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) -> HttpResponse:
         """
         Get request to action a decrease in number of items required.
 
         Args:
             request: HTTP request.
             kwargs: Will contain PK of the item to decrease.
+
+        Raises:
+            Http404: On inability to locate the product.
+
+        Returns:
+            HttpResponse: Rendered template containing the product details.
         """
         try:
             product = WishlistItem.objects.get(pk=kwargs["pk"])
@@ -110,4 +129,53 @@ class WishlistDecrease(generic.ListView):
         context = {self.context_object_name: product}
         return render(
             request=request, template_name=self.template_name, context=context
+        )
+
+
+class WishlistUpdateNext(generic.TemplateView):
+    """View to update details of the oldest wishlist item."""
+
+    def get(self, request, *args, **kwargs) -> JsonResponse:
+        """
+        Update a wishlist item with the oldest last updated date.
+
+        Args:
+            request: HTTP request object.
+
+        Return:
+            JsonResponse: Wishlist item as JSON.
+        """
+        item: WishlistItem = WishlistItem.objects.all().order_by("last_updated")[:1][0]
+        try:
+            shop = ProductDetailsFactory().shop(url=str(item.product_url))
+            product_details = shop.get_product_details()
+        except ProductNotFoundException:
+            return JsonResponse(
+                {
+                    "result": "failure",
+                    "message": "Unable to locate product",
+                }
+            )
+        item.name = product_details.name
+        item.image = product_details.product_image
+        item.description = product_details.description
+        item.price = product_details.price
+        item.in_stock = product_details.in_stock
+        item.last_updated = datetime.now()
+        item.save()
+        return JsonResponse(
+            {
+                "result": "success",
+                "item": {
+                    "name": item.name,
+                    "quantity": item.quantity,
+                    "image": item.image,
+                    "price": item.price,
+                    "description": item.description,
+                    "product_url": item.product_url,
+                    "info_url": item.info_url,
+                    "in_stock": item.in_stock,
+                    "last_updated": item.last_updated,
+                },
+            }
         )

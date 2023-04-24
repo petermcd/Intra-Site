@@ -47,7 +47,7 @@ class FetchTransactions:
         self._fetch_transactions()
         return self._process_output()
 
-    def _fetch_account(self):
+    def _fetch_account(self) -> None:
         """Identify the correct account."""
         accounts = Account.fetch(auth=self._auth)
         for account in accounts:
@@ -55,7 +55,7 @@ class FetchTransactions:
                 self._account_id = account.account_id
                 break
 
-    def _fetch_transactions(self):
+    def _fetch_transactions(self) -> None:
         """Fetch transactions from Monzo."""
         since = self._handler.last_transaction_datetime
         if not since:
@@ -80,30 +80,19 @@ class FetchTransactions:
             monzo_transaction.created = tran.created
             monzo_transaction.description = tran.description
             monzo_transaction.has_receipt = False
-            if tran.merchant:
-                merchant = MonzoMerchant.objects.filter(
-                    merchant_id__exact=tran.description
-                )
-                if len(merchant):
-                    monzo_transaction.merchant = merchant[0]
-                else:
-                    new_merchant = MonzoMerchant()
+            merchant = MonzoMerchant.objects.filter(merchant_id__exact=tran.description)
+            if len(merchant):
+                monzo_transaction.merchant = merchant[0]
+            else:
+                new_merchant = MonzoMerchant()
+                if tran.merchant:
                     new_merchant.merchant_id = tran.merchant["id"]
                     new_merchant.name = tran.merchant["name"]
-                    new_merchant.save()
-                    monzo_transaction.merchant = new_merchant
-            else:
-                merchant = MonzoMerchant.objects.filter(
-                    merchant_id__exact=tran.description
-                )
-                if len(merchant):
-                    monzo_transaction.merchant = merchant[0]
                 else:
-                    new_merchant = MonzoMerchant()
                     new_merchant.merchant_id = tran.description
                     new_merchant.name = tran.description
-                    new_merchant.save()
-                    monzo_transaction.merchant = new_merchant
+                new_merchant.save()
+                monzo_transaction.merchant = new_merchant
             monzo_transaction.save()
             if self._process_transactions:
                 self._process_transaction(transaction=monzo_transaction)
@@ -157,7 +146,7 @@ class ProcessInterest:
             self._add_interest(bill)
         return {}
 
-    def _add_interest(self, bill: Bill):
+    def _add_interest(self, bill: Bill) -> None:
         """
         Add interest to the given bill.
 

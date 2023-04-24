@@ -92,7 +92,7 @@ class DetailView(generic.DetailView):
         return Book.objects.all()
 
 
-def get_book_details(request, search_type: str, search: str):
+def get_book_details(request, search_type: str, search: str) -> HttpResponse:
     """
     Fetch book details from the Google books API.
 
@@ -102,7 +102,7 @@ def get_book_details(request, search_type: str, search: str):
         search: Test to search for
 
     Returns:
-         List of dicts
+         HttpResponse
     """
     response: dict[str, Any] = {
         "success": False,
