@@ -1,5 +1,6 @@
 """Module to handle retrival of product details."""
 import abc
+import json
 import re
 from dataclasses import dataclass
 
@@ -26,77 +27,54 @@ class ProductNotFoundException(Exception):
     pass
 
 
-class ShopInterface(abc.ABC):
+class Shop:
     """Interface for shops."""
 
-    @abc.abstractmethod
-    def get_product_details(self, url: str) -> ProductDetails:
+    __slots__ = ("_response", "_url")
+
+    def __init__(self, url: str):
         """
-        Get details regarding a product from shops.
+        Initialise Shop.
 
         Args:
-            url: URL for the product.
-
-        Returns:
-            ProductDetails containing product details.
+            url: Product URL.
         """
-        raise NotImplementedError
-
-
-class Amazon(ShopInterface):
-    """Class to handle interactions with Amazon."""
-
-    def get_product_details(self, url: str) -> ProductDetails:
-        """
-        Get details regarding a product from Amazon.
-
-        Args:
-            url: URL for the product.
-
-        Returns:
-            ProductDetails containing product details.
-        """
-        fixed_url = url.split(sep="?")[0]
         headers = {
             "User-Agent": (
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                 "(KHTML, like Gecko) Chrome/112.0.5615.50 Safari/537.36"
             )
         }
-        req = requests.get(url=fixed_url, headers=headers)
-        if req.status_code != 200:
+        self._response = requests.get(url=url, headers=headers)
+        if self._response.status_code != 200:
             raise ProductNotFoundException("Unable to locate product.")
-        parsed = BeautifulSoup(req.text, "html.parser")
-        name = parsed.title.string
-        product_image = ""
-        product_image_matches = re.search(r'"hiRes":"([a-zA-Z0-9:\/.+_-]+)"', req.text)
-        if product_image_matches:
-            product_image = product_image_matches.group(1)
-        description = "UNKNOWN"
-        description_search = parsed.find("div", {"id": "feature-bullets"})
-        if description_search:
-            description = description_search.text
-        price = 0
-        price_search = parsed.find("span", {"class": "a-price"}).contents[0]
-        if price_search:
-            price = self._normalise_price(price_search.text)
-        in_stock = False
-        for stock in parsed.find_all("span", {"class": "a-color-attainable"}):
-            if "in stock" in stock.text.lower():
-                in_stock = True
-                break
-        product_details = ProductDetails(
-            name=name or "",
-            product_image=product_image,
-            description=description,
-            price=int(price),
-            product_url=url,
-            info_url=url,
-            in_stock=in_stock,
-        )
-        return product_details
+        self._url = url
 
-    def _normalise_price(self, price: str) -> int:
+    @abc.abstractmethod
+    def get_product_details(self) -> ProductDetails:
+        """
+        Get details regarding a product from shops.
+
+        Returns:
+            ProductDetails containing product details.
+        """
+        raise NotImplementedError
+
+    @staticmethod
+    def normalise_price_from_float(price: float) -> int:
+        """
+        Convert a price as a string to an int.
+
+        Args:
+            price: Price as a string.
+
+        Returns:
+            Price as an int in pence.
+        """
+        return int(price * 100)
+
+    @staticmethod
+    def normalise_price(price: str) -> int:
         """
         Convert a price as a string to an int.
 
@@ -111,136 +89,231 @@ class Amazon(ShopInterface):
         return int(float(price) * 100)
 
 
-class PiHut(ShopInterface):
-    """Class to handle interactions with Pi Hut."""
+class Amazon(Shop):
+    """Class to handle interactions with Amazon."""
 
-    def get_product_details(self, url: str) -> ProductDetails:
+    def __init__(self, url: str):
         """
-        Get details regarding a product from PiHut.
+        Initialise Amazon.
 
         Args:
-            url: URL for the product.
+            url: Product URL.
+        """
+        fixed_url = url.split(sep="?")[0]
+        super().__init__(url=fixed_url)
+
+    def get_product_details(self) -> ProductDetails:
+        """
+        Get details regarding a product from Amazon.
 
         Returns:
             ProductDetails containing product details.
         """
-        info_url = f"{url}.js"
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-                "(KHTML, like Gecko) Chrome/112.0.5615.50 Safari/537.36"
-            )
-        }
-        req = requests.get(url=info_url, headers=headers)
-        if req.status_code != 200:
-            raise ProductNotFoundException("Unable to locate product.")
-        data = req.json()
-        product_details = ProductDetails(
-            name=data["title"],
-            product_image=data["media"][0]["src"],
-            description=data["description"],
-            price=int(data["price"]),
-            product_url=url,
-            info_url=info_url,
-            in_stock=data["available"],
+        parsed = BeautifulSoup(self._response.text, "html.parser")
+        name = parsed.title.string
+        return ProductDetails(
+            name=name or "",
+            product_image=self._get_product_image(parsed_data=parsed),
+            description=self._get_description(parsed_data=parsed),
+            price=self._get_price(parsed_data=parsed),
+            product_url=self._url,
+            info_url=self._url,
+            in_stock=self._get_stock_availability(parsed_data=parsed),
         )
-        return product_details
+
+    @staticmethod
+    def _get_description(parsed_data) -> str:
+        """
+        Identify the description of the product.
+
+        Args:
+            parsed_data: Source of the product page as parsed by BeatifulSoup
+
+        Returns:
+             Product description.
+        """
+        description = "UNKNOWN"
+        description_search = parsed_data.find(
+            "div", {"class": "a-expander-partial-collapse-content"}
+        )
+        if description_search:
+            return description_search.text
+        description_search = parsed_data.find("div", {"id": "feature-bullets"})
+        if description_search:
+            return description_search.text
+        return description
+
+    def _get_price(self, parsed_data) -> int:
+        """
+        Identify the price of the product.
+
+        Args:
+            parsed_data: Source of the product page as parsed by BeatifulSoup
+
+        Returns:
+             Price as an int
+        """
+        price = 0
+        price_search = parsed_data.find("span", {"class": "a-price"}).contents[0]
+        if price_search:
+            price = self.normalise_price(price_search.text)
+        return price
+
+    def _get_product_image(self, parsed_data) -> str:
+        """
+        Identify the product image.
+
+        Args:
+            parsed_data: Source of the product page as parsed by BeatifulSoup.
+
+        Returns:
+             Product image URL or an empty string.
+        """
+        product_image = ""
+        product_image_matches = parsed_data.find("img", {"id": "imgBlkFront"})
+        if product_image_matches:
+            product_image_field = product_image_matches.attrs["data-a-dynamic-image"]
+            product_image_json = json.loads(product_image_field)
+            product_image = list(product_image_json.keys())[0]
+            return product_image
+        product_image_matches = re.search(
+            r'"hiRes":"([a-zA-Z0-9:/.+_-]+)"', self._response.text
+        )
+        if product_image_matches:
+            return product_image_matches.group(1)
+        return product_image
+
+    @staticmethod
+    def _get_stock_availability(parsed_data) -> bool:
+        """
+        Identify if the product is in stock.
+
+        Args:
+            parsed_data: Source of the product page as parsed by BeatifulSoup
+
+        Returns:
+             True if in stock otherwise False
+        """
+        for stock in parsed_data.find_all("span", {"class": "a-color-attainable"}):
+            if "in stock" in stock.text.lower():
+                return True
+        for stock in parsed_data.find_all("span", {"class": "a-color-success"}):
+            if "in stock" in stock.text.lower():
+                return True
+        return False
 
 
-class Ikea(ShopInterface):
+class Ikea(Shop):
     """Class to handle interactions with Ikea."""
 
-    def get_product_details(self, url: str) -> ProductDetails:
+    def __init__(self, url: str):
+        """
+        Initialise Ikea.
+
+        Args:
+            url: Product URL.
+        """
+        fixed_url = url.split(sep="?")[0]
+        super().__init__(url=fixed_url)
+
+    def get_product_details(self) -> ProductDetails:
         """
         Get details regarding a product from Ikea.
 
-        Args:
-            url: URL for the product.
-
         Returns:
             ProductDetails containing product details.
         """
-        fixed_url = url.split(sep="?")[0]
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                "(KHTML, like Gecko) Chrome/112.0.5615.50 Safari/537.36"
-            )
-        }
-        req = requests.get(url=fixed_url, headers=headers)
-        if req.status_code != 200:
-            raise ProductNotFoundException("Unable to locate product.")
-        parsed = BeautifulSoup(req.text, "html.parser")
+        parsed = BeautifulSoup(self._response.text, "html.parser")
         name = parsed.title.string
         product_image = parsed.find("img", {"class": "pip-image"}).attrs["src"]
         description = parsed.find("p", {"class": "pip-product-details__paragraph"}).text
-        price = self._normalise_price(
-            parsed.find("span", {"class": "pip-temp-price__integer"}).text
+        price = self.normalise_price_from_float(
+            float(parsed.find("span", {"class": "pip-temp-price__integer"}).text)
         )
         in_stock = False
-        product_details = ProductDetails(
+        return ProductDetails(
             name=name or "",
             product_image=product_image,
             description=description,
             price=int(price),
-            product_url=url,
-            info_url=url,
+            product_url=self._url,
+            info_url=self._url,
             in_stock=in_stock,
         )
-        return product_details
 
-    def _normalise_price(self, price: str) -> int:
+
+class PiHut(Shop):
+    """Class to handle interactions with Pi Hut."""
+
+    __slots__ = (
+        "_product_url",
+        "_response",
+    )
+
+    def __init__(self, url: str):
         """
-        Convert a price as a string to an int.
+        Initialise PiHut.
 
         Args:
-            price: Price as a string.
-
-        Returns:
-            Price as an int in pence.
+            url: Product URL.
         """
-        price = price.strip()
-        return int(float(price) * 100)
+        info_url = f"{url}.js"
+        self._product_url = url
+        super().__init__(url=info_url)
 
-
-class Unknown(ShopInterface):
-    """Class to handle interactions with unknown sites."""
-
-    def get_product_details(self, url: str) -> ProductDetails:
+    def get_product_details(self) -> ProductDetails:
         """
-        Get details regarding a product from Unknown sellers.
-
-        Args:
-            url: URL for the product.
+        Get details regarding a product from PiHut.
 
         Returns:
             ProductDetails containing product details.
         """
+        data = self._response.json()
+        return ProductDetails(
+            name=data["title"],
+            product_image=data["media"][0]["src"],
+            description=data["description"],
+            price=int(data["price"]),
+            product_url=self._product_url,
+            info_url=self._url,
+            in_stock=data["available"],
+        )
+
+
+class Unknown(Shop):
+    """Class to handle interactions with unknown sites."""
+
+    def __init__(self, url: str):
+        """
+        Initialise Unknown.
+
+        Args:
+            url: Product URL.
+        """
         fixed_url = url.split(sep="?")[0]
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                "(KHTML, like Gecko) Chrome/112.0.5615.50 Safari/537.36"
-            )
-        }
-        req = requests.get(url=fixed_url, headers=headers)
-        if req.status_code != 200:
-            raise ProductNotFoundException("Unable to locate product.")
-        parsed = BeautifulSoup(req.text, "html.parser")
+        super().__init__(url=fixed_url)
+
+    def get_product_details(self) -> ProductDetails:
+        """
+        Get details regarding a product from Unknown sellers.
+
+        Returns:
+            ProductDetails containing product details.
+        """
+        parsed = BeautifulSoup(self._response.text, "html.parser")
         name = parsed.title.string
         description = "UNKNOWN"
         price = 0
         in_stock = False
-        product_details = ProductDetails(
+        return ProductDetails(
             name=name or "",
             product_image="",
             description=description,
             price=int(price),
-            product_url=url,
-            info_url=url,
+            product_url=self._url,
+            info_url=self._url,
             in_stock=in_stock,
         )
-        return product_details
 
 
 SHOP_MAP = {
@@ -256,7 +329,8 @@ SHOP_MAP = {
 class ProductDetailsFactory:
     """Factory to provide the correct shop object."""
 
-    def shop(self, url: str) -> ShopInterface:
+    @staticmethod
+    def shop(url: str) -> Shop:
         """
         Provide the shop object.
 
@@ -268,6 +342,6 @@ class ProductDetailsFactory:
         """
         for store_url in SHOP_MAP.keys():
             if url.lower().startswith(store_url):
-                shop_obj = SHOP_MAP[store_url]()  # type: ignore
+                shop_obj = SHOP_MAP[store_url](url=url)  # type: ignore
                 return shop_obj
-        return Unknown()
+        return Unknown(url=url)

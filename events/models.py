@@ -49,12 +49,6 @@ class Venue(models.Model):
     country: models.CharField = models.CharField(max_length=255)
     postcode: models.CharField = models.CharField(max_length=255)
 
-    class Meta:
-        """Meta class."""
-
-        verbose_name = "Venue"
-        verbose_name_plural = "Venues"
-
     def __str__(self) -> str:
         """
         To string for Venue.
@@ -63,16 +57,6 @@ class Venue(models.Model):
             The name and city of the venue
         """
         return f"{self.name} - {self.city}"
-
-    @property
-    def printable(self) -> str:
-        """
-        Printable representation of the model.
-
-        Returns:
-            Printable version of the venue as a string
-        """
-        return f"{self.name}\n{self.street_address}\n{self.city}\n{self.country}\n{self.postcode}"
 
     @property
     def csv(self) -> str:
@@ -84,6 +68,22 @@ class Venue(models.Model):
         """
         return f"{self.name},{self.street_address},{self.city},{self.country},{self.postcode}"
 
+    @property
+    def printable(self) -> str:
+        """
+        Printable representation of the model.
+
+        Returns:
+            Printable version of the venue as a string
+        """
+        return f"{self.name}\n{self.street_address}\n{self.city}\n{self.country}\n{self.postcode}"
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Venue"
+        verbose_name_plural = "Venues"
+
 
 class Station(models.Model):
     """Model for Station."""
@@ -94,12 +94,6 @@ class Station(models.Model):
     country: models.CharField = models.CharField(max_length=255)
     postcode: models.CharField = models.CharField(max_length=255)
 
-    class Meta:
-        """Meta class."""
-
-        verbose_name = "Station"
-        verbose_name_plural = "Stations"
-
     def __str__(self) -> str:
         """
         To string for Station.
@@ -108,6 +102,12 @@ class Station(models.Model):
             The name and cite of the Station
         """
         return f"{self.name} - {self.city}"
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Station"
+        verbose_name_plural = "Stations"
 
 
 class Event(models.Model):
@@ -123,19 +123,6 @@ class Event(models.Model):
     ticket_file: models.FileField = models.FileField(
         storage=OverwriteStorageName, null=True, blank=True, upload_to=ticket_file_name
     )
-
-    class Meta:
-        """Meta class."""
-
-        verbose_name = "Event"
-        verbose_name_plural = "Events"
-
-        constraints = [
-            models.CheckConstraint(
-                check=models.Q(models.Q(ends__gte=models.F("start"))),
-                name="event_ends_after_start",
-            ),
-        ]
 
     def __str__(self) -> str:
         """
@@ -174,17 +161,24 @@ class Event(models.Model):
             arranged = "Partial"
         return arranged
 
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Event"
+        verbose_name_plural = "Events"
+
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(models.Q(ends__gte=models.F("start"))),
+                name="event_ends_after_start",
+            ),
+        ]
+
 
 class TravelType(models.Model):
     """Model for travel type."""
 
     name: models.CharField = models.CharField(max_length=255)
-
-    class Meta:
-        """Meta class."""
-
-        verbose_name = "Travel type"
-        verbose_name_plural = "Travel types"
 
     def __str__(self) -> str:
         """
@@ -194,6 +188,12 @@ class TravelType(models.Model):
             Travel type name as a string
         """
         return str(self.name)
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Travel type"
+        verbose_name_plural = "Travel types"
 
 
 class Travel(models.Model):
@@ -233,12 +233,6 @@ class Travel(models.Model):
     )
     notes: models.TextField = models.TextField(max_length=500)
 
-    class Meta:
-        """Meta class."""
-
-        verbose_name = "Travel"
-        verbose_name_plural = "Travel"
-
     def __str__(self) -> str:
         """
         To string for Travel.
@@ -247,6 +241,12 @@ class Travel(models.Model):
             The event name, departing station and arrival station for the Travel
         """
         return f"{self.for_event.name}: {self.departing_station.name} -> {self.arrival_station.name}"
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Travel"
+        verbose_name_plural = "Travel"
 
 
 class Hotel(models.Model):
@@ -258,12 +258,6 @@ class Hotel(models.Model):
     country: models.CharField = models.CharField(max_length=255)
     postcode: models.CharField = models.CharField(max_length=255)
 
-    class Meta:
-        """Meta class."""
-
-        verbose_name = "Hotel"
-        verbose_name_plural = "Hotels"
-
     def __str__(self) -> str:
         """
         To string for Venue.
@@ -272,6 +266,12 @@ class Hotel(models.Model):
             The name and city of the venue
         """
         return f"{self.name} - {self.city}"
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = "Hotel"
+        verbose_name_plural = "Hotels"
 
 
 class Accommodation(models.Model):
@@ -292,6 +292,15 @@ class Accommodation(models.Model):
     check_in: models.DateTimeField = models.DateTimeField(verbose_name="Check In")
     check_out: models.DateTimeField = models.DateTimeField(verbose_name="Check Out")
 
+    def __str__(self) -> str:
+        """
+        To string for accommodation.
+
+        Returns:
+            The name of the accommodation and event
+        """
+        return f"{self.for_event.name} - {self.hotel.name}"
+
     class Meta:
         """Meta class."""
 
@@ -304,12 +313,3 @@ class Accommodation(models.Model):
                 name="accommodation_check_in_before_checkout",
             ),
         ]
-
-    def __str__(self) -> str:
-        """
-        To string for accommodation.
-
-        Returns:
-            The name of the accommodation and event
-        """
-        return f"{self.for_event.name} - {self.hotel.name}"

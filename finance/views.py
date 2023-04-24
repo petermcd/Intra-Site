@@ -111,7 +111,7 @@ class Monzo(generic.TemplateView):
             request=request, template_name=self.template_name, context=context
         )
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs) -> HttpResponse:
         """
         Process the post request.
 
@@ -206,7 +206,7 @@ class MonzoTransactionsView(generic.TemplateView):
             request=request, template_name=self.template_name, context=context
         )
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs) -> HttpResponse:
         """
         Process the post request.
 
@@ -315,7 +315,7 @@ class PaymentsView(generic.ListView):
         return current_payments
 
 
-def bill(request, pk: int):
+def bill(request, pk: int) -> HttpResponse:
     """
     View to handle fetching data for a bill.
 
@@ -340,7 +340,9 @@ def bill(request, pk: int):
     return render(request, "finance/bill.html", data)
 
 
-def bill_history(request, pk: int, period: str = "year"):
+def bill_history(
+    request, pk: int, period: str = "year"
+) -> Union[HttpResponse, JsonResponse]:
     """
     View to handle fetching bill history data.
 
@@ -388,7 +390,7 @@ def bill_history(request, pk: int, period: str = "year"):
     return JsonResponse(data=response, safe=False)
 
 
-def bill_delete(request, pk: int):
+def bill_delete(request, pk: int) -> HttpResponse:
     """
     View to handle deleting a bill.
 
@@ -407,7 +409,7 @@ def bill_delete(request, pk: int):
     return HttpResponse(status=200)
 
 
-def investment(request, pk: int):
+def investment(request, pk: int) -> HttpResponse:
     """
     View to handle fetching data for an investment.
 
@@ -432,7 +434,7 @@ def investment(request, pk: int):
     return render(request, "finance/investment.html", data)
 
 
-def investment_delete(request, pk: int):
+def investment_delete(request, pk: int) -> HttpResponse:
     """
     View to handle deleting an investment.
 
@@ -451,7 +453,9 @@ def investment_delete(request, pk: int):
     return HttpResponse(status=200)
 
 
-def investment_history(request, pk: int, period: str = "year"):
+def investment_history(
+    request, pk: int, period: str = "year"
+) -> Union[HttpResponse, JsonResponse]:
     """
     View to handle fetching investment history data.
 
@@ -499,7 +503,7 @@ def investment_history(request, pk: int, period: str = "year"):
     return JsonResponse(data=response, safe=False)
 
 
-def investment_add(request):
+def investment_add(request) -> HttpResponse:
     """
     Handle adding a new investment.
 
@@ -525,7 +529,7 @@ def investment_add(request):
     return render(request, "finance/partials/investment_item.html", context)
 
 
-def investment_output_form(request):
+def investment_output_form(request) -> HttpResponse:
     """
     Handle outputting the form for adding a new task item.
 

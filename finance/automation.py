@@ -47,7 +47,7 @@ class FetchTransactions:
         self._fetch_transactions()
         return self._process_output()
 
-    def _fetch_account(self):
+    def _fetch_account(self) -> None:
         """Identify the correct account."""
         accounts = Account.fetch(auth=self._auth)
         for account in accounts:
@@ -55,7 +55,7 @@ class FetchTransactions:
                 self._account_id = account.account_id
                 break
 
-    def _fetch_transactions(self):
+    def _fetch_transactions(self) -> None:
         """Fetch transactions from Monzo."""
         since = self._handler.last_transaction_datetime
         if not since:
@@ -157,7 +157,7 @@ class ProcessInterest:
             self._add_interest(bill)
         return {}
 
-    def _add_interest(self, bill: Bill):
+    def _add_interest(self, bill: Bill) -> None:
         """
         Add interest to the given bill.
 

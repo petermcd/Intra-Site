@@ -5,7 +5,7 @@ from django.core.files.storage import FileSystemStorage
 class OverwriteStorageName(FileSystemStorage):
     """Class to handle file uploads and the deletion of old files."""
 
-    def get_available_name(self, name, max_length=None):
+    def get_available_name(self, name, max_length=None) -> str:
         """
         Override the given name with tbe new name.
 

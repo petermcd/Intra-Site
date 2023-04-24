@@ -24,15 +24,15 @@ class Application(models.Model):
     alias: models.CharField = models.CharField(max_length=255, blank=True)
     description: models.TextField = models.TextField()
 
+    def __str__(self):
+        """Return the application name."""
+        return self.name
+
     class Meta:
         """Meta class."""
 
         verbose_name = "Application"
         verbose_name_plural = "Applications"
-
-    def __str__(self):
-        """Return the application name."""
-        return self.name
 
 
 class ConnectionType(models.Model):
@@ -41,15 +41,15 @@ class ConnectionType(models.Model):
     name: models.CharField = models.CharField(max_length=255, unique=True)
     unique_port: models.BooleanField = models.BooleanField(default=False)
 
+    def __str__(self):
+        """Return the connection type name."""
+        return self.name
+
     class Meta:
         """Meta class."""
 
         verbose_name = "Connection type"
         verbose_name_plural = "Connection types"
-
-    def __str__(self):
-        """Return the connection type name."""
-        return self.name
 
 
 class Registrar(models.Model):
@@ -58,15 +58,15 @@ class Registrar(models.Model):
     name: models.CharField = models.CharField(max_length=255, unique=True)
     url: models.URLField = models.URLField()
 
+    def __str__(self):
+        """Return the registrar name."""
+        return self.name
+
     class Meta:
         """Meta class."""
 
         verbose_name = "Registrar"
         verbose_name_plural = "Registrars"
-
-    def __str__(self):
-        """Return the registrar name."""
-        return self.name
 
 
 class DomainName(models.Model):
@@ -77,15 +77,15 @@ class DomainName(models.Model):
         Registrar, on_delete=models.RESTRICT
     )
 
+    def __str__(self):
+        """Return the domain name."""
+        return self.name
+
     class Meta:
         """Meta class."""
 
         verbose_name = "Domain name"
         verbose_name_plural = "Domain names"
-
-    def __str__(self):
-        """Return the domain name."""
-        return self.name
 
 
 class Vendor(models.Model):
@@ -94,15 +94,15 @@ class Vendor(models.Model):
     name: models.CharField = models.CharField(max_length=255, unique=True)
     url: models.URLField = models.URLField()
 
+    def __str__(self):
+        """Return the vendor name."""
+        return self.name
+
     class Meta:
         """Meta class."""
 
         verbose_name = "Vendor"
         verbose_name_plural = "Vendors"
-
-    def __str__(self):
-        """Return the vendor name."""
-        return self.name
 
 
 class Model(models.Model):
@@ -111,15 +111,15 @@ class Model(models.Model):
     name: models.CharField = models.CharField(max_length=255, unique=True)
     vendor: models.ForeignKey = models.ForeignKey(Vendor, on_delete=models.RESTRICT)
 
+    def __str__(self):
+        """Return the model name."""
+        return self.name
+
     class Meta:
         """Meta class."""
 
         verbose_name = "Model"
         verbose_name_plural = "Models"
-
-    def __str__(self):
-        """Return the model name."""
-        return self.name
 
 
 class DeviceType(models.Model):
@@ -128,15 +128,15 @@ class DeviceType(models.Model):
     name: models.CharField = models.CharField(max_length=255, unique=True)
     image: models.CharField = models.CharField(max_length=20)
 
+    def __str__(self):
+        """Return the device type name."""
+        return self.name
+
     class Meta:
         """Meta class."""
 
         verbose_name = "Device type"
         verbose_name_plural = "Device types"
-
-    def __str__(self):
-        """Return the device type name."""
-        return self.name
 
 
 class OperatingSystem(models.Model):
@@ -155,15 +155,15 @@ class OperatingSystem(models.Model):
         max_length=255, null=True, blank=True
     )
 
+    def __str__(self):
+        """Return the operating system name."""
+        return self.name
+
     class Meta:
         """Meta class."""
 
         verbose_name = "Operating system"
         verbose_name_plural = "Operating systems"
-
-    def __str__(self):
-        """Return the operating system name."""
-        return self.name
 
 
 class Device(models.Model):
@@ -234,15 +234,15 @@ class AnsibleVariables(models.Model):
 
     name: models.CharField = models.CharField(max_length=255)
 
+    def __str__(self):
+        """Return the Ansible variable name."""
+        return self.name
+
     class Meta:
         """Meta class."""
 
         verbose_name = "Ansible variable"
         verbose_name_plural = "Ansible variables"
-
-    def __str__(self):
-        """Return the Ansible variable name."""
-        return self.name
 
 
 class AnsibleDeviceConfiguration(models.Model):
@@ -253,6 +253,10 @@ class AnsibleDeviceConfiguration(models.Model):
         AnsibleVariables, on_delete=models.CASCADE
     )
     value: models.CharField = models.CharField(max_length=255)
+
+    def __str__(self):
+        """Return the Ansible device configuration name."""
+        return f"{self.for_device.hostname} - {self.name}"
 
     class Meta:
         """Meta class."""
@@ -265,10 +269,6 @@ class AnsibleDeviceConfiguration(models.Model):
         ]
         verbose_name = "Ansible device configuration"
         verbose_name_plural = "Ansible device configurations"
-
-    def __str__(self):
-        """Return the Ansible device configuration name."""
-        return f"{self.for_device.hostname} - {self.name}"
 
 
 class Website(models.Model):
@@ -287,6 +287,10 @@ class Website(models.Model):
     path: models.CharField = models.CharField(max_length=255, null=True, blank=True)
     description: models.TextField = models.TextField(null=True, blank=True)
 
+    def __str__(self):
+        """Return the subdomain name."""
+        return self.name
+
     @property
     def full_url(self):
         """Return the full url."""
@@ -298,10 +302,6 @@ class Website(models.Model):
             if any([self.subdomain, self.domain_name])
             else f"{protocol}://{self.hosted_on.ip_address}{port}{path}"
         )
-
-    def __str__(self):
-        """Return the subdomain name."""
-        return self.name
 
     class Meta:
         """Subdomain` model meta class."""

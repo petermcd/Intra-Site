@@ -22,7 +22,7 @@ class DocumentView(generic.ListView):
         return list(documents)
 
 
-def document_delete(request, pk: int):
+def document_delete(request, pk: int) -> HttpResponse:
     """
     View to handle deleting a document item.
 
@@ -31,7 +31,7 @@ def document_delete(request, pk: int):
         pk: primary key for the document item being deleted
 
     Returns:
-        Empty response with a 204 code
+        Empty response with a 200 code
     """
     if not request.user.is_authenticated:
         return HttpResponse(status=401)

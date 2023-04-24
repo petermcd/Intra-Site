@@ -73,7 +73,7 @@ class DetailView(generic.DetailView):
         return Event.objects.all()
 
 
-def event_delete(request, pk: int):
+def event_delete(request, pk: int) -> HttpResponse:
     """
     View to handle deleting and event a task item.
 

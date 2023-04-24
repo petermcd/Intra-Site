@@ -13,7 +13,7 @@ class DjangoHandler(Storage):
     __instance = None
     _credentials_record = None
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args, **kwargs) -> "DjangoHandler":
         """Create a singleton instance."""
         if not cls.__instance:
             cls.__instance = super().__new__(cls)
@@ -41,7 +41,7 @@ class DjangoHandler(Storage):
             else {}
         )
 
-    def set_client_details(self, client_id: str, client_secret: str):
+    def set_client_details(self, client_id: str, client_secret: str) -> None:
         """
         Store a given client id and secret and clear all other details.
 
@@ -51,7 +51,7 @@ class DjangoHandler(Storage):
         """
         self._fetch_monzo_credential_object()
         if not self._credentials_record:
-            return {}
+            return
         self._credentials_record.access_token = None
         self._credentials_record.client_id = client_id
         self._credentials_record.client_secret = client_secret
@@ -159,18 +159,18 @@ class DjangoHandler(Storage):
         self._credentials_record.last_fetched_datetime = when
         self._credentials_record.save()
 
-    def _fetch_monzo_credential_object(self):
+    def _fetch_monzo_credential_object(self) -> None:
         """Fetch the monzo credential object from the database."""
         if self._credentials_record:
             return
-        credentials: list[Monzo] = Monzo.objects.all()
+        credentials = Monzo.objects.all()
         if len(credentials):
             self._credentials_record = credentials[0]
             return
         self._credentials_record = Monzo()
 
 
-def create_redirect_url(request):
+def create_redirect_url(request) -> str:
     """
     Build the URL to use for a redirect URL.
 
