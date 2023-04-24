@@ -80,30 +80,21 @@ class FetchTransactions:
             monzo_transaction.created = tran.created
             monzo_transaction.description = tran.description
             monzo_transaction.has_receipt = False
-            if tran.merchant:
-                merchant = MonzoMerchant.objects.filter(
-                    merchant_id__exact=tran.description
-                )
-                if len(merchant):
-                    monzo_transaction.merchant = merchant[0]
-                else:
-                    new_merchant = MonzoMerchant()
+            merchant = MonzoMerchant.objects.filter(
+                merchant_id__exact=tran.description
+            )
+            if len(merchant):
+                monzo_transaction.merchant = merchant[0]
+            else:
+                new_merchant = MonzoMerchant()
+                if tran.merchant:
                     new_merchant.merchant_id = tran.merchant["id"]
                     new_merchant.name = tran.merchant["name"]
-                    new_merchant.save()
-                    monzo_transaction.merchant = new_merchant
-            else:
-                merchant = MonzoMerchant.objects.filter(
-                    merchant_id__exact=tran.description
-                )
-                if len(merchant):
-                    monzo_transaction.merchant = merchant[0]
                 else:
-                    new_merchant = MonzoMerchant()
                     new_merchant.merchant_id = tran.description
                     new_merchant.name = tran.description
-                    new_merchant.save()
-                    monzo_transaction.merchant = new_merchant
+                new_merchant.save()
+                monzo_transaction.merchant = new_merchant
             monzo_transaction.save()
             if self._process_transactions:
                 self._process_transaction(transaction=monzo_transaction)
