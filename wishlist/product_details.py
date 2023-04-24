@@ -132,16 +132,20 @@ class Amazon(Shop):
         Returns:
              Product description.
         """
-        description = "UNKNOWN"
-        description_search = parsed_data.find(
+        if description_search := parsed_data.find(
             "div", {"class": "a-expander-partial-collapse-content"}
+        ):
+            return description_search.text
+        description = "UNKNOWN"
+        return (
+            description_search.text
+            if (
+                description_search := parsed_data.find(
+                    "div", {"id": "feature-bullets"}
+                )
+            )
+            else description
         )
-        if description_search:
-            return description_search.text
-        description_search = parsed_data.find("div", {"id": "feature-bullets"})
-        if description_search:
-            return description_search.text
-        return description
 
     def _get_price(self, parsed_data) -> int:
         """
@@ -153,11 +157,15 @@ class Amazon(Shop):
         Returns:
              Price as an int
         """
-        price = 0
-        price_search = parsed_data.find("span", {"class": "a-price"}).contents[0]
-        if price_search:
-            price = self.normalise_price(price_search.text)
-        return price
+        return (
+            self.normalise_price(price_search.text)
+            if (
+                price_search := parsed_data.find(
+                    "span", {"class": "a-price"}
+                ).contents[0]
+            )
+            else 0
+        )
 
     def _get_product_image(self, parsed_data) -> str:
         """
@@ -169,19 +177,16 @@ class Amazon(Shop):
         Returns:
              Product image URL or an empty string.
         """
-        product_image = ""
-        product_image_matches = parsed_data.find("img", {"id": "imgBlkFront"})
-        if product_image_matches:
+        if product_image_matches := parsed_data.find("img", {"id": "imgBlkFront"}):
             product_image_field = product_image_matches.attrs["data-a-dynamic-image"]
             product_image_json = json.loads(product_image_field)
-            product_image = list(product_image_json.keys())[0]
-            return product_image
-        product_image_matches = re.search(
+            return list(product_image_json.keys())[0]
+        if product_image_matches := re.search(
             r'"hiRes":"([a-zA-Z0-9:/.+_-]+)"', self._response.text
-        )
-        if product_image_matches:
-            return product_image_matches.group(1)
-        return product_image
+        ):
+            return product_image_matches[1]
+        else:
+            return ""
 
     @staticmethod
     def _get_stock_availability(parsed_data) -> bool:
@@ -197,10 +202,10 @@ class Amazon(Shop):
         for stock in parsed_data.find_all("span", {"class": "a-color-attainable"}):
             if "in stock" in stock.text.lower():
                 return True
-        for stock in parsed_data.find_all("span", {"class": "a-color-success"}):
-            if "in stock" in stock.text.lower():
-                return True
-        return False
+        return any(
+            "in stock" in stock.text.lower()
+            for stock in parsed_data.find_all("span", {"class": "a-color-success"})
+        )
 
 
 class Ikea(Shop):
@@ -309,7 +314,7 @@ class Unknown(Shop):
             name=name or "",
             product_image="",
             description=description,
-            price=int(price),
+            price=price,
             product_url=self._url,
             info_url=self._url,
             in_stock=in_stock,
@@ -342,6 +347,5 @@ class ProductDetailsFactory:
         """
         for store_url in SHOP_MAP.keys():
             if url.lower().startswith(store_url):
-                shop_obj = SHOP_MAP[store_url](url=url)  # type: ignore
-                return shop_obj
+                return SHOP_MAP[store_url](url=url)
         return Unknown(url=url)
