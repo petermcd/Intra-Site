@@ -260,6 +260,7 @@ class PiHut(Shop):
         Args:
             url: Product URL.
         """
+        url = url.split(sep="?")[0]
         info_url = f"{url}.js"
         self._product_url = url
         super().__init__(url=info_url)
