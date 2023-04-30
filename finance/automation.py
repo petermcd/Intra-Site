@@ -5,6 +5,7 @@ from typing import Union
 from monzo.authentication import Authentication
 from monzo.endpoints.account import Account
 from monzo.endpoints.transaction import Transaction
+from monzo.exceptions import MonzoAuthenticationError
 
 from finance.models import DEBT_TYPES, Bill, MonzoMerchant, MonzoTransaction
 from finance.utilities import DjangoHandler
@@ -41,10 +42,16 @@ class FetchTransactions:
         )
         self._auth.register_callback_handler(self._handler)
 
-    def process(self) -> dict[str, int]:
+    def process(self) -> dict[str, Union[int, str]]:
         """Process transactions."""
-        self._fetch_account()
-        self._fetch_transactions()
+        try:
+            self._fetch_account()
+            self._fetch_transactions()
+        except MonzoAuthenticationError as exc:
+            return {
+                "result": "failure",
+                "message": exc,
+            }
         return self._process_output()
 
     def _fetch_account(self) -> None:
@@ -106,7 +113,7 @@ class FetchTransactions:
 
         self._handler.last_transaction_datetime = self._last_transaction
 
-    def _process_output(self) -> dict[str, int]:
+    def _process_output(self) -> dict[str, Union[int, str]]:
         """
         Process the output.
 
@@ -114,6 +121,7 @@ class FetchTransactions:
             Dict describing the output
         """
         return {
+            "result": "success",
             "processed_transactions": self._processed_transaction_count,
             "transactions": self._transaction_count,
         }
