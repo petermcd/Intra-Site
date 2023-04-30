@@ -35,7 +35,7 @@ class DjangoHandler(Storage):
                 "client_id": str(self._credentials_record.client_id),
                 "client_secret": str(self._credentials_record.client_secret),
                 "expiry": self._credentials_record.expiry,
-                "refresh_token": str(self._credentials_record.access_token),
+                "refresh_token": str(self._credentials_record.refresh_token),
             }
             if self._credentials_record
             else {}
