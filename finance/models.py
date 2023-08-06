@@ -146,7 +146,7 @@ class InvestmentValue(models.Model):
 
     def __str__(self) -> str:
         """Return a string representation of the model."""
-        return f"{self.investment.name} ({self.value})"
+        return f"{self.investment.organisation} ({self.value})"
 
 
 class Monzo(models.Model):
