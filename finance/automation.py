@@ -162,7 +162,7 @@ class ProcessInterest:
             bill: Bill to add interest too
         """
         interest: float = self._calculate_interest(
-            balance=bill.current_balance, apr=bill.apr
+            balance=float(bill.current_balance), apr=float(bill.apr)
         )
         bill.current_balance += interest
         bill.save()

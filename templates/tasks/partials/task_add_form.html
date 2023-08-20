@@ -2,8 +2,7 @@
   <form
     hx-post="add"
     hx-target="#task-item-add"
-    hx-swap="outerHTML"
-  >
+    hx-swap="outerHTML">
     <td>
       {% csrf_token %}
       <button hx-trigger="click" type="submit">
@@ -11,7 +10,7 @@
       </button>
     </td>
     <td>
-      <input name="task-title" type="text" />
+      <input name="task-title" type="text"/>
     </td>
     <td>
       <input name="task-due-by" type="date" data-field="datetime">

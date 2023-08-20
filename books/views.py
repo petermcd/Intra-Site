@@ -3,7 +3,7 @@ from json import dumps, loads
 from typing import Any
 
 import requests
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views import generic
 
 from books.models import Author, Book
@@ -90,6 +90,27 @@ class DetailView(generic.DetailView):
             List of book objects
         """
         return Book.objects.all()
+
+
+def all_books_json(request) -> JsonResponse:
+    """
+    View to output books as json.
+
+    Args:
+        request: API Request
+
+    Returns:
+         HttpResponse
+    """
+    books: dict[str, Any] = {"books": []}
+    book_res = Book.objects.all()
+    for book in book_res:
+        book_details = {
+            "title": book.title,
+            "author": [author.name for author in book.authors.all()],
+        }
+        books["books"].append(book_details)
+    return JsonResponse(books)
 
 
 def get_book_details(request, search_type: str, search: str) -> HttpResponse:

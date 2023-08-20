@@ -1,14 +1,14 @@
 {% load mathfilters %}
 <tr id="wishlist-item-{{ wishlist_item.pk }}">
   <td>{% if wishlist_item.image %}
-    <img src="{{ wishlist_item.image }}" alt="{{ wishlist_item.name }}" width="100px" height="100px" />
+    <img src="{{ wishlist_item.image }}" alt="{{ wishlist_item.name }}" width="100px" height="100px"/>
   {% endif %}</td>
   <td>{{ wishlist_item.name }}</td>
   <td>{{ wishlist_item.description | safe }}</td>
   <td>{% if wishlist_item.in_stock %}&#9989;{% endif %}</td>
   <td>
     <a href="{{ wishlist_item.product_url }}" target="_blank">Buy</a>
-    {% if wishlist_item.price > 0 %}<br />£{{ wishlist_item.price|div:100 }}{% endif %}
+    {% if wishlist_item.price > 0 %}<br/>£{{ wishlist_item.price|div:100 }}{% endif %}
   </td>
   <td>
     <button hx-get="{{ wishlist_item.pk }}/decrease"

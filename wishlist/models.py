@@ -24,4 +24,4 @@ class WishlistItem(models.Model):
         Return:
             String representation of the object
         """
-        return self.name
+        return str(self.name)

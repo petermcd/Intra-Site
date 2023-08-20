@@ -49,7 +49,7 @@ class Wake:
         if not self._device.connected_too:
             return False
         turing_pi_ip: str = self._device.connected_too.ip_address
-        turing_pi_port = self._device.port - 1
+        turing_pi_port = int(self._device.port) - 1
         url = f"http://{turing_pi_ip}/api/bmc?opt=set&type=power&node{turing_pi_port}=1"
         from urllib import request
 

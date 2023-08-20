@@ -61,16 +61,14 @@ def wake_device(request, pk: int):
     Returns:
         Empty response with a 200 code
     """
-    device = Device.objects.filter(pk=pk)
-
-    if not device:
+    if device := Device.objects.filter(pk=pk):
+        return (
+            HttpResponse(status=200)
+            if Wake(device=device[0]).wake()
+            else HttpResponse(status=400)
+        )
+    else:
         return HttpResponse(status=400)
-
-    res = Wake(device=device[0]).wake()
-    if res:
-        return HttpResponse(status=200)
-
-    return HttpResponse(status=400)
 
 
 def website_delete(request, pk: int):

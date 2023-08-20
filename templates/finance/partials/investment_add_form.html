@@ -14,17 +14,17 @@
       <select name="organisation">
         {% for organisation in organisations %}
           <option value="{{ organisation.id }}">{{ organisation.name }}</option>
-        {%  endfor %}
+        {% endfor %}
       </select>
     </td>
     <td>
-      <input name="description" type="text" />
+      <input name="description" type="text"/>
     </td>
     <td>
-      <input name="value" type="number" min="0" value="0" step="0.01" />
+      <input name="value" type="number" min="0" value="0" step="0.01"/>
     </td>
     <td>
-      <input name="invested_on" type="date" data-field="datetime" />
+      <input name="invested_on" type="date" data-field="datetime"/>
     </td>
     <td></td>
   </form>
