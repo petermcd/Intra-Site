@@ -17,9 +17,11 @@
         {% for author in author_list %}
           <tr>
             <td>{{ author.name }}</td>
-            <td><ul>{% for book in author.book_set.all %}
-              <li><a href='/books/{{ book.id }}/'>{{ book.title }}</a></li>
-            {% endfor %}</ul></td>
+            <td>
+              <ul>{% for book in author.book_set.all %}
+                <li><a href='/books/{{ book.id }}/'>{{ book.title }}</a></li>
+              {% endfor %}</ul>
+            </td>
           </tr>
         {% endfor %}
         {% if author_list|length < 1 %}
@@ -40,7 +42,8 @@
             {% endif %}
             {{ page_obj.number }}
             {% if page_obj.has_next %}
-              <a href="?page={{ page_obj.next_page_number }}{{ search_term }}">{{ page_obj.next_page_number }}</a>
+              <a href="?page=
+                {{ page_obj.next_page_number }}{{ search_term }}">{{ page_obj.next_page_number }}</a>
               {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
                 <a href="?page={{ page_obj.paginator.num_pages }}{{ search_term }}">{{ page_obj.paginator.num_pages }}</a>
               {% endif %}

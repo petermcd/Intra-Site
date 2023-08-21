@@ -11,7 +11,9 @@
       </button>
     </form>
   </td>
-  <td><label for="{{ investment.pk }}"><a href="{{ investment.pk }}">{{ investment.organisation.name }}</a></label></td>
+  <td>
+    <label for="{{ investment.pk }}"><a href="{{ investment.pk }}">{{ investment.organisation.name }}</a></label>
+  </td>
   <td>{{ investment.description }}</td>
   <td>£{{ investment.current_value }}</td>
   <td>{{ investment.date_purchased }}</td>
