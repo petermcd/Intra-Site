@@ -107,7 +107,13 @@ def all_books_json(request) -> JsonResponse:
     for book in book_res:
         book_details = {
             "title": book.title,
+            "subtitle": book.subtitle,
+            "description": book.description,
+            "thumbnail": book.thumbnail,
             "author": [author.name for author in book.authors.all()],
+            "publisher": book.publisher,
+            "published": book.published,
+            "isbn13": book.isbn13,
         }
         books["books"].append(book_details)
     return JsonResponse(books)
