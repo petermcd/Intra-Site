@@ -200,6 +200,7 @@ def all_wishlist_json(request) -> JsonResponse:
             "quantity": wishlist.quantity,
             "price": wishlist.price,
             "url": wishlist.product_url,
+            "description": wishlist.description,
         }
         response["wishlist"].append(wishlist_details)
     return JsonResponse(response)
