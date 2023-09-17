@@ -196,12 +196,13 @@ def all_wishlist_json(request) -> JsonResponse:
     wishlist_res = WishlistItem.objects.all()
     for wishlist in wishlist_res:
         wishlist_details = {
-            "name": wishlist.name,
-            "quantity": wishlist.quantity,
-            "price": wishlist.price,
-            "url": wishlist.product_url,
             "description": wishlist.description,
+            "id": wishlist.pk,
             "image": wishlist.image,
+            "name": wishlist.name,
+            "price": wishlist.price,
+            "quantity": wishlist.quantity,
+            "url": wishlist.product_url,
         }
         response["wishlist"].append(wishlist_details)
     return JsonResponse(response)
