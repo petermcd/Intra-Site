@@ -16,6 +16,6 @@ urlpatterns = [
     path("additem", WishlistAdd.as_view(), name="wishlist_add"),
     path("<int:pk>/increase", WishlistIncrease.as_view(), name="wishlist_increase"),
     path("<int:pk>/decrease", WishlistDecrease.as_view(), name="wishlist_decrease"),
-    path("update_next", WishlistUpdateNext.as_view(), name="wishlist_decrease"),
-    path("wishlist.json", all_wishlist_json, name="wishlist_jsone"),
+    path("update_next", WishlistUpdateNext.as_view(), name="wishlist_next"),
+    path("wishlist.json", all_wishlist_json, name="wishlist_json"),
 ]
