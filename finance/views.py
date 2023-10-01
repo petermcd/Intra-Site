@@ -1,6 +1,5 @@
 """Views for the Finance application."""
 from datetime import datetime, timedelta
-from typing import Union
 
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import redirect, render
@@ -11,9 +10,7 @@ from monzo.exceptions import MonzoAuthenticationError, MonzoServerError
 from finance.automation import FetchTransactions, ProcessInterest
 from finance.models import (
     Bill,
-    BillHistory,
     Investments,
-    InvestmentValue,
     MonzoMerchant,
     MonzoTransaction,
     Organisation,
@@ -340,56 +337,6 @@ def bill(request, pk: int) -> HttpResponse:
     return render(request, "finance/bill.html", data)
 
 
-def bill_history(
-    request, pk: int, period: str = "year"
-) -> Union[HttpResponse, JsonResponse]:
-    """
-    View to handle fetching bill history data.
-
-    Args:
-        request: Request object
-        pk: primary key for the bill to fetch data for
-        period: period to fetch data for
-
-    Returns:
-        Json containing data for the given investment and period
-    """
-    if not request.user.is_authenticated:
-        return HttpResponse(status=401)
-    response_list: list[dict[str, Union[str]]] = []
-    days = 0
-    weeks = 0
-    if period == "day":
-        days = 1
-    elif period == "week":
-        weeks = 1
-    elif period == "month":
-        days = 30
-    elif period == "year":
-        days = 365
-    else:
-        days = 1826
-    time_delta = timedelta(days=days, weeks=weeks)
-    lookup_time = datetime.now() - time_delta
-    bill_values = BillHistory.objects.filter(date__gt=lookup_time, bill=pk).order_by(
-        "date"
-    )
-    if len(bill_values) > 0:
-        response_list.extend(
-            {
-                "date": bill_value.date.strftime("%Y-%m-%d"),
-                "value": bill_value.current_balance,
-            }
-            for bill_value in bill_values
-        )
-    response = {
-        "status": "success",
-        "record_count": len(response_list),
-        "data": response_list,
-    }
-    return JsonResponse(data=response, safe=False)
-
-
 def bill_delete(request, pk: int) -> HttpResponse:
     """
     View to handle deleting a bill.
@@ -451,56 +398,6 @@ def investment_delete(request, pk: int) -> HttpResponse:
     if len(investment_item) == 1:
         investment_item.delete()
     return HttpResponse(status=200)
-
-
-def investment_history(
-    request, pk: int, period: str = "year"
-) -> Union[HttpResponse, JsonResponse]:
-    """
-    View to handle fetching investment history data.
-
-    Args:
-        request: Request object
-        pk: primary key for the investment to fetch data for
-        period: period to fetch data for
-
-    Returns:
-        Json containing data for the given investment and period
-    """
-    if not request.user.is_authenticated:
-        return HttpResponse(status=401)
-    response_list: list[dict[str, Union[str]]] = []
-    days = 0
-    weeks = 0
-    if period == "day":
-        days = 1
-    elif period == "week":
-        weeks = 1
-    elif period == "month":
-        days = 30
-    elif period == "year":
-        days = 365
-    else:
-        days = 1826
-    time_delta = timedelta(days=days, weeks=weeks)
-    lookup_time = datetime.now() - time_delta
-    investment_values = InvestmentValue.objects.filter(
-        date__gt=lookup_time, investment=pk
-    ).order_by("date")
-    if len(investment_values) > 0:
-        response_list.extend(
-            {
-                "date": investment_value.date.strftime("%Y-%m-%d"),
-                "value": investment_value.value,
-            }
-            for investment_value in investment_values
-        )
-    response = {
-        "status": "success",
-        "record_count": len(response_list),
-        "data": response_list,
-    }
-    return JsonResponse(data=response, safe=False)
 
 
 def investment_add(request) -> HttpResponse:

@@ -19,5 +19,7 @@ urlpatterns = [
     path("network/", include("network.urls")),
     path("tasks/", include("tasks.urls")),
     path("wishlist/", include("wishlist.urls")),
+    path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
+    path("api/", include("api.urls")),
     path("__debug__/", include("debug_toolbar.urls")),
 ]

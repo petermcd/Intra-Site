@@ -74,6 +74,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "mathfilters",
+    "oauth2_provider",
+    "rest_framework",
+    "api.apps.ApiConfig",
     "books.apps.BooksConfig",
     "documents.apps.DocumentsConfig",
     "events.apps.EventsConfig",
@@ -116,6 +119,24 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "intranet.wsgi.application"
+
+OAUTH2_PROVIDER = {
+    "ALLOWED_REDIRECT_URI_SCHEMES": ["https", "intra"],
+    "SCOPES": {
+        "read": "Read scope",
+        "write": "Write scope",
+        "groups": "Access to your groups",
+    },
+}
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
+    ],
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
