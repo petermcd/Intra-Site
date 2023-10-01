@@ -1,9 +1,7 @@
 """Views for the Wishlist application."""
-from datetime import datetime
-from typing import Any
-
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
+from django.utils.timezone import now
 from django.views import generic
 
 from wishlist.models import WishlistItem
@@ -162,7 +160,7 @@ class WishlistUpdateNext(generic.TemplateView):
         item.description = product_details.description
         item.price = product_details.price
         item.in_stock = product_details.in_stock
-        item.last_updated = datetime.now()
+        item.last_updated = now()
         item.save()
         return JsonResponse(
             {
@@ -180,29 +178,3 @@ class WishlistUpdateNext(generic.TemplateView):
                 },
             }
         )
-
-
-def all_wishlist_json(request) -> JsonResponse:
-    """
-    View to output wishlist as json.
-
-    Args:
-        request: API Request
-
-    Returns:
-         HttpResponse
-    """
-    response: dict[str, list[dict[str, Any]]] = {"wishlist": []}
-    wishlist_res = WishlistItem.objects.all()
-    for wishlist in wishlist_res:
-        wishlist_details = {
-            "description": wishlist.description,
-            "id": wishlist.pk,
-            "image": wishlist.image,
-            "name": wishlist.name,
-            "price": wishlist.price,
-            "quantity": wishlist.quantity,
-            "url": wishlist.product_url,
-        }
-        response["wishlist"].append(wishlist_details)
-    return JsonResponse(response)

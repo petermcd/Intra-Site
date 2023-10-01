@@ -7,7 +7,6 @@ from wishlist.views import (
     WishlistDecrease,
     WishlistIncrease,
     WishlistUpdateNext,
-    all_wishlist_json,
 )
 
 app_name = "wishlist"
@@ -17,5 +16,4 @@ urlpatterns = [
     path("<int:pk>/increase", WishlistIncrease.as_view(), name="wishlist_increase"),
     path("<int:pk>/decrease", WishlistDecrease.as_view(), name="wishlist_decrease"),
     path("update_next", WishlistUpdateNext.as_view(), name="wishlist_next"),
-    path("wishlist.json", all_wishlist_json, name="wishlist_json"),
 ]
