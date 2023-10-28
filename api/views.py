@@ -39,6 +39,7 @@ class BillSerializer(serializers.ModelSerializer):
 
         model = Bill
         fields = [
+            "url",
             "name",
             "description",
             "organisation",
@@ -61,6 +62,7 @@ class BillHistorySerializer(serializers.ModelSerializer):
 
         model = BillHistory
         fields = [
+            "url",
             "bill",
             "current_balance",
             "date",
