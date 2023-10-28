@@ -3,6 +3,7 @@ import mimetypes
 import os
 import socket
 from pathlib import Path
+from typing import Union
 
 from dotenv import load_dotenv
 
@@ -129,12 +130,13 @@ OAUTH2_PROVIDER = {
     },
 }
 
-REST_FRAMEWORK = {
+REST_FRAMEWORK: dict[str, Union[set[str], list[str]]] = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
+        "rest_framework.authentication.SessionAuthentication",
     ],
 }
 

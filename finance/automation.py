@@ -24,7 +24,7 @@ class FetchTransactions:
         "_transaction_count",
     )
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialise MonzoAutomation."""
         self._handler: DjangoHandler = DjangoHandler()
         self._last_transaction = None

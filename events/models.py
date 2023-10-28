@@ -116,7 +116,7 @@ class Event(models.Model):
     name: models.CharField = models.CharField(max_length=255)
     description: models.TextField = models.TextField(max_length=1000)
     venue: models.ForeignKey = models.ForeignKey(
-        Venue, on_delete=models.RESTRICT, null=True
+        to=Venue, on_delete=models.RESTRICT, null=True
     )
     start: models.DateTimeField = models.DateTimeField()
     ends: models.DateTimeField = models.DateTimeField()
@@ -200,20 +200,20 @@ class Travel(models.Model):
     """Model for Travel."""
 
     travel_type: models.ForeignKey = models.ForeignKey(
-        TravelType,
+        to=TravelType,
         null=False,
         on_delete=models.RESTRICT,
         related_name="travel_type",
     )
     departing_station: models.ForeignKey = models.ForeignKey(
-        Station,
+        to=Station,
         null=False,
         on_delete=models.RESTRICT,
         related_name="departing_station",
     )
     departure: models.DateTimeField = models.DateTimeField()
     arrival_station: models.ForeignKey = models.ForeignKey(
-        Station,
+        to=Station,
         null=False,
         on_delete=models.RESTRICT,
         related_name="arrival_station",
@@ -223,7 +223,7 @@ class Travel(models.Model):
         max_length=6, choices=TRAVEL_DIRECTION_CHOICES
     )
     for_event: models.ForeignKey = models.ForeignKey(
-        Event,
+        to=Event,
         null=False,
         on_delete=models.CASCADE,
         related_name="event",
@@ -278,13 +278,13 @@ class Accommodation(models.Model):
     """Model for accommodation."""
 
     hotel: models.ForeignKey = models.ForeignKey(
-        Hotel,
+        to=Hotel,
         null=False,
         on_delete=models.RESTRICT,
         related_name="event_hotel",
     )
     for_event: models.ForeignKey = models.ForeignKey(
-        Event,
+        to=Event,
         null=False,
         on_delete=models.CASCADE,
         related_name="event_accommodation",

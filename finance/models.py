@@ -61,9 +61,11 @@ class Bill(models.Model):
     name: models.CharField = models.CharField(max_length=100)
     description: models.TextField = models.TextField()
     organisation: models.ForeignKey = models.ForeignKey(
-        Organisation, on_delete=models.RESTRICT
+        to=Organisation, on_delete=models.RESTRICT
     )
-    bill_type: models.ForeignKey = models.ForeignKey(BillType, on_delete=models.CASCADE)
+    bill_type: models.ForeignKey = models.ForeignKey(
+        to=BillType, on_delete=models.CASCADE
+    )
     due_day: models.SmallIntegerField = models.SmallIntegerField(default=1)
     monthly_payments: models.DecimalField = models.DecimalField(
         max_digits=10, decimal_places=2, default=0
@@ -78,7 +80,7 @@ class Bill(models.Model):
     start_date: models.DateTimeField = models.DateTimeField(blank=True, null=True)
     last_payment: models.DateTimeField = models.DateTimeField(blank=True, null=True)
     paid_from: models.ForeignKey = models.ForeignKey(
-        PaidFrom, on_delete=models.RESTRICT, null=False
+        to=PaidFrom, on_delete=models.RESTRICT, null=False
     )
 
     def __str__(self) -> str:
@@ -96,7 +98,7 @@ class BillHistory(models.Model):
     """Model for the BillHistory."""
 
     bill: models.ForeignKey = models.ForeignKey(
-        Bill, on_delete=models.CASCADE, null=False
+        to=Bill, on_delete=models.CASCADE, null=False
     )
     current_balance: models.DecimalField = models.DecimalField(
         max_digits=10, decimal_places=2, default=0
@@ -108,7 +110,7 @@ class Investments(models.Model):
     """Model for the Investments table."""
 
     organisation: models.ForeignKey = models.ForeignKey(
-        Organisation, on_delete=models.CASCADE
+        to=Organisation, on_delete=models.CASCADE
     )
     description: models.TextField = models.TextField()
     current_value: models.DecimalField = models.DecimalField(
@@ -126,7 +128,7 @@ class Investments(models.Model):
     @property
     def organisation_name(self) -> str:
         """Return the name of the organisation."""
-        return "test"
+        return self.organisation.name
 
     class Meta:
         """Meta class."""
@@ -139,7 +141,7 @@ class InvestmentValue(models.Model):
     """Model for the InvestmentValue."""
 
     investment: models.ForeignKey = models.ForeignKey(
-        Investments, on_delete=models.CASCADE
+        to=Investments, on_delete=models.CASCADE
     )
     value: models.DecimalField = models.DecimalField(max_digits=10, decimal_places=2)
     date: models.DateField = models.DateField(auto_now_add=True)
@@ -185,7 +187,7 @@ class MonzoMerchant(models.Model):
         null=False,
     )
     for_bill: models.ForeignKey = models.ForeignKey(
-        Bill,
+        to=Bill,
         on_delete=models.CASCADE,
         blank=True,
         null=True,

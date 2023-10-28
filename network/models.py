@@ -8,7 +8,7 @@ class AdditionalAnsibleGroup(models.Model):
     name: models.CharField = models.CharField(max_length=255, unique=True)
     alias: models.CharField = models.CharField(max_length=255, blank=True)
     parent: models.ForeignKey = models.ForeignKey(
-        "self", on_delete=models.RESTRICT, null=True, blank=True
+        to="self", on_delete=models.RESTRICT, null=True, blank=True
     )
     description: models.TextField = models.TextField()
 
@@ -74,7 +74,7 @@ class DomainName(models.Model):
 
     name: models.CharField = models.CharField(max_length=255, unique=True)
     registrar: models.ForeignKey = models.ForeignKey(
-        Registrar, on_delete=models.RESTRICT
+        to=Registrar, on_delete=models.RESTRICT
     )
 
     def __str__(self):
@@ -109,7 +109,7 @@ class Model(models.Model):
     """Model for the model."""
 
     name: models.CharField = models.CharField(max_length=255, unique=True)
-    vendor: models.ForeignKey = models.ForeignKey(Vendor, on_delete=models.RESTRICT)
+    vendor: models.ForeignKey = models.ForeignKey(to=Vendor, on_delete=models.RESTRICT)
 
     def __str__(self):
         """Return the model name."""
@@ -144,9 +144,9 @@ class OperatingSystem(models.Model):
 
     name: models.CharField = models.CharField(max_length=255, unique=True)
     alias: models.CharField = models.CharField(max_length=255, blank=True)
-    vendor: models.ForeignKey = models.ForeignKey(Vendor, on_delete=models.RESTRICT)
+    vendor: models.ForeignKey = models.ForeignKey(to=Vendor, on_delete=models.RESTRICT)
     parent: models.ForeignKey = models.ForeignKey(
-        "self", on_delete=models.RESTRICT, null=True, blank=True
+        to="self", on_delete=models.RESTRICT, null=True, blank=True
     )
     default_username: models.CharField = models.CharField(
         max_length=255, null=True, blank=True
@@ -177,24 +177,24 @@ class Device(models.Model):
         max_length=255, null=True, blank=True, unique=True
     )
     operating_system: models.ForeignKey = models.ForeignKey(
-        OperatingSystem, on_delete=models.RESTRICT
+        to=OperatingSystem, on_delete=models.RESTRICT
     )
     additional_ansible_groups: models.ManyToManyField = models.ManyToManyField(
-        AdditionalAnsibleGroup,
+        to=AdditionalAnsibleGroup,
         blank=True,
     )
     hardware_vendor: models.ForeignKey = models.ForeignKey(
-        Vendor, on_delete=models.RESTRICT
+        to=Vendor, on_delete=models.RESTRICT
     )
-    model: models.ForeignKey = models.ForeignKey(Model, on_delete=models.RESTRICT)
+    model: models.ForeignKey = models.ForeignKey(to=Model, on_delete=models.RESTRICT)
     device_type: models.ForeignKey = models.ForeignKey(
-        DeviceType, on_delete=models.RESTRICT
+        to=DeviceType, on_delete=models.RESTRICT
     )
     applications: models.ManyToManyField = models.ManyToManyField(
-        Application, blank=True
+        to=Application, blank=True
     )
     connected_too: models.ForeignKey = models.ForeignKey(
-        "self", on_delete=models.RESTRICT, null=True, blank=True
+        to="self", on_delete=models.RESTRICT, null=True, blank=True
     )
     connection_type: models.ForeignKey = models.ForeignKey(
         ConnectionType, on_delete=models.RESTRICT
@@ -248,9 +248,11 @@ class AnsibleVariables(models.Model):
 class AnsibleDeviceConfiguration(models.Model):
     """Model for the Ansible device configuration."""
 
-    for_device: models.ForeignKey = models.ForeignKey(Device, on_delete=models.CASCADE)
+    for_device: models.ForeignKey = models.ForeignKey(
+        to=Device, on_delete=models.CASCADE
+    )
     name: models.ForeignKey = models.ForeignKey(
-        AnsibleVariables, on_delete=models.CASCADE
+        to=AnsibleVariables, on_delete=models.CASCADE
     )
     value: models.CharField = models.CharField(max_length=255)
 
@@ -279,9 +281,11 @@ class Website(models.Model):
         max_length=255, blank=True, null=True
     )
     domain_name: models.ForeignKey = models.ForeignKey(
-        DomainName, on_delete=models.RESTRICT, null=True, blank=True
+        to=DomainName, on_delete=models.RESTRICT, null=True, blank=True
     )
-    hosted_on: models.ForeignKey = models.ForeignKey(Device, on_delete=models.RESTRICT)
+    hosted_on: models.ForeignKey = models.ForeignKey(
+        to=Device, on_delete=models.RESTRICT
+    )
     secure: models.BooleanField = models.BooleanField(default=True)
     port: models.IntegerField = models.IntegerField(null=True, blank=True)
     path: models.CharField = models.CharField(max_length=255, null=True, blank=True)
