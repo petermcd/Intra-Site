@@ -112,7 +112,7 @@ class InvestmentSerializer(serializers.ModelSerializer):
     class Meta:
         """Metaclass to map serializer's fields with the model fields."""
 
-        model = Bill
+        model = Investments
         fields = [
             "description",
             "organisation",
@@ -127,7 +127,7 @@ class InvestmentHistorySerializer(serializers.ModelSerializer):
     class Meta:
         """Metaclass to map serializer's fields with the model fields."""
 
-        model = BillHistory
+        model = InvestmentValue
         fields = [
             "value",
             "date",
