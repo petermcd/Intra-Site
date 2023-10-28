@@ -1,7 +1,8 @@
 // jshint esversion: 6
 $.getJSON( "/network/rack.json", function( data ) {
-  process_data(data);
+    process_data(data);
 });
+
 function process_data(shelf_data) {
     let container = $('#rack');
     let shelf_iter = 0;
@@ -27,8 +28,7 @@ function process_data(shelf_data) {
                     '</a></div>';
                 row.append(col);
                 $('[data-toggle="' + device['hostname'] + '"]').popover();
-            }
-            else {
+            } else {
                 row.append(col);
             }
             tab_index++;

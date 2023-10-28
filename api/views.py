@@ -1,8 +1,15 @@
 """Views for the API app."""
+from datetime import datetime
+
 from django.contrib.auth.models import User
+from django.db.models import Q
+from django.utils import timezone
 from rest_framework import serializers, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response as response
 
 from books.models import Author, Book
+from finance.models import Bill, BillHistory, Investments, InvestmentValue
 from network.models import Device, DeviceType, Model, OperatingSystem, Website
 from wishlist.models import WishlistItem
 
@@ -17,6 +24,46 @@ class AuthorSerializer(serializers.ModelSerializer):
         fields = [
             "url",
             "name",
+        ]
+
+
+class BillSerializer(serializers.ModelSerializer):
+    """Serializer to represent the Bill model."""
+
+    bill_type = serializers.ReadOnlyField(source="bill_type.name")
+    organisation = serializers.ReadOnlyField(source="organisation.name")
+    paid_from = serializers.ReadOnlyField(source="paid_from.name")
+
+    class Meta:
+        """Metaclass to map serializer's fields with the model fields."""
+
+        model = Bill
+        fields = [
+            "name",
+            "description",
+            "organisation",
+            "bill_type",
+            "due_day",
+            "monthly_payments",
+            "current_balance",
+            "apr",
+            "start_date",
+            "last_payment",
+            "paid_from",
+        ]
+
+
+class BillHistorySerializer(serializers.ModelSerializer):
+    """Serializer to represent the BillHistory model."""
+
+    class Meta:
+        """Metaclass to map serializer's fields with the model fields."""
+
+        model = BillHistory
+        fields = [
+            "bill",
+            "current_balance",
+            "date",
         ]
 
 
@@ -54,6 +101,36 @@ class DeviceTypeSerializer(serializers.ModelSerializer):
         fields = [
             "name",
             "image",
+        ]
+
+
+class InvestmentSerializer(serializers.ModelSerializer):
+    """Serializer to represent the Investment model."""
+
+    organisation = serializers.ReadOnlyField(source="organisation.name")
+
+    class Meta:
+        """Metaclass to map serializer's fields with the model fields."""
+
+        model = Bill
+        fields = [
+            "description",
+            "organisation",
+            "current_value",
+            "date_purchased",
+        ]
+
+
+class InvestmentHistorySerializer(serializers.ModelSerializer):
+    """Serializer to represent the InvestmentValue model."""
+
+    class Meta:
+        """Metaclass to map serializer's fields with the model fields."""
+
+        model = BillHistory
+        fields = [
+            "value",
+            "date",
         ]
 
 
@@ -205,3 +282,85 @@ class WhoAmIViewSet(viewsets.ReadOnlyModelViewSet):
         """Return the current user."""
         pk = self.kwargs.get("pk")
         return self.request.user if pk == "current" else super().get_object()
+
+
+class BillViewSet(viewsets.ReadOnlyModelViewSet):
+    """Viewset to represent the Bill model."""
+
+    queryset = Bill.objects.all()
+    serializer_class = BillSerializer
+
+    @action(detail=False)
+    def bills_for_month(self, request):
+        """Return the bills for the given month and year."""
+        month = (
+            int(request.query_params.get("month", datetime.now().month))
+            or datetime.now().month
+        )
+        year = (
+            int(request.query_params.get("year", datetime.now().year))
+            or datetime.now().year
+        )
+        search_date = timezone.make_aware(datetime(year=year, month=month, day=1))
+        queryset = Bill.objects.all().order_by("name")
+        bills = queryset.filter(
+            Q(start_date__lte=search_date)
+            & Q(Q(last_payment__isnull=True) | Q(last_payment__gte=search_date)),
+        )
+        serializer = BillSerializer(bills, many=True)
+        return response(serializer.data)
+
+    @action(detail=True)
+    def history(self, request, pk=None) -> response:
+        """Return the history for the given bill."""
+        filter_args = {}
+        queryset = BillHistory.objects.all().order_by("date")
+        if pk:
+            filter_args["pk"] = pk
+        if "year" in request.query_params:
+            year: int = (
+                int(request.query_params.get("year", datetime.now().year))
+                or datetime.now().year
+            )
+            start_date: datetime = timezone.make_aware(
+                datetime(year=year, month=1, day=1)
+            )
+            end_date: datetime = timezone.make_aware(
+                datetime(year=year + 1, month=1, day=1)
+            )
+            filter_args = {
+                "date__gte": start_date,
+                "date__lte": end_date,
+            }
+        bill_history = queryset.filter(**filter_args)
+        serializer = BillHistorySerializer(bill_history, many=True)
+        return response(serializer.data)
+
+
+class InvestmentViewSet(viewsets.ReadOnlyModelViewSet):
+    """Viewset to represent the Investment model."""
+
+    queryset = Investments.objects.all()
+    serializer_class = InvestmentSerializer
+
+    @action(detail=True)
+    def history(self, request, pk=None):
+        """Return the history for the given investment."""
+        filter_args = {}
+        queryset = InvestmentValue.objects.all().order_by("date")
+        if pk:
+            filter_args["pk"] = pk
+        if "year" in request.query_params:
+            year = (
+                int(request.query_params.get("year", datetime.now().year))
+                or datetime.now().year
+            )
+            start_date = timezone.make_aware(datetime(year=year, month=1, day=1))
+            end_date = timezone.make_aware(datetime(year=year + 1, month=1, day=1))
+            filter_args = {
+                "date__gte": start_date,
+                "date__lte": end_date,
+            }
+        investment_history = queryset.filter(**filter_args)
+        serializer = InvestmentHistorySerializer(investment_history, many=True)
+        return response(serializer.data)

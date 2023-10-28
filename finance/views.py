@@ -1,5 +1,6 @@
 """Views for the Finance application."""
 from datetime import datetime, timedelta
+from typing import Any, Union
 
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import redirect, render
@@ -10,7 +11,9 @@ from monzo.exceptions import MonzoAuthenticationError, MonzoServerError
 from finance.automation import FetchTransactions, ProcessInterest
 from finance.models import (
     Bill,
+    BillHistory,
     Investments,
+    InvestmentValue,
     MonzoMerchant,
     MonzoTransaction,
     Organisation,
@@ -35,13 +38,62 @@ class FinanceView(generic.ListView):
         return list(investments)
 
 
+def bill_history(
+    request, pk: int, period: str = "year"
+) -> Union[HttpResponse, JsonResponse]:
+    """
+    View to handle fetching bill history data.
+
+    Args:
+        request: Request object
+        pk: primary key for the bill to fetch data for
+        period: period to fetch data for
+    Returns:
+        Json containing data for the given investment and period
+    """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+    response_list: list[dict[str, Union[str]]] = []
+    days = 0
+    weeks = 0
+    if period == "day":
+        days = 1
+    elif period == "week":
+        weeks = 1
+    elif period == "month":
+        days = 30
+    elif period == "year":
+        days = 365
+    else:
+        days = 1826
+    time_delta = timedelta(days=days, weeks=weeks)
+    lookup_time = datetime.now() - time_delta
+    bill_values = BillHistory.objects.filter(date__gt=lookup_time, bill=pk).order_by(
+        "date"
+    )
+    if len(bill_values) > 0:
+        response_list.extend(
+            {
+                "date": bill_value.date.strftime("%Y-%m-%d"),
+                "value": bill_value.current_balance,
+            }
+            for bill_value in bill_values
+        )
+    response = {
+        "status": "success",
+        "record_count": len(response_list),
+        "data": response_list,
+    }
+    return JsonResponse(data=response, safe=False)
+
+
 class InvestmentsView(generic.ListView):
     """View to see a list of Investments."""
 
     template_name = "finance/investments.html"
     context_object_name = "investment_list"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         """
         Obtain context data ready for output.
 
@@ -49,7 +101,7 @@ class InvestmentsView(generic.ListView):
             Context data ready for output in a template
         """
         context = super().get_context_data(**kwargs)
-        context["total"]: float = sum(
+        context["total"] = sum(
             investment_item.current_value
             for investment_item in context["investment_list"]
         )
@@ -65,6 +117,55 @@ class InvestmentsView(generic.ListView):
         """
         investments = Investments.objects.all().order_by("organisation__name")
         return list(investments)
+
+
+def investment_history(
+    request, pk: int, period: str = "year"
+) -> Union[HttpResponse, JsonResponse]:
+    """
+    View to handle fetching investment history data.
+
+    Args:
+        request: Request object
+        pk: primary key for the investment to fetch data for
+        period: period to fetch data for
+    Returns:
+        Json containing data for the given investment and period
+    """
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+    response_list: list[dict[str, Union[str]]] = []
+    days = 0
+    weeks = 0
+    if period == "day":
+        days = 1
+    elif period == "week":
+        weeks = 1
+    elif period == "month":
+        days = 30
+    elif period == "year":
+        days = 365
+    else:
+        days = 1826
+    time_delta = timedelta(days=days, weeks=weeks)
+    lookup_time = datetime.now() - time_delta
+    investment_values = InvestmentValue.objects.filter(
+        date__gt=lookup_time, investment=pk
+    ).order_by("date")
+    if len(investment_values) > 0:
+        response_list.extend(
+            {
+                "date": investment_value.date.strftime("%Y-%m-%d"),
+                "value": investment_value.value,
+            }
+            for investment_value in investment_values
+        )
+    response = {
+        "status": "success",
+        "record_count": len(response_list),
+        "data": response_list,
+    }
+    return JsonResponse(data=response, safe=False)
 
 
 class Monzo(generic.TemplateView):
@@ -252,7 +353,7 @@ class PaymentsView(generic.ListView):
     template_name = "finance/bills.html"
     context_object_name = "payment_list"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         """
         Obtain context data ready for output.
 
@@ -260,15 +361,15 @@ class PaymentsView(generic.ListView):
             Context data ready for output in a template
         """
         context = super().get_context_data(**kwargs)
-        context["monthly_total"]: float = sum(
+        context["monthly_total"] = sum(
             payment.monthly_payments for payment in context["payment_list"]
         )
-        context["from_pot_total"]: float = sum(
+        context["from_pot_total"] = sum(
             bill_item.monthly_payments
             for bill_item in context["payment_list"]
             if bill_item.paid_from.name == "Pot"
         )
-        context["from_balance_total"]: float = sum(
+        context["from_balance_total"] = sum(
             bill_item.monthly_payments
             for bill_item in context["payment_list"]
             if bill_item.paid_from.name == "Main Balance"
