@@ -7,6 +7,8 @@ from dataclasses import dataclass
 import requests
 from bs4 import BeautifulSoup
 
+HTML_PARSER = "html.parser"
+
 
 @dataclass
 class ProductDetails:
@@ -109,7 +111,7 @@ class Amazon(Shop):
         Returns:
             ProductDetails containing product details.
         """
-        parsed = BeautifulSoup(self._response.text, "html.parser")
+        parsed = BeautifulSoup(self._response.text, HTML_PARSER)
         name = parsed.title.string
         return ProductDetails(
             name=name or "",
@@ -155,15 +157,18 @@ class Amazon(Shop):
         Returns:
              Price as an int
         """
-        return (
-            self.normalise_price(price_search.text)
-            if (
-                price_search := parsed_data.find("span", {"class": "a-price"}).contents[
-                    0
-                ]
+        try:
+            return (
+                self.normalise_price(price_search.text)
+                if (
+                    price_search := parsed_data.find(
+                        "span", {"class": "a-price"}
+                    ).contents[0]
+                )
+                else 999999
             )
-            else 0
-        )
+        except AttributeError:
+            return 999999
 
     def _get_product_image(self, parsed_data) -> str:
         """
@@ -226,7 +231,7 @@ class Ikea(Shop):
         Returns:
             ProductDetails containing product details.
         """
-        parsed = BeautifulSoup(self._response.text, "html.parser")
+        parsed = BeautifulSoup(self._response.text, HTML_PARSER)
         name = parsed.title.string
         product_image = parsed.find("img", {"class": "pip-image"}).attrs["src"]
         description = parsed.find("p", {"class": "pip-product-details__paragraph"}).text
@@ -304,7 +309,7 @@ class Unknown(Shop):
         Returns:
             ProductDetails containing product details.
         """
-        parsed = BeautifulSoup(self._response.text, "html.parser")
+        parsed = BeautifulSoup(self._response.text, HTML_PARSER)
         name = parsed.title.string
         description = "UNKNOWN"
         price = 0

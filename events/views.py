@@ -2,6 +2,7 @@
 from django.http import HttpResponse
 from django.utils.timezone import now
 from django.views import generic
+from django.views.decorators.http import require_GET
 
 from events.models import Accommodation, Event, Travel
 from settings.models import Setting
@@ -73,6 +74,7 @@ class DetailView(generic.DetailView):
         return Event.objects.all()
 
 
+@require_GET
 def event_delete(request, pk: int) -> HttpResponse:
     """
     View to handle deleting and event a task item.

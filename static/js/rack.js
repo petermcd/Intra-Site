@@ -5,12 +5,12 @@ $.getJSON( "/network/rack.json", function( data ) {
 
 function process_data(shelf_data) {
     let container = $('#rack');
-    let shelf_iter = 0;
-    while (shelf_iter < 19) {
-        shelf_iter++;
+    let shelf_iter = 22;
+    while (shelf_iter > 0) {
         let shelf_id = ' id="shelf' + shelf_iter + '"';
         const shelf = '<div class="row rack_row"' + shelf_id + '></div>';
         container.append(shelf);
+        shelf_iter--;
     }
     let tab_index = 1;
     for (let shelf in shelf_data) {

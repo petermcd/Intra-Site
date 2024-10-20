@@ -9,12 +9,13 @@ django-mathfilters
 django-oauth-toolkit
 Markdown
 monzo-api
-mysqlclient
 pillow
 Pygments
+pymysql
 python-dateutil
 python-dotenv
 PyYAML
 requests
+Turing-Pi-BMC==0.5.0
 uritemplate
 wakeonlan

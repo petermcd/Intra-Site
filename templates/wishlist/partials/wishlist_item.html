@@ -7,23 +7,23 @@
   <td>{{ wishlist_item.description | safe }}</td>
   <td>{% if wishlist_item.in_stock %}&#9989;{% endif %}</td>
   <td>
-    <a href="{{ wishlist_item.product_url }}" target="_blank">Buy</a>
+    <a href="{{ wishlist_item.product_url }}" target="_blank" rel="noopener">Buy</a>
     {% if wishlist_item.price > 0 %}<br/>£{{ wishlist_item.price|div:100 }}{% endif %}
   </td>
   <td>
     <button hx-get="{{ wishlist_item.pk }}/decrease"
-      hx-trigger="click"
-      hx-target="closest tr"
-      hx-swap="outerHTML"
-      type="submit">
+            hx-trigger="click"
+            hx-target="closest tr"
+            hx-swap="outerHTML"
+            type="submit">
       -
     </button>
     {{ wishlist_item.quantity }}
     <button hx-get="{{ wishlist_item.pk }}/increase"
-      hx-trigger="click"
-      hx-target="closest tr"
-      hx-swap="outerHTML"
-      type="submit">
+            hx-trigger="click"
+            hx-target="closest tr"
+            hx-swap="outerHTML"
+            type="submit">
       +
     </button>
   </td>

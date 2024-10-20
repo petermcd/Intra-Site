@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import generic
+from django.views.decorators.http import require_GET, require_POST
 
 from tasks.models import Task, TaskFrequency
 
@@ -26,6 +27,7 @@ class TaskView(generic.ListView):
         return list(tasks)
 
 
+@require_POST
 def task_add(request) -> HttpResponse:
     """
     Handle adding a new task item.
@@ -53,6 +55,7 @@ def task_add(request) -> HttpResponse:
     return render(request, "tasks/partials/task_item.html", context)
 
 
+@require_GET
 def task_complete(request, pk: int) -> HttpResponse:
     """
     View to handle completing a task item.
@@ -86,6 +89,7 @@ def task_complete(request, pk: int) -> HttpResponse:
     return HttpResponse(status=200)
 
 
+@require_GET
 def task_output_form(request) -> HttpResponse:
     """
     Handle outputting the form for adding a new task item.

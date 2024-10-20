@@ -1,4 +1,7 @@
 """Module to facilitate waking devices."""
+from ipaddress import IPv4Address
+
+from bmc.cluster import Cluster
 from wakeonlan import send_magic_packet
 
 from network.models import Device
@@ -45,19 +48,17 @@ class Wake:
 
         Returns: True on success otherwise False
         """
-        # TODO finalise calling url.
         if not self._device.connected_too:
             return False
-        turing_pi_ip: str = self._device.connected_too.ip_address
-        turing_pi_port = int(self._device.port) - 1
-        url = f"http://{turing_pi_ip}/api/bmc?opt=set&type=power&node{turing_pi_port}=1"
-        from urllib import request
-
-        req = request.Request(url=url)
-        response = ""
-        with request.urlopen(req) as f:
-            response += f.read().decode("utf-8")
-        return True
+        cluster = Cluster(
+            cluster_ip=IPv4Address(self._device.connected_too.ip_address),
+            username="root",
+            password="turing",
+            verify=False,
+        )
+        nodes = cluster.nodes
+        node = nodes[int(self._device.port) - 1]
+        return cluster.start_nodes(nodes=[node])
 
     def _wake_lan(self) -> bool:
         """

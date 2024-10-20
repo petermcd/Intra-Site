@@ -5,8 +5,10 @@ import socket
 from pathlib import Path
 from typing import Union
 
+import pymysql
 from dotenv import load_dotenv
 
+pymysql.install_as_MySQLdb()
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -15,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = str(
     os.getenv(
         "SECURITY_KEY",
-        "django-insecure-w6d881036p!78s)**g^=9b%h0ujlgg(0ldpkt6jwz&r#s=6y!6",
+        "$)ptl4snl*(w_)(@g7940l_rtns5k459_lf(w_$_pr&(i$=r+8",
     )
 )
 
@@ -25,7 +27,7 @@ DEBUG = True
 
 allowed_host_env = os.getenv(
     "DJANGO_ALLOWED_HOST",
-    "intra.petermcdonald.co.uk",
+    "127.0.0.1",
 )
 
 ALLOWED_HOSTS: list[str] = [

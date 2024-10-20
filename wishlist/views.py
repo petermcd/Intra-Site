@@ -7,6 +7,8 @@ from django.views import generic
 from wishlist.models import WishlistItem
 from wishlist.product_details import ProductDetailsFactory, ProductNotFoundException
 
+WISHLIST_ITEM_TEMPLATE = "wishlist/partials/wishlist_item.html"
+
 
 class Wishlist(generic.ListView):
     """View to see a list of wishlist items."""
@@ -27,7 +29,7 @@ class Wishlist(generic.ListView):
 class WishlistAdd(generic.ListView):
     """View to add a wishlist item."""
 
-    template_name = "wishlist/partials/wishlist_item.html"
+    template_name = WISHLIST_ITEM_TEMPLATE
     context_object_name = "wishlist_item"
 
     def post(self, request, *args, **kwargs) -> HttpResponse:
@@ -67,7 +69,7 @@ class WishlistAdd(generic.ListView):
 class WishlistIncrease(generic.TemplateView):
     """View to increase the number of an item required."""
 
-    template_name = "wishlist/partials/wishlist_item.html"
+    template_name = WISHLIST_ITEM_TEMPLATE
     context_object_name = "wishlist_item"
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
@@ -99,7 +101,7 @@ class WishlistIncrease(generic.TemplateView):
 class WishlistDecrease(generic.ListView):
     """View to decrease the number of an item required."""
 
-    template_name = "wishlist/partials/wishlist_item.html"
+    template_name = WISHLIST_ITEM_TEMPLATE
     context_object_name = "wishlist_item"
 
     def get(self, request, *args, **kwargs) -> HttpResponse:

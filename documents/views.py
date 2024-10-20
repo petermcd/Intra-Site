@@ -1,6 +1,7 @@
 """Views for the Task application."""
 from django.http import HttpResponse
 from django.views import generic
+from django.views.decorators.http import require_GET
 
 from documents.models import Document
 
@@ -22,6 +23,7 @@ class DocumentView(generic.ListView):
         return list(documents)
 
 
+@require_GET
 def document_delete(request, pk: int) -> HttpResponse:
     """
     View to handle deleting a document item.

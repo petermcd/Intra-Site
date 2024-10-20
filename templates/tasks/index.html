@@ -8,6 +8,7 @@
   <section id="table_list">
     {% if user.is_authenticated %}
       <table class="table table-striped table-bordered">
+        <caption>Tasks</caption>
         <thead>
           <tr>
             <th>Mark As Done</th>
@@ -20,10 +21,10 @@
           <tr>
             <td colspan="3">
               <button hx-get="form"
-                hx-trigger="click"
-                hx-target="#task-list"
-                hx-swap="beforeend"
-                type="submit">
+                      hx-trigger="click"
+                      hx-target="#task-list"
+                      hx-swap="beforeend"
+                      type="submit">
                 Add
               </button>
             </td>

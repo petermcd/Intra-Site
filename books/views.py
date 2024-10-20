@@ -5,6 +5,7 @@ from typing import Any
 import requests
 from django.http import HttpResponse
 from django.views import generic
+from django.views.decorators.http import require_GET
 
 from books.models import Author, Book
 from settings.models import Setting
@@ -92,12 +93,13 @@ class DetailView(generic.DetailView):
         return Book.objects.all()
 
 
-def get_book_details(request, search_type: str, search: str) -> HttpResponse:
+@require_GET
+def get_book_details(_, search_type: str, search: str) -> HttpResponse:
     """
     Fetch book details from the Google books API.
 
     Args:
-        request: API Request
+        _: API Request
         search_type: What to search for
         search: Test to search for
 

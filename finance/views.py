@@ -5,6 +5,7 @@ from typing import Any, Union
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import redirect, render
 from django.views import generic
+from django.views.decorators.http import require_GET, require_POST
 from monzo.authentication import Authentication
 from monzo.exceptions import MonzoAuthenticationError, MonzoServerError
 
@@ -38,6 +39,7 @@ class FinanceView(generic.ListView):
         return list(investments)
 
 
+@require_GET
 def bill_history(
     request, pk: int, period: str = "year"
 ) -> Union[HttpResponse, JsonResponse]:
@@ -119,6 +121,7 @@ class InvestmentsView(generic.ListView):
         return list(investments)
 
 
+@require_GET
 def investment_history(
     request, pk: int, period: str = "year"
 ) -> Union[HttpResponse, JsonResponse]:
@@ -413,6 +416,7 @@ class PaymentsView(generic.ListView):
         return current_payments
 
 
+@require_GET
 def bill(request, pk: int) -> HttpResponse:
     """
     View to handle fetching data for a bill.
@@ -438,6 +442,7 @@ def bill(request, pk: int) -> HttpResponse:
     return render(request, "finance/bill.html", data)
 
 
+@require_GET
 def bill_delete(request, pk: int) -> HttpResponse:
     """
     View to handle deleting a bill.
@@ -457,6 +462,7 @@ def bill_delete(request, pk: int) -> HttpResponse:
     return HttpResponse(status=200)
 
 
+@require_GET
 def investment(request, pk: int) -> HttpResponse:
     """
     View to handle fetching data for an investment.
@@ -482,6 +488,7 @@ def investment(request, pk: int) -> HttpResponse:
     return render(request, "finance/investment.html", data)
 
 
+@require_GET
 def investment_delete(request, pk: int) -> HttpResponse:
     """
     View to handle deleting an investment.
@@ -501,6 +508,7 @@ def investment_delete(request, pk: int) -> HttpResponse:
     return HttpResponse(status=200)
 
 
+@require_POST
 def investment_add(request) -> HttpResponse:
     """
     Handle adding a new investment.
@@ -527,6 +535,7 @@ def investment_add(request) -> HttpResponse:
     return render(request, "finance/partials/investment_item.html", context)
 
 
+@require_GET
 def investment_output_form(request) -> HttpResponse:
     """
     Handle outputting the form for adding a new task item.

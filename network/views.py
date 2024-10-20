@@ -4,6 +4,7 @@ from typing import Any
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views import generic
+from django.views.decorators.http import require_GET
 
 from network.models import (
     AdditionalAnsibleGroup,
@@ -50,12 +51,13 @@ class WebsitesView(generic.ListView):
         return list(websites)
 
 
-def wake_device(request, pk: int):
+@require_GET
+def wake_device(_, pk: int):
     """
     View to handle deleting a website.
 
     Args:
-        request: Request object
+        _: Request object
         pk: primary key for the website to delete
 
     Returns:
@@ -71,6 +73,7 @@ def wake_device(request, pk: int):
         return HttpResponse(status=400)
 
 
+@require_GET
 def website_delete(request, pk: int):
     """
     View to handle deleting a website.
@@ -90,6 +93,7 @@ def website_delete(request, pk: int):
     return HttpResponse(status=200)
 
 
+@require_GET
 def index(request) -> HttpResponse:
     """
     Handle the Network topology index.
@@ -100,12 +104,13 @@ def index(request) -> HttpResponse:
     return render(request, "network/index.html", {})
 
 
-def hosts(request) -> HttpResponse:
+@require_GET
+def hosts(_) -> HttpResponse:
     """
     Create and output the inventory list for Ansible.
 
     Args:
-        request: HttpRequest object
+        _: HttpRequest object
 
     Return:
         Inventory list in ini format
@@ -186,12 +191,13 @@ def hosts(request) -> HttpResponse:
     return HttpResponse(content_type="text/plain", content=output)
 
 
-def hosts_zip(request) -> HttpResponse:
+@require_GET
+def hosts_zip(_) -> HttpResponse:
     """
     Create and output the inventory list for Ansible.
 
     Args:
-        request: HttpRequest object
+        _: HttpRequest object
 
     Return:
         Inventory list in ini format
@@ -248,12 +254,13 @@ def hosts_zip(request) -> HttpResponse:
     return HttpResponse(content_type="text/plain", content=output)
 
 
-def network(request) -> JsonResponse:
+@require_GET
+def network(_) -> JsonResponse:
     """
     Create and output the node map as a JSON response.
 
     Args:
-        request: HttpRequest object
+        _: HttpRequest object
 
     Return:
         JsonResponse containing node map of the network
@@ -299,6 +306,7 @@ def network(request) -> JsonResponse:
     return JsonResponse(data)
 
 
+@require_GET
 def rack(request) -> HttpResponse:
     """
     Handle the Rack page.
@@ -312,12 +320,13 @@ def rack(request) -> HttpResponse:
     return render(request, "network/rack.html", {})
 
 
-def rack_json(request) -> JsonResponse:
+@require_GET
+def rack_json(_) -> JsonResponse:
     """
     Handle the Rack json.
 
     Args:
-        request: HttpRequest object
+        _: HttpRequest object
 
     Return:
         JsonResponse for the rack json

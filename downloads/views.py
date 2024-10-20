@@ -4,16 +4,18 @@ from os.path import join, normpath
 from typing import Union
 
 from django.http import FileResponse, HttpResponseNotFound
+from django.views.decorators.http import require_GET
 
 
+@require_GET
 def download_view(
-    request, directory="", filename=""
+    _, directory="", filename=""
 ) -> Union[FileResponse, HttpResponseNotFound]:
     """
     Facilitate downloads.
 
     Args:
-        request: http request object
+        _: http request object
         directory: Directory the file is in
         filename: File name of the file to download
 
