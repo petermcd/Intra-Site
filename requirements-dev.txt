@@ -1,5 +1,5 @@
-pywatchman
-ipython
-pre-commit
-setuptools>=70.0.0 # not directly required, pinned by Snyk to avoid a vulnerability
-zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
+ipython==9.2.0
+pre-commit==4.2.0
+pywatchman==2.0.0
+setuptools==80.1.0 # not directly required, pinned to avoid a vulnerability
+zipp==3.21.0 # not directly required, pinned to avoid a vulnerability

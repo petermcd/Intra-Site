@@ -1,4 +1,5 @@
 """URL configuration for the Tasks application."""
+
 from django.urls import path
 
 from downloads.views import download_view

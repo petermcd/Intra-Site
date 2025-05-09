@@ -1,4 +1,5 @@
 """Views for the Wishlist application."""
+
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils.timezone import now

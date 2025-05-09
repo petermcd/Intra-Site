@@ -1,4 +1,5 @@
 """Admin configuration for the Finance application."""
+
 from django.contrib import admin
 
 from finance.models import Bill, BillType, Investments, Organisation, PaidFrom

@@ -1,4 +1,5 @@
 """URL configuration for the Books application."""
+
 from django.urls import path
 
 from books.views import AuthorIndexView, DetailView, IndexView, get_book_details

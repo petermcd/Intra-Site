@@ -1,23 +1,23 @@
-beautifulsoup4
-Django
-djangorestframework
-django_cleanup
-django-debug-toolbar
-django-filter
-django-guardian
-django-mathfilters
-django-oauth-toolkit
-Markdown
-monzo-api
-mysqlclient
-pillow
-Pygments
-python-dateutil
-python-dotenv
-PyYAML
-requests
-uritemplate
-wakeonlan
-jwcrypto>=1.5.6 # not directly required, pinned by Snyk to avoid a vulnerability
-sqlparse>=0.5.0 # not directly required, pinned by Snyk to avoid a vulnerability
-urllib3>=2.2.2 # not directly required, pinned by Snyk to avoid a vulnerability
+beautifulsoup4==4.13.4
+Django==5.2
+djangorestframework==3.16.0
+django_cleanup==9.0.0
+django-debug-toolbar==5.2.0
+django-filter==25.1
+django-guardian==2.4.0
+django-mathfilters==1.0.0
+django-oauth-toolkit==3.0.1
+Markdown==3.8
+monzo-api==1.2.0
+mysqlclient==2.2.7
+pillow==11.2.1
+Pygments==2.19.1
+python-dateutil==2.9.0.post0
+python-dotenv==1.1.0
+PyYAML==6.0.2
+requests==2.32.3
+uritemplate==4.1.1
+wakeonlan==3.1.0
+jwcrypto==1.5.6 # not directly required, pinned to avoid a vulnerability
+sqlparse==0.5.3 # not directly required, pinned to avoid a vulnerability
+urllib3==2.2.2 # not directly required, pinned to avoid a vulnerability

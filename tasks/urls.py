@@ -1,4 +1,5 @@
 """URL configuration for the Tasks application."""
+
 from django.urls import path
 
 from tasks.views import TaskView, task_add, task_complete, task_output_form

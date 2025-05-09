@@ -1,4 +1,5 @@
 """Admin configuration for the Documents application."""
+
 from django.contrib import admin
 
 from documents.models import Document

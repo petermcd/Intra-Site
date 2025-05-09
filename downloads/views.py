@@ -1,4 +1,5 @@
 """Views for Downloads."""
+
 import re
 from os.path import join, normpath
 from typing import Union

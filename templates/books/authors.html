@@ -43,7 +43,7 @@
             {{ page_obj.number }}
             {% if page_obj.has_next %}
               <a href="?page=
-                {{ page_obj.next_page_number }}{{ search_term }}">{{ page_obj.next_page_number }}</a>
+                       {{ page_obj.next_page_number }}{{ search_term }}">{{ page_obj.next_page_number }}</a>
               {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
                 <a href="?page={{ page_obj.paginator.num_pages }}{{ search_term }}">{{ page_obj.paginator.num_pages }}</a>
               {% endif %}

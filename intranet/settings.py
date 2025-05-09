@@ -1,4 +1,5 @@
 """Settings for the Django project."""
+
 import mimetypes
 import os
 import socket

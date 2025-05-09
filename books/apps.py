@@ -1,4 +1,5 @@
 """Configuration for the Books application."""
+
 from django.apps import AppConfig
 
 

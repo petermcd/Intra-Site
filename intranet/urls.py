@@ -1,4 +1,5 @@
 """Primary URL configuration for the Intranet site."""
+
 from django.contrib import admin
 from django.templatetags.static import static
 from django.urls import include, path

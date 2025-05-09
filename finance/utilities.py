@@ -1,4 +1,5 @@
 """Collection of classes and functions tp help normal activities."""
+
 from datetime import datetime, timedelta
 from typing import Optional, Union
 
@@ -180,4 +181,4 @@ def create_redirect_url(request) -> str:
     Returns:
         Redirect URL as a string
     """
-    return f'{request.scheme}://{request.META["HTTP_HOST"]}{request.path}'
+    return f'{request.scheme}://{request.headers["host"]}{request.path}'

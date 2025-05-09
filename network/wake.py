@@ -1,4 +1,5 @@
 """Module to facilitate waking devices."""
+
 from wakeonlan import send_magic_packet
 
 from network.models import Device

@@ -1,4 +1,5 @@
 """Configuration for the Wishlist application."""
+
 from django.apps import AppConfig
 
 

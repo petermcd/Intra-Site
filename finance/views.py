@@ -1,4 +1,5 @@
 """Views for the Finance application."""
+
 from datetime import datetime, timedelta
 from typing import Any, Union
 
@@ -196,9 +197,9 @@ class Monzo(generic.TemplateView):
             auth.register_callback_handler(handler=handler)
             try:
                 auth.authenticate(authorization_token=code, state_token=state)
-                context[
-                    "success_message"
-                ] = "Monzo is now configured, remember to authorise in the app."
+                context["success_message"] = (
+                    "Monzo is now configured, remember to authorise in the app."
+                )
             except MonzoAuthenticationError:
                 context["error"] = "Monzo authentication error"
             except MonzoServerError:

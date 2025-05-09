@@ -1,4 +1,5 @@
 """Models for the Settings application."""
+
 from django.db import models
 
 

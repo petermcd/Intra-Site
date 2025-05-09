@@ -1,4 +1,5 @@
 """URL configuration for the Events application."""
+
 from django.urls import path
 
 from events.views import DetailView, IndexView, event_delete

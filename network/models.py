@@ -1,4 +1,5 @@
 """Models for the network application."""
+
 from django.db import models
 
 

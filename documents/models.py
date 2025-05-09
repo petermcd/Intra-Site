@@ -1,4 +1,5 @@
 """Models for the document application."""
+
 from django.db import models
 
 

@@ -1,4 +1,5 @@
 """Views for the Books application."""
+
 from json import dumps, loads
 from typing import Any
 

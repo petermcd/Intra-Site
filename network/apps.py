@@ -1,4 +1,5 @@
 """Configuration for the Network application."""
+
 from django.apps import AppConfig
 
 
