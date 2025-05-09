@@ -1,4 +1,5 @@
 """Helper methods and classes for Intranet."""
+
 from django.core.files.storage import FileSystemStorage
 
 

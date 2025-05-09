@@ -1,4 +1,5 @@
 """Models for the Task application."""
+
 from django.db import models
 
 

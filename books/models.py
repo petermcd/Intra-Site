@@ -1,4 +1,5 @@
 """Models for the books application."""
+
 from django.db import models
 
 from intranet.helpers import OverwriteStorageName

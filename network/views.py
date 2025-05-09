@@ -1,4 +1,5 @@
 """Views for the Network application."""
+
 from typing import Any
 
 from django.http import HttpResponse, JsonResponse

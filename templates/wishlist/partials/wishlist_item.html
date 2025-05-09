@@ -12,18 +12,18 @@
   </td>
   <td>
     <button hx-get="{{ wishlist_item.pk }}/decrease"
-      hx-trigger="click"
-      hx-target="closest tr"
-      hx-swap="outerHTML"
-      type="submit">
+            hx-trigger="click"
+            hx-target="closest tr"
+            hx-swap="outerHTML"
+            type="submit">
       -
     </button>
     {{ wishlist_item.quantity }}
     <button hx-get="{{ wishlist_item.pk }}/increase"
-      hx-trigger="click"
-      hx-target="closest tr"
-      hx-swap="outerHTML"
-      type="submit">
+            hx-trigger="click"
+            hx-target="closest tr"
+            hx-swap="outerHTML"
+            type="submit">
       +
     </button>
   </td>

@@ -1,4 +1,5 @@
 """Module to handle retrival of product details."""
+
 import abc
 import json
 import re

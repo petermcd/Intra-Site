@@ -1,4 +1,5 @@
 """Models for the Finance application."""
+
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -17,7 +18,7 @@ class Organisation(models.Model):
         return str(self.name)
 
     class Meta:
-        """Meta class."""
+        """Metaclass."""
 
         verbose_name = "Organisation"
         verbose_name_plural = "Organisations"
@@ -33,7 +34,7 @@ class BillType(models.Model):
         return str(self.name)
 
     class Meta:
-        """Meta class."""
+        """Metaclass."""
 
         verbose_name = "Bill type"
         verbose_name_plural = "Bill types"
@@ -88,7 +89,7 @@ class Bill(models.Model):
         return str(self.name)
 
     class Meta:
-        """Meta class."""
+        """Metaclass."""
 
         verbose_name = "Bill"
         verbose_name_plural = "Bills"
@@ -127,11 +128,11 @@ class Investments(models.Model):
 
     @property
     def organisation_name(self) -> str:
-        """Return the name of the organisation."""
+        """Return the name of the organization."""
         return self.organisation.name
 
     class Meta:
-        """Meta class."""
+        """Metaclass."""
 
         verbose_name = "Investment"
         verbose_name_plural = "Investments"

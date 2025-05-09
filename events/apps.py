@@ -1,4 +1,5 @@
 """Configuration for the Events application."""
+
 from django.apps import AppConfig
 
 

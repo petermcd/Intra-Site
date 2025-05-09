@@ -1,4 +1,5 @@
 """Views for the Task application."""
+
 from django.http import HttpResponse
 from django.views import generic
 

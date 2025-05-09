@@ -1,4 +1,5 @@
 """Configuration for the Task application."""
+
 from django.apps import AppConfig
 
 

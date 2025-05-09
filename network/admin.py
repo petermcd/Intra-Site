@@ -1,4 +1,5 @@
 """Admin configuration for the Network application."""
+
 from django.contrib import admin
 
 from network.models import (

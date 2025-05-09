@@ -1,4 +1,5 @@
 """Views for Intranet."""
+
 from django.views import generic
 
 

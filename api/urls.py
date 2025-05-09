@@ -1,4 +1,5 @@
 """Primary URL configuration for the Intranet site."""
+
 from django.urls import include, path
 from rest_framework import routers
 

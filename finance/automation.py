@@ -1,4 +1,5 @@
 """Class to support Monzo automation."""
+
 from datetime import datetime, timedelta
 from typing import Union
 

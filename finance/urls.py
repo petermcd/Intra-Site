@@ -1,4 +1,5 @@
 """URL configuration for the Finance application."""
+
 from django.urls import path
 
 from finance.views import (

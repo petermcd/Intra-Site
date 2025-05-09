@@ -1,4 +1,5 @@
 """Configuration for the Documents application."""
+
 from django.apps import AppConfig
 
 

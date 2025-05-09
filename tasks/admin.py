@@ -1,4 +1,5 @@
 """Admin configuration for the Tasks application."""
+
 from django.contrib import admin
 
 from tasks.models import Task, TaskFrequency

@@ -1,4 +1,5 @@
 """Admin configuration for the Settings application."""
+
 from django.contrib import admin
 
 from events.models import (
